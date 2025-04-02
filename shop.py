@@ -11,71 +11,28 @@ class ShopItem:
 class Shop:
     def __init__(self, player):
         self.player = player
-        self.items = [
-            ShopItem(
-                "Wooden Sword", 
-                "sword_wood", 
-                15, 
-                'damage', 
-                2,
-                "+2 Damage"
-            ),
-            ShopItem(
-                "Iron Sword", 
-                "sword_iron", 
-                50, 
-                'damage', 
-                5,
-                "+5 Damage"
-            ),
-            ShopItem(
-                "Steel Sword", 
-                "sword_steel", 
-                150, 
-                'damage', 
-                15,
-                "+15 Damage"
-            ),
-            ShopItem(
-                "Small Pouch", 
-                "pouch_small", 
-                25, 
-                'gold_per_second', 
-                1,
-                "+1 Gold/s"
-            ),
-            ShopItem(
-                "Coin Purse", 
-                "purse_coin", 
-                75, 
-                'gold_per_second', 
-                3,
-                "+3 Gold/s"
-            ),
-            ShopItem(
-                "Treasure Chest", 
-                "chest_treasure", 
-                250, 
-                'gold_per_second', 
-                10,
-                "+10 Gold/s"
-            ),
-            ShopItem(
-                "Dash Boots", 
-                "boots_dash", 
-                120, 
-                'dash', 
-                0,
-                "Unlock Dash Ability"
-            )
+        self.available_items = []  # Itens disponíveis para compra
+        self.all_items = [  # Todos os itens do jogo
+            ShopItem("Wooden Sword", "sword_wood", 15, 'damage', 2, "+2 Damage"),
+            ShopItem("Iron Sword", "sword_iron", 50, 'damage', 5, "+5 Damage"),
+            ShopItem("Steel Sword", "sword_steel", 150, 'damage', 15, "+15 Damage"),
+            ShopItem("Small Pouch", "pouch_small", 25, 'gold_per_second', 1, "+1 Gold/s"),
+            ShopItem("Coin Purse", "purse_coin", 75, 'gold_per_second', 3, "+3 Gold/s"),
+            ShopItem("Treasure Chest", "chest_treasure", 250, 'gold_per_second', 10, "+10 Gold/s"),
+            ShopItem("Dash Boots", "boots_dash", 120, 'dash', 0, "Unlock Dash Ability")
         ]
+        self.reset_shop()  # Inicializa os itens disponíveis
+        
+    def reset_shop(self):
+        """Reseta a loja com itens não comprados"""
+        self.available_items = [item for item in self.all_items if not item.purchased]
         
     def buy_item(self, item_index):
-        item = self.items[item_index]
-        
-        if item.purchased:
+        if item_index >= len(self.available_items):
             return False
             
+        item = self.available_items[item_index]
+        
         if self.player.gold >= item.cost:
             self.player.gold -= item.cost
             item.purchased = True
@@ -86,6 +43,8 @@ class Shop:
                 self.player.gold_per_second += item.stat_value
             elif item.stat_type == 'dash':
                 self.player.dash_unlocked = True
-                
+            
+            # Remove o item comprado da lista de disponíveis
+            self.available_items.pop(item_index)
             return True
         return False

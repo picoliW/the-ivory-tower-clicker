@@ -132,43 +132,49 @@ class UI:
         if self.shop_scroll_position > 0:
             self.shop_scroll_position -= 1
             self.update_visible_items()
-    
+
     def scroll_down(self):
-        if self.shop_scroll_position + 4 < len(self.shop.items):
+        max_scroll = max(0, len(self.shop.available_items) - 4)
+        if self.shop_scroll_position < max_scroll:
             self.shop_scroll_position += 1
             self.update_visible_items()
-    
+
     def update_visible_items(self):
+        # Atualiza estado dos botões de scroll
         self.scroll_up_btn.enabled = (self.shop_scroll_position > 0)
-        self.scroll_down_btn.enabled = (self.shop_scroll_position + 4 < len(self.shop.items))
+        max_scroll = max(0, len(self.shop.available_items) - 4)
+        self.scroll_down_btn.enabled = (self.shop_scroll_position < max_scroll)
         
+        # Atualiza os itens visíveis
         for i in range(4):
             item_ui = self.shop_items_ui[i]
             item_index = self.shop_scroll_position + i
             
-            if item_index < len(self.shop.items):
-                item = self.shop.items[item_index]
+            if item_index < len(self.shop.available_items):
+                item = self.shop.available_items[item_index]
                 
                 item_ui['background'].enabled = True
-                
                 item_ui['icon'].texture = f'assets/{item.texture}'
                 item_ui['name'].text = f"{item.name} ({item.cost}g)"
                 item_ui['effect'].text = item.description
                 item_ui['button'].on_click = Func(self.buy_item, item_index)
-                item_ui['button'].disabled = item.purchased or self.player.gold < item.cost
-                item_ui['button'].color = color.green if not item.purchased and self.player.gold >= item.cost else color.gray
+                item_ui['button'].disabled = self.player.gold < item.cost
+                item_ui['button'].color = color.green if self.player.gold >= item.cost else color.gray
             else:
                 item_ui['background'].enabled = False
-    
+
     def buy_item(self, item_index):
         if self.shop.buy_item(item_index):
-            # Feedback visual
-            self.shop_items_ui[item_index - self.shop_scroll_position]['button'].color = color.gray
-            self.shop_items_ui[item_index - self.shop_scroll_position]['button'].disabled = True
-            self.shop_items_ui[item_index - self.shop_scroll_position]['button'].blink(color.green)
-            
+            # Atualiza a UI
             self.update_gold_text()
+            self.shop_scroll_position = max(0, min(self.shop_scroll_position, len(self.shop.available_items) - 4))
             self.update_visible_items()
+            
+            # Feedback visual
+            for i in range(4):
+                current_index = self.shop_scroll_position + i
+                if current_index < len(self.shop.available_items):
+                    self.shop_items_ui[i]['button'].blink(color.green)
     
     def set_shop_visibility(self, visible):
         self.shop_visible = visible

@@ -1,5 +1,7 @@
 __pycache__
-tempCodeRunnerFile
+tempCodeRunnerFile.py
 build
 dist
 main.spec
+convert.py 
+icon.ico
