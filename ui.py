@@ -82,23 +82,23 @@ class UI:
             item_icon = Entity(
                 parent=item_bg,
                 model='quad',
-                scale=(0.4, 1.0),
+                scale=(0.2, 0.9),
                 position=(-0.35, 0),
                 origin=(0, 0))
             
             # Nome e preço
             item_name = Text(
                 parent=item_bg,
-                position=(-0.1, 0.03),
-                scale=1,
-                origin=(-0.5, 0))
+                position=(0, 0.20),
+                scale=(1.5, 7),
+                origin=(0, 0))
             
             # Descrição do efeito
             item_effect = Text(
                 parent=item_bg,
-                position=(0.1, -0.03),
-                scale=1,
-                origin=(-0.5, 0),
+                position=(0, 0),
+                scale=(1.5, 7),
+                origin=(0, 0),
                 color=color.yellow)
             
             # Botão de compra
@@ -106,7 +106,7 @@ class UI:
                 parent=item_bg,
                 text='BUY',
                 position=(0.35, 0),
-                scale=(0.2, 0.08),
+                scale=(0.2, 0.35),
                 color=color.green.tint(-0.2))
             
             self.shop_items_ui.append({
