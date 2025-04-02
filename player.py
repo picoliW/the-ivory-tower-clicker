@@ -13,7 +13,7 @@ class Player:
             model='quad',
             texture='assets/player',
             scale=(3, 2.5),
-            position=(-5, 0),
+            position=(-5, 0.6),
             collider='box'
         )
         

@@ -3,6 +3,7 @@ from player import Player
 from enemy import EnemyManager
 from shop import Shop
 from ui import UI
+from floor import Floor
 
 app = Ursina()
 
@@ -27,5 +28,6 @@ player = Player()
 enemy_manager = EnemyManager(player)
 shop = Shop(player)
 ui = UI(player, enemy_manager, shop)
+floor = Floor()  
 
 app.run()
