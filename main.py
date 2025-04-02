@@ -9,8 +9,9 @@ app = Ursina()
 
 window.title = 'The Ivory Tower'
 window.borderless = False
-window.fullscreen = True
-window.exit_button.visible = True
+window.fullscreen = False
+window.exit_button.visible = False
+window.size = (1920, 1080) 
 
 def update():
     player.update()
