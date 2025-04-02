@@ -15,7 +15,6 @@ class Enemy(Entity):
         self.health = health
         self.type = enemy_type
         
-        # Cria a barra de vida
         self.health_bar = Entity(
             parent=self,
             model='quad',
