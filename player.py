@@ -12,7 +12,7 @@ class Player:
         self.sprite = Entity(
             model='quad',
             texture='assets/player',
-            scale=(1, 1.5),
+            scale=(3, 2.5),
             position=(-5, 0),
             collider='box'
         )
@@ -28,29 +28,5 @@ class Player:
             self.gold_timer = 0
             
     def attack(self, enemy):
-        if enemy.take_damage(self.damage):
-            pass 
-            
-    def upgrade_damage(self, amount, cost):
-        if self.gold >= cost:
-            self.gold -= cost
-            self.damage += amount
-            return True
-        return False
-        
-    def upgrade_gold_per_second(self, amount, cost):
-        if self.gold >= cost:
-            self.gold -= cost
-            # Se gold_per_second for 0, define como 1 (primeira compra)
-            if self.gold_per_second == 0:
-                self.gold_per_second = 1
-            self.gold_per_second += amount
-            return True
-        return False
-        
-    def unlock_dash(self, cost):
-        if not self.dash_unlocked and self.gold >= cost:
-            self.gold -= cost
-            self.dash_unlocked = True
-            return True
-        return False
+        if hasattr(enemy, 'take_damage'):
+            enemy.take_damage(self.damage)

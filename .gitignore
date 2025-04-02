@@ -1,2 +1,5 @@
 __pycache__
 tempCodeRunnerFile
+build
+dist
+main.spec
