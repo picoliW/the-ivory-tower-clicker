@@ -49,20 +49,15 @@ class Enemy(Entity):
         self.update_health_bar()
         
     def update_health_bar(self):
-        # Atualiza a largura da barra de vida
         health_percent = self.health / self.max_health
         self.health_bar.scale_x = 0.8 * health_percent
         
-        # Atualiza a cor (verde para alta vida, vermelho para baixa)
-        # Substitui color.lerp por uma função manual
         red_amount = int(255 * (1 - health_percent))
         green_amount = int(255 * health_percent)
         self.health_bar.color = rgb(red_amount, green_amount, 0)
         
-        # Atualiza o texto
         self.health_text.text = f"{int(self.health)}/{int(self.max_health)}"
         
-        # Centraliza o texto na barra
         self.health_text.position = (0.4 - (0.4 * health_percent), 0.7)
         
     def take_damage(self, amount):
@@ -72,15 +67,13 @@ class Enemy(Entity):
         if self.health <= 0:
             self.health = 0
             self.update_health_bar()
-            return True  # Inimigo derrotado
+            return True  
             
         self.update_health_bar()
-        # Efeito visual ao levar dano
         self.blink(color.white, duration=0.1)
-        return False  # Inimigo ainda vivo
+        return False  
 
     def die(self):
-        """Lidar com a morte do inimigo"""
         destroy(self.health_bar)
         destroy(self.health_bar_bg)
         destroy(self.health_text)
@@ -95,13 +88,11 @@ class EnemyManager:
         self.spawn_enemy()
         
     def spawn_enemy(self):
-        # Remove inimigos antigos
         for enemy in self.enemies:
             if enemy:
                 enemy.die()
         self.enemies.clear()
         
-        # Cria um novo inimigo
         enemy_type = randint(1, 3)
         health = 10 + (self.player.floor * 5)
         
