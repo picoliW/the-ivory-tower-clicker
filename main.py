@@ -3,14 +3,14 @@ from player import Player
 from enemy import EnemyManager
 from shop import Shop
 from ui import UI
-from floor import Floor
+from background import Background
 
 app = Ursina()
 
 window.title = 'The Ivory Tower'
 window.borderless = False
-window.fullscreen = False
-window.exit_button.visible = False
+window.fullscreen = True
+window.exit_button.visible = True
 
 def update():
     player.update()
@@ -28,6 +28,7 @@ player = Player()
 enemy_manager = EnemyManager(player)
 shop = Shop(player)
 ui = UI(player, enemy_manager, shop)
-floor = Floor()  
+background = Background()
+
 
 app.run()
