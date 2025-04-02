@@ -9,6 +9,7 @@ class UI:
         self.shop_scroll_position = 0
         
         self.create_main_ui()
+        self.create_hud_ui() 
         self.create_shop_ui()
         self.set_shop_visibility(False)
         
@@ -25,9 +26,48 @@ class UI:
             color=color.orange,
             on_click=self.toggle_shop
         )
+
+    def create_hud_ui(self):
+        self.gold_bg = Panel(
+            scale=(0.45, 0.08),
+            position=(0, 0.40), 
+            texture='white_cube',
+            texture_scale=(1, 1),
+            color=color.rgba(50, 50, 50, 200),
+            z=-1
+        )
+
+        self.gold_label = Text(
+            text='Gold:',
+            parent=self.gold_bg,
+            position=(-0.23, 0),
+            scale=(3, 15),
+            origin=(0, 0),
+            color=color.gold,
+            bold=True,
+        )
+        
+        self.gold_coin_img = Entity(
+            parent=self.gold_bg,
+            model='quad',
+            texture="assets/gold_coin.png",
+            position=(-0.4, 0),
+            scale=(0.15, 0.65),
+            origin=(0, 0)
+        )
+        
+        self.gold_value_text = Text(
+            text=str(self.player.gold),
+            parent=self.gold_bg,
+            position=(0, 0),
+            scale=(3, 15),
+            origin=(0, 0),
+            color=color.white
+        )
+        
+        self.gold_text.enabled = False
         
     def create_shop_ui(self):
-        # Fundo da loja (popup)
         self.shop_background = Panel(
             scale=(0.8, 0.8),
             position=(0, 0),
@@ -37,7 +77,6 @@ class UI:
             z=-1
         )
         
-        # Título da loja
         self.shop_title = Text(
             text='SHOP',
             position=(0, 0.35),
@@ -46,7 +85,6 @@ class UI:
             background=True
         )
         
-        # Botões de scroll
         self.scroll_up_btn = Button(
             parent=self.shop_background,
             texture='assets/arrow_up',
@@ -67,7 +105,6 @@ class UI:
         for i in range(4): 
             y_pos = 0.35 - (i * 0.18) 
             
-            # Container do item
             item_bg = Entity(
                 parent=self.shop_background,
                 model='quad',
@@ -140,12 +177,10 @@ class UI:
             self.update_visible_items()
 
     def update_visible_items(self):
-        # Atualiza estado dos botões de scroll
         self.scroll_up_btn.enabled = (self.shop_scroll_position > 0)
         max_scroll = max(0, len(self.shop.available_items) - 4)
         self.scroll_down_btn.enabled = (self.shop_scroll_position < max_scroll)
         
-        # Atualiza os itens visíveis
         for i in range(4):
             item_ui = self.shop_items_ui[i]
             item_index = self.shop_scroll_position + i
@@ -197,11 +232,16 @@ class UI:
             self.update_visible_items()
     
     def update_gold_text(self):
-        self.gold_text.text = f'Gold: {self.player.gold}'
+        gold_str = str(self.player.gold)
+        if len(gold_str) > 6:  
+            gold_str = f"{self.player.gold/1000000:.1f}M" 
+        self.gold_value_text.text = gold_str
+        self.gold_value_text.scale *= 1.2
+        invoke(setattr, self.gold_value_text, 'scale', (3, 15), delay=0.1)
     
     def update(self):
         self.floor_text.text = f'Floor: {self.player.floor}'
-        self.gold_text.text = f'Gold: {self.player.gold}'
+        self.gold_value_text.text = str(self.player.gold) 
         self.enemy_count_text.text = f'Enemies: {self.enemy_manager.enemies_defeated}/5'
         
         if self.shop_visible:
