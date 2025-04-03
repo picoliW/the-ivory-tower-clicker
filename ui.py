@@ -267,10 +267,12 @@ class UI:
     def upgrade_armor(self, armor_index):
         if armor_index < len(self.shop.armor_list):
             armor = self.shop.armor_list[armor_index]
-            if armor.upgrade(self.shop.player): 
+            if armor.upgrade(self.player):  
                 self.update_gold_text()
                 self.update_visible_armors()
+                # Visual feedback
                 self.armor_items_ui[armor_index]['button'].blink(color.green)
+                print(f"Player damage increased to: {self.player.damage}") 
         
     def scroll_up(self):
         if self.shop_tab == 'items' and self.shop_scroll_position > 0:
@@ -314,7 +316,8 @@ class UI:
                 item_ui['button'].disabled = self.player.gold < item.cost
                 item_ui['button'].color = color.green if self.player.gold >= item.cost else color.gray
             else:
-                item_ui['background'].enabled = False             
+                item_ui['background'].enabled = False   
+
     def update_visible_armors(self):
         for i in range(4):
             armor_ui = self.armor_items_ui[i]
@@ -324,7 +327,7 @@ class UI:
                 armor_ui['background'].enabled = True
                 armor_ui['icon'].texture = f'assets/{armor.texture}'
                 armor_ui['name'].text = f"{armor.name} (Lv. {armor.level})"
-                armor_ui['stats'].text = f"+{armor.current_damage} Damage\nCost: {armor.current_cost}g"
+                armor_ui['stats'].text = f"+{armor.base_damage} Damage\nCost: {armor.current_cost}g"
                 
                 can_upgrade = armor.level < armor.max_level and self.player.gold >= armor.current_cost
                 armor_ui['button'].on_click = Func(self.upgrade_armor, i)
