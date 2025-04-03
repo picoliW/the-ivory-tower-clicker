@@ -12,22 +12,26 @@ class ArmorItem:
     def __init__(self, name, texture, base_damage, base_cost):
         self.name = name
         self.texture = texture
-        self.base_damage = base_damage
+        self.base_damage = base_damage 
         self.base_cost = base_cost
         self.level = 1
         self.max_level = 100
+        self.total_damage_added = 0 
 
     @property
     def current_cost(self):
-        return self.base_cost * self.level 
+        return int(self.base_cost * (1.6 ** (self.level - 1)))
 
     @property
     def current_damage(self):
-        return self.base_damage * self.level  
+        return self.base_damage * self.level
 
     def upgrade(self, player):
         if self.level < self.max_level and player.gold >= self.current_cost:
             player.gold -= self.current_cost
+            damage_to_add = self.base_damage  
+            player.damage += damage_to_add
+            self.total_damage_added += damage_to_add
             self.level += 1
             return True
         return False
@@ -38,18 +42,18 @@ class Shop:
         self.available_items = [] 
         self.all_items = [  
             ShopItem("Wooden Sword", "sword_wood", 15, 'damage', 2, "+2 Damage"),
-            ShopItem("Iron Sword", "sword_iron", 50, 'damage', 5, "+5 Damage"),
-            ShopItem("Steel Sword", "sword_steel", 150, 'damage', 15, "+15 Damage"),
+            ShopItem("Iron Sword", "sword_iron", 150, 'damage', 5, "+5 Damage"),
+            ShopItem("Steel Sword", "sword_steel", 325, 'damage', 15, "+15 Damage"),
             ShopItem("Small Pouch", "pouch_small", 25, 'gold_per_second', 1, "+1 Gold/s"),
-            ShopItem("Coin Purse", "purse_coin", 75, 'gold_per_second', 3, "+3 Gold/s"),
-            ShopItem("Treasure Chest", "chest_treasure", 250, 'gold_per_second', 10, "+10 Gold/s"),
-            ShopItem("Dash Boots", "boots_dash", 120, 'dash', 0, "Unlock Dash Ability")
+            ShopItem("Coin Purse", "purse_coin", 70, 'gold_per_second', 3, "+3 Gold/s"),
+            ShopItem("Treasure Chest", "chest_treasure", 500, 'gold_per_second', 10, "+10 Gold/s"),
+            ShopItem("Dash Boots", "boots_dash", 5000, 'dash', 0, "Unlock Dash Ability")
         ]
         self.armor_list = [
             ArmorItem("Wooden Chestplate", "wooden_chestplate", 2, 15),
-            ArmorItem("Wooden Shield", "wooden_shield", 5, 50),
-            ArmorItem("Wooden Ring", "wooden_ring", 10, 100),
-            ArmorItem("Wooden Boots", "wooden_boots", 20, 250)
+            ArmorItem("Wooden Shield", "wooden_shield", 5, 300),
+            ArmorItem("Wooden Ring", "wooden_ring", 10, 1000),
+            ArmorItem("Wooden Boots", "wooden_boots", 20, 2000)
         ]
         self.reset_shop() 
         
