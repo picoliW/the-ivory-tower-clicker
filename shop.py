@@ -8,6 +8,30 @@ class ShopItem:
         self.description = description
         self.purchased = False
 
+class ArmorItem:
+    def __init__(self, name, texture, base_damage, base_cost):
+        self.name = name
+        self.texture = texture
+        self.base_damage = base_damage
+        self.base_cost = base_cost
+        self.level = 1
+        self.max_level = 100
+
+    @property
+    def current_cost(self):
+        return self.base_cost * self.level 
+
+    @property
+    def current_damage(self):
+        return self.base_damage * self.level  
+
+    def upgrade(self, player):
+        if self.level < self.max_level and player.gold >= self.current_cost:
+            player.gold -= self.current_cost
+            self.level += 1
+            return True
+        return False
+
 class Shop:
     def __init__(self, player):
         self.player = player
@@ -20,6 +44,12 @@ class Shop:
             ShopItem("Coin Purse", "purse_coin", 75, 'gold_per_second', 3, "+3 Gold/s"),
             ShopItem("Treasure Chest", "chest_treasure", 250, 'gold_per_second', 10, "+10 Gold/s"),
             ShopItem("Dash Boots", "boots_dash", 120, 'dash', 0, "Unlock Dash Ability")
+        ]
+        self.armor_list = [
+            ArmorItem("Wooden Chestplate", "wooden_chestplate", 2, 15),
+            ArmorItem("Wooden Shield", "wooden_shield", 5, 50),
+            ArmorItem("Wooden Ring", "wooden_ring", 10, 100),
+            ArmorItem("Wooden Boots", "wooden_boots", 20, 250)
         ]
         self.reset_shop() 
         

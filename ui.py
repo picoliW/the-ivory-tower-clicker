@@ -7,6 +7,7 @@ class UI:
         self.shop = shop
         self.shop_visible = False
         self.shop_scroll_position = 0
+        self.shop_tab = 'items'
         
         self.create_main_ui()
         self.create_hud_ui() 
@@ -69,20 +70,30 @@ class UI:
         
     def create_shop_ui(self):
         self.shop_background = Panel(
-            scale=(0.8, 0.8),
+            scale=(0.8, 0.95),
             position=(0, 0),
             texture='white_cube',
             texture_scale=(1, 1),
             color=color.dark_gray,
             z=-1
         )
-        
-        self.shop_title = Text(
-            text='SHOP',
-            position=(0, 0.35),
-            scale=2,
-            origin=(0, 0),
-            background=True
+
+        self.tab_items_btn = Button(
+            parent=self.shop_background,
+            text='Items',
+            position=(-0.3, 0.42),
+            scale=(0.2, 0.08),
+            color=color.blue,
+            on_click=Func(self.set_shop_tab, 'items')
+        )
+
+        self.tab_armor_btn = Button(
+            parent=self.shop_background,
+            text='Armor',
+            position=(0.3, 0.42),
+            scale=(0.2, 0.08),
+            color=color.blue,
+            on_click=Func(self.set_shop_tab, 'armor')
         )
         
         self.scroll_up_btn = Button(
@@ -103,7 +114,7 @@ class UI:
         
         self.shop_items_ui = []
         for i in range(4): 
-            y_pos = 0.35 - (i * 0.18) 
+            y_pos = 0.26 - (i * 0.18) 
             
             item_bg = Entity(
                 parent=self.shop_background,
@@ -153,6 +164,58 @@ class UI:
                 'effect': item_effect,
                 'button': buy_btn
             })
+        self.armor_items_ui = []
+        for i in range(4): 
+            y_pos = 0.26 - (i * 0.18)
+            
+            armor_bg = Entity(
+                parent=self.shop_background,
+                model='quad',
+                color=color.rgba(0, 0, 0, 255),
+                scale=(0.7, 0.15),
+                position=(0, y_pos),
+                origin=(0, 0),
+                enabled=False
+            )
+            
+            armor_icon = Entity(
+                parent=armor_bg,
+                model='quad',
+                scale=(0.2, 0.9),
+                position=(-0.35, 0),
+                origin=(0, 0)
+            )
+            
+            armor_name = Text(
+                parent=armor_bg,
+                position=(0, 0.20),
+                scale=(1.5, 7),
+                origin=(0, 0)
+            )
+            
+            armor_stats = Text(
+                parent=armor_bg,
+                position=(0, 0),
+                scale=(1.5, 7),
+                origin=(0, 0),
+                color=color.yellow
+            )
+            
+            upgrade_btn = Button(
+                parent=armor_bg,
+                text='UPGRADE',
+                position=(0.35, 0),
+                scale=(0.2, 0.35),
+                color=color.green.tint(-0.2)
+            )
+            
+            self.armor_items_ui.append({
+                'background': armor_bg,
+                'icon': armor_icon,
+                'name': armor_name,
+                'stats': armor_stats,
+                'button': upgrade_btn
+            })
         
         self.close_btn = Button(
             parent=self.shop_background,
@@ -164,17 +227,72 @@ class UI:
         )
         
         self.update_visible_items()
+
+    def select_armor_type(self, index):
+        if self.shop.armor.select_armor(index):
+            # Atualiza cores dos botões
+            for i, btn in enumerate(self.armor_select_buttons):
+                btn.color = color.blue if i == index else color.gray
+            self.update_armor_ui()
+
+    def set_shop_tab(self, tab_name):
+        self.shop_tab = tab_name
+        self.update_shop_display()
+
+    def update_shop_display(self):
+        if self.shop_tab == 'items':
+            for armor_ui in self.armor_items_ui:
+                armor_ui['background'].enabled = False
+            self.update_visible_items()
+        else:
+            for item_ui in self.shop_items_ui:
+                item_ui['background'].enabled = False
+            self.update_visible_armors()
+    
+    def update_armor_ui(self):
+        armor = self.shop.armor
+        self.armor_icon.texture = f"assets/{armor.texture}"
+        
+        info = f"""
+        {armor.name}
+        Damage: +{armor.damage}
+        Next Level Cost: {armor.cost}g
+        """
+        self.armor_info_text.text = info
+        
+        can_upgrade = armor.current_level < armor.max_level and self.player.gold >= armor.cost
+        self.upgrade_btn.color = color.green if can_upgrade else color.gray
+        self.upgrade_btn.disabled = not can_upgrade
+
+    def upgrade_armor(self, armor_index):
+        if armor_index < len(self.shop.armor_list):
+            armor = self.shop.armor_list[armor_index]
+            if armor.upgrade(self.shop.player): 
+                self.update_gold_text()
+                self.update_visible_armors()
+                self.armor_items_ui[armor_index]['button'].blink(color.green)
         
     def scroll_up(self):
-        if self.shop_scroll_position > 0:
+        if self.shop_tab == 'items' and self.shop_scroll_position > 0:
             self.shop_scroll_position -= 1
             self.update_visible_items()
+        elif self.shop_tab == 'armor' and self.shop_scroll_position > 0:
+            self.shop_scroll_position -= 1
+            self.update_visible_armors()
 
     def scroll_down(self):
-        max_scroll = max(0, len(self.shop.available_items) - 4)
+        max_scroll = 0
+        if self.shop_tab == 'items':
+            max_scroll = max(0, len(self.shop.available_items) - 4)
+        elif self.shop_tab == 'armor':
+            max_scroll = max(0, len(self.shop.armor_list) - 4)  
+        
         if self.shop_scroll_position < max_scroll:
             self.shop_scroll_position += 1
-            self.update_visible_items()
+            if self.shop_tab == 'items':
+                self.update_visible_items()
+            else:
+                self.update_visible_armors()
 
     def update_visible_items(self):
         self.scroll_up_btn.enabled = (self.shop_scroll_position > 0)
@@ -196,7 +314,24 @@ class UI:
                 item_ui['button'].disabled = self.player.gold < item.cost
                 item_ui['button'].color = color.green if self.player.gold >= item.cost else color.gray
             else:
-                item_ui['background'].enabled = False
+                item_ui['background'].enabled = False             
+    def update_visible_armors(self):
+        for i in range(4):
+            armor_ui = self.armor_items_ui[i]
+            if i < len(self.shop.armor_list):  
+                armor = self.shop.armor_list[i]  
+                
+                armor_ui['background'].enabled = True
+                armor_ui['icon'].texture = f'assets/{armor.texture}'
+                armor_ui['name'].text = f"{armor.name} (Lv. {armor.level})"
+                armor_ui['stats'].text = f"+{armor.current_damage} Damage\nCost: {armor.current_cost}g"
+                
+                can_upgrade = armor.level < armor.max_level and self.player.gold >= armor.current_cost
+                armor_ui['button'].on_click = Func(self.upgrade_armor, i)
+                armor_ui['button'].disabled = not can_upgrade
+                armor_ui['button'].color = color.green if can_upgrade else color.gray
+            else:
+                armor_ui['background'].enabled = False
 
     def buy_item(self, item_index):
         if self.shop.buy_item(item_index):
@@ -214,13 +349,13 @@ class UI:
     def set_shop_visibility(self, visible):
         self.shop_visible = visible
         self.shop_background.enabled = visible
-        self.shop_title.enabled = visible
         self.close_btn.enabled = visible
         self.scroll_up_btn.enabled = visible
         self.scroll_down_btn.enabled = visible
         
         if visible:
             self.update_visible_items()
+            self.update_shop_display()
         else:
             for item_ui in self.shop_items_ui:
                 item_ui['background'].enabled = False
@@ -241,8 +376,11 @@ class UI:
     
     def update(self):
         self.floor_text.text = f'Floor: {self.player.floor}'
-        self.gold_value_text.text = str(self.player.gold) 
+        self.gold_value_text.text = str(self.player.gold)
         self.enemy_count_text.text = f'Enemies: {self.enemy_manager.enemies_defeated}/5'
         
         if self.shop_visible:
-            self.update_visible_items()
+            if self.shop_tab == 'items':
+                self.update_visible_items()
+            else:
+                self.update_visible_armors()
