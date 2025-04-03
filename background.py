@@ -7,10 +7,9 @@ class Background(Entity):
             texture=texture,
             scale=(camera.aspect_ratio * 12.5, 12.5),  # Cobre toda a tela
             position=(0, 0),
-            z=10,  # Valor alto para ficar atrás de tudo
-            texture_scale=(1, 1),  # Não repete a textura
+            z=10, 
+            texture_scale=(1, 1),  
             name='background'
         )
-        # Configurações para melhor qualidade
         self.texture.filtering = None
         self.texture.wrap = 'clamp'
