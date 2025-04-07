@@ -4,14 +4,19 @@ from enemy import EnemyManager
 from shop import Shop
 from ui import UI
 from background import Background
+from screeninfo import get_monitors
 
 app = Ursina()
+
+monitor = get_monitors()[0]
+monitor_width = monitor.width
+monitor_height = monitor.height
 
 window.title = 'The Ivory Tower'
 window.borderless = False
 window.fullscreen = True
 window.exit_button.visible = True
-window.size = (1920, 1080) 
+window.size = (monitor_width, monitor_height)
 
 def update():
     player.update()
