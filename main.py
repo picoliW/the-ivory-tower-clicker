@@ -5,6 +5,8 @@ from shop import Shop
 from ui import UI
 from background import Background
 from screeninfo import get_monitors
+from bossfight import BossFight
+from ursina import Audio
 
 app = Ursina()
 
@@ -18,10 +20,36 @@ window.fullscreen = True
 window.exit_button.visible = True
 window.size = (monitor_width, monitor_height)
 
+boss_fight = None
+bossfight_win_sound = Audio('assets/sounds/bossfightSounds/bossfightWin.wav', autoplay=False)
+
 def update():
+    global boss_fight
+
+    if boss_fight and boss_fight.active:
+        boss_fight.update()
+        return
+
     player.update()
     enemy_manager.update()
     ui.update()
+
+    if player.floor == 2 and not boss_fight:
+        def win():
+            player.floor += 1
+            player.sprite.position = (-5, 0.6)
+            bossfight_win_sound.play()
+            global boss_fight
+            boss_fight = None 
+
+        def fail():
+            player.floor -= 1
+            player.sprite.position = (-5, 0.6)
+            global boss_fight
+            boss_fight = None 
+
+        boss_fight = BossFight(player, on_win=win, on_fail=fail)
+
 
 def input(key):
     if key == 'left mouse down':

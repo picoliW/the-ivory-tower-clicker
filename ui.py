@@ -230,7 +230,6 @@ class UI:
 
     def select_armor_type(self, index):
         if self.shop.armor.select_armor(index):
-            # Atualiza cores dos botões
             for i, btn in enumerate(self.armor_select_buttons):
                 btn.color = color.blue if i == index else color.gray
             self.update_armor_ui()
@@ -270,7 +269,6 @@ class UI:
             if armor.upgrade(self.player):  
                 self.update_gold_text()
                 self.update_visible_armors()
-                # Visual feedback
                 self.armor_items_ui[armor_index]['button'].blink(color.green)
                 print(f"Player damage increased to: {self.player.damage}") 
         
@@ -338,12 +336,10 @@ class UI:
 
     def buy_item(self, item_index):
         if self.shop.buy_item(item_index):
-            # Atualiza a UI
             self.update_gold_text()
             self.shop_scroll_position = max(0, min(self.shop_scroll_position, len(self.shop.available_items) - 4))
             self.update_visible_items()
             
-            # Feedback visual
             for i in range(4):
                 current_index = self.shop_scroll_position + i
                 if current_index < len(self.shop.available_items):

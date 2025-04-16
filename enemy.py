@@ -44,14 +44,13 @@ class Enemy(Entity):
             background=True,
             background_color=color.black)
 
-        # Carrega o som de morte
         try:
-            self.death_sound = Audio(f'assets/sounds/enemy_{self.type}_die.wav', autoplay=False)
+            self.death_sound = Audio(f'assets/sounds/enemySounds/enemy_{self.type}_die.wav', autoplay=False)
         except:
             print(f"Erro ao carregar som para inimigo tipo {self.type}")
             self.death_sound = None
 
-        self.update_health_bar()  # Agora o método já está definido
+        self.update_health_bar() 
 
     def update_health_bar(self):
         health_percent = self.health / self.max_health
@@ -95,7 +94,6 @@ class EnemyManager:
         self.spawn_enemy()
 
     def spawn_enemy(self):
-        # Remove inimigos antigos
         for enemy in self.enemies:
             if enemy:
                 enemy.die()
@@ -111,7 +109,7 @@ class EnemyManager:
 
     def update(self):
         if self.current_enemy and self.current_enemy.health <= 0:
-            self.current_enemy.die()  # Isso agora toca o som
+            self.current_enemy.die()  
             self.enemies_defeated += 1
             self.player.gold += 5 + (self.player.floor * 2)
             

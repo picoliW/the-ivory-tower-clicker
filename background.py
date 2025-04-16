@@ -5,7 +5,7 @@ class Background(Entity):
         super().__init__(
             model='quad',
             texture=texture,
-            scale=(camera.aspect_ratio * 12.5, 12.5),  # Cobre toda a tela
+            scale=(camera.aspect_ratio * 12.5, 12.5), 
             position=(0, 0),
             z=10, 
             texture_scale=(1, 1),  
