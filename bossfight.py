@@ -33,6 +33,14 @@ class BossFight(Entity):
             z=-0.5  # Atrás do player
         )
 
+        self.walk_frames_right = [f'assets/Player/PlayerMovement/Right/move_right_{i}' for i in range(9)]
+        self.walk_frames_left = [f'assets/player_walk_left_{i}' for i in range(9)]
+        self.current_frame = 0
+        self.frame_timer = 0
+        self.frame_speed = 0.1
+        self.facing = 'right'
+
+
 
     def update(self):
         if not self.active:
@@ -63,6 +71,32 @@ class BossFight(Entity):
         )
         self.player.sprite.x += move.x * time.dt * self.speed
         self.player.sprite.y += move.y * time.dt * self.speed
+
+        # Animação de andar
+        moving = move.x != 0
+
+        if move.x < 0:
+            self.facing = 'left'
+        elif move.x > 0:
+            self.facing = 'right'
+
+        if moving:
+            self.frame_timer += time.dt
+            if self.frame_timer >= self.frame_speed:
+                self.current_frame = (self.current_frame + 1) % len(self.walk_frames_right)
+                self.frame_timer = 0
+
+                if self.facing == 'right':
+                    self.player.sprite.texture = self.walk_frames_right[self.current_frame]
+                else:
+                    self.player.sprite.texture = self.walk_frames_left[self.current_frame]
+        else:
+            self.current_frame = 0
+            if self.facing == 'right':
+                self.player.sprite.texture = self.walk_frames_right[0]
+            else:
+                self.player.sprite.texture = self.walk_frames_left[0]
+
 
     def spawn_projectile(self):
         x = random.uniform(-7, 7)
