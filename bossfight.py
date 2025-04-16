@@ -23,6 +23,17 @@ class BossFight(Entity):
         self.spawn_timer = 0.5
         self.spawn_cooldown = 0
 
+        # Hitbox de debug
+        self.hitbox_debug = Entity(
+            model='quad',
+            color=color.azure,
+            scale=self.player.sprite.scale,
+            position=self.player.sprite.position,
+            wireframe=True,
+            z=-0.5  # Atrás do player
+        )
+
+
     def update(self):
         if not self.active:
             return
@@ -69,3 +80,6 @@ class BossFight(Entity):
             self.on_win()
         else:
             self.on_fail()
+
+        self.hitbox_debug.position = self.player.sprite.position
+
