@@ -39,15 +39,17 @@ def update():
             player.floor += 1
             player.sprite.position = (-5, 0.6)
             bossfight_win_sound.play()
+            enemy_manager.show_enemies()
             global boss_fight
             boss_fight = None 
 
         def fail():
             player.floor -= 1
             player.sprite.position = (-5, 0.6)
+            enemy_manager.show_enemies()
             global boss_fight
             boss_fight = None 
-
+        enemy_manager.hide_enemies()
         boss_fight = BossFight(player, on_win=win, on_fail=fail)
 
 

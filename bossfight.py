@@ -13,7 +13,7 @@ class BossFight(Entity):
         self.projectiles = []
 
         # Área da bossfight
-        self.area = Entity(model='quad', color=color.dark_gray, scale=(16, 9), z=1)
+        self.area = Entity(model='quad', color=color.black, scale=(16, 9), z=1)
 
         self.player.sprite.position = (0, -3)
 
@@ -100,7 +100,7 @@ class BossFight(Entity):
 
     def spawn_projectile(self):
         x = random.uniform(-7, 7)
-        proj = Entity(model='circle', color=color.red, scale=0.5, position=(x, 5), collider='box')
+        proj = Entity(model='circle', color=color.white, scale=0.5, position=(x, 5), collider='box')
         self.projectiles.append(proj)
 
     def end_bossfight(self, success):

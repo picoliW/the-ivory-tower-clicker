@@ -93,6 +93,15 @@ class EnemyManager:
         self.current_enemy = None
         self.spawn_enemy()
 
+    def hide_enemies(self):
+        for enemy in self.enemies:
+            enemy.enabled = False
+
+    def show_enemies(self):
+        for enemy in self.enemies:
+            enemy.enabled = True
+
+
     def spawn_enemy(self):
         for enemy in self.enemies:
             if enemy:
