@@ -12,7 +12,7 @@ class Player:
         self.sprite = Entity(
             model='quad',
             texture='assets/player',
-            scale=(3, 2.5),
+            scale=(2.4, 2),
             position=(-5, 0.6),
             collider='box'
         )

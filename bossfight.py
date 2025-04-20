@@ -12,10 +12,27 @@ class BossFight(Entity):
         self.timer = 10
         self.projectiles = []
 
-        # Área da bossfight
-        self.area = Entity(model='quad', color=color.black, scale=(16, 9), z=1)
 
-        self.player.sprite.position = (0, -3)
+        offset_y = -1 
+
+        self.arena_fill = Entity(model='quad', color=color.black, scale=(10, 5), y=offset_y, z=0.4)
+
+        thickness = 0.05
+        w, h = 10, 5
+
+        self.boss_entity = Entity(
+            model='quad',
+            texture='assets/bosses/boss1', 
+            scale=(3.5, 3), 
+            position=(0, offset_y + h/2 + 1.5),  # centralizado acima da arena
+            z=0.3  # z maior que a arena, mas menor que as bordas se quiser
+)
+        self.border_top = Entity(model='quad', color=color.white, scale=(w, thickness), y=h/2 + offset_y, z=0.5)
+        self.border_bottom = Entity(model='quad', color=color.white, scale=(w, thickness), y=-h/2 + offset_y, z=0.5)
+        self.border_left = Entity(model='quad', color=color.white, scale=(thickness, h), x=-w/2, y=offset_y, z=0.5)
+        self.border_right = Entity(model='quad', color=color.white, scale=(thickness, h), x=w/2, y=offset_y, z=0.5)
+
+        self.player.sprite.position = (0, offset_y - h/2 + 1.5)  
 
         # Ativar movimentação manual
         self.speed = 5
@@ -69,8 +86,23 @@ class BossFight(Entity):
             held_keys['d'] - held_keys['a'],
             held_keys['w'] - held_keys['s']
         )
-        self.player.sprite.x += move.x * time.dt * self.speed
-        self.player.sprite.y += move.y * time.dt * self.speed
+        new_x = self.player.sprite.x + move.x * time.dt * self.speed
+        new_y = self.player.sprite.y + move.y * time.dt * self.speed
+
+        if not self.arena_fill or not self.arena_fill.enabled:
+            return  
+
+        half_width = self.arena_fill.scale_x / 2
+        half_height = self.arena_fill.scale_y / 2
+
+        min_x = self.arena_fill.x - half_width + self.player.sprite.scale_x / 2
+        max_x = self.arena_fill.x + half_width - self.player.sprite.scale_x / 2
+        min_y = self.arena_fill.y - half_height + self.player.sprite.scale_y / 2
+        max_y = self.arena_fill.y + half_height - self.player.sprite.scale_y / 2
+
+
+        self.player.sprite.x = clamp(new_x, min_x, max_x)
+        self.player.sprite.y = clamp(new_y, min_y, max_y)
 
         # Animação de andar
         moving = move.x != 0
@@ -97,18 +129,25 @@ class BossFight(Entity):
             else:
                 self.player.sprite.texture = self.walk_frames_left[0]
 
-
     def spawn_projectile(self):
-        x = random.uniform(-7, 7)
+        arena_x_min = self.arena_fill.x - self.arena_fill.scale_x / 2
+        arena_x_max = self.arena_fill.x + self.arena_fill.scale_x / 2
+        x = random.uniform(arena_x_min, arena_x_max)
         proj = Entity(model='circle', color=color.white, scale=0.5, position=(x, 5), collider='box')
         self.projectiles.append(proj)
+
 
     def end_bossfight(self, success):
         self.active = False
         for proj in self.projectiles:
             destroy(proj)
         self.projectiles.clear()
-        destroy(self.area)
+        destroy(self.arena_fill)
+        destroy(self.boss_entity)
+        destroy(self.border_top)
+        destroy(self.border_bottom)
+        destroy(self.border_left)
+        destroy(self.border_right)
 
         if success:
             self.on_win()
