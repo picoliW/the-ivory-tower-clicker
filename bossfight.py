@@ -12,10 +12,22 @@ class BossFight(Entity):
         self.timer = 10
         self.projectiles = []
 
+        self.background = Entity(
+            model='quad', 
+            color=color.black, 
+            scale=(camera.aspect_ratio * 20, 20),
+            z=10  
+        )
 
         offset_y = -1 
 
-        self.arena_fill = Entity(model='quad', color=color.black, scale=(10, 5), y=offset_y, z=0.4)
+        self.arena_fill = Entity(
+            model='quad', 
+            color=color.black33,  
+            scale=(10, 5), 
+            y=offset_y, 
+            z=1
+        )
 
         thickness = 0.05
         w, h = 10, 5
@@ -24,17 +36,19 @@ class BossFight(Entity):
             model='quad',
             texture='assets/bosses/boss1', 
             scale=(3.5, 3), 
-            position=(0, offset_y + h/2 + 1.5),  # centralizado acima da arena
-            z=0.3  # z maior que a arena, mas menor que as bordas se quiser
-)
+            position=(0, offset_y + h/2 + 1.5),
+            z=0.8
+        )
+        
+        # Bordas - valor de z mais alto (mais na frente)
         self.border_top = Entity(model='quad', color=color.white, scale=(w, thickness), y=h/2 + offset_y, z=0.5)
         self.border_bottom = Entity(model='quad', color=color.white, scale=(w, thickness), y=-h/2 + offset_y, z=0.5)
         self.border_left = Entity(model='quad', color=color.white, scale=(thickness, h), x=-w/2, y=offset_y, z=0.5)
         self.border_right = Entity(model='quad', color=color.white, scale=(thickness, h), x=w/2, y=offset_y, z=0.5)
 
-        self.player.sprite.position = (0, offset_y - h/2 + 1.5)  
+        self.player.sprite.position = (0, offset_y - h/2 + 1.5)
+        self.player.sprite.z = 0.6
 
-        # Ativar movimentação manual
         self.speed = 5
 
         self.spawn_timer = 0.5
@@ -148,6 +162,7 @@ class BossFight(Entity):
         destroy(self.border_bottom)
         destroy(self.border_left)
         destroy(self.border_right)
+        destroy(self.background)
 
         if success:
             self.on_win()
@@ -155,4 +170,3 @@ class BossFight(Entity):
             self.on_fail()
 
         self.hitbox_debug.position = self.player.sprite.position
-
