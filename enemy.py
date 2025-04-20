@@ -6,7 +6,7 @@ class Enemy(Entity):
     def __init__(self, enemy_type, health, position=(2, 0)):
         super().__init__(
             model='quad',
-            texture=f'assets/enemy_{enemy_type}',
+            texture=f'assets/enemies/enemy_{enemy_type}',
             scale=(1.5, 1.5),
             position=position,
             collider='box'

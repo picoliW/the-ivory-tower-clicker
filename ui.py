@@ -250,7 +250,7 @@ class UI:
     
     def update_armor_ui(self):
         armor = self.shop.armor
-        self.armor_icon.texture = f"assets/{armor.texture}"
+        self.armor_icon.texture = f"assets/shop_items/{armor.texture}"
         
         info = f"""
         {armor.name}
@@ -307,7 +307,7 @@ class UI:
                 item = self.shop.available_items[item_index]
                 
                 item_ui['background'].enabled = True
-                item_ui['icon'].texture = f'assets/{item.texture}'
+                item_ui['icon'].texture = f'assets/shop_items/{item.texture}'
                 item_ui['name'].text = f"{item.name} ({item.cost}g)"
                 item_ui['effect'].text = item.description
                 item_ui['button'].on_click = Func(self.buy_item, item_index)
@@ -323,7 +323,7 @@ class UI:
                 armor = self.shop.armor_list[i]  
                 
                 armor_ui['background'].enabled = True
-                armor_ui['icon'].texture = f'assets/{armor.texture}'
+                armor_ui['icon'].texture = f'assets/shop_items/{armor.texture}'
                 armor_ui['name'].text = f"{armor.name} (Lv. {armor.level})"
                 armor_ui['stats'].text = f"+{armor.base_damage} Damage\nCost: {armor.current_cost}g"
                 
