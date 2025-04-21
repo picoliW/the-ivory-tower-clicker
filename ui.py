@@ -270,7 +270,6 @@ class UI:
                 self.update_gold_text()
                 self.update_visible_armors()
                 self.armor_items_ui[armor_index]['button'].blink(color.green)
-                print(f"Player damage increased to: {self.player.damage}") 
         
     def scroll_up(self):
         if self.shop_tab == 'items' and self.shop_scroll_position > 0:

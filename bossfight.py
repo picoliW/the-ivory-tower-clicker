@@ -72,7 +72,6 @@ class BossFight(Entity):
         self.facing = 'right'
 
         self.player.sprite.collider = BoxCollider(self.player.sprite, size=(1.2, 1.6, 1)) 
-        print('Collider do player:', self.player.sprite.collider)
         self.hitbox_debug.scale = (1.2, 1.6)
 
     def update(self):
@@ -97,13 +96,7 @@ class BossFight(Entity):
             else:
                 result = proj.intersects(self.player.sprite)
                 if result.hit:
-                    print('🔥 COLISÃO DETECTADA')
                     self.end_bossfight(success=False)
-                else:
-                    # Debug visual para mostrar se estão próximos
-                    dist = distance(proj.position, self.player.sprite.position)
-                    if dist < 1.5:
-                        print(f'❓Proximo mas sem colisão: dist={dist:.2f}, proj={proj.position}, player={self.player.sprite.position}')
 
         move = Vec2(
             held_keys['d'] - held_keys['a'],
@@ -162,8 +155,6 @@ class BossFight(Entity):
         proj = Entity(model='circle', color=color.white, scale=0.5, position=(x, 5), collider='box')
         proj.z = self.player.sprite.z
         self.projectiles.append(proj)
-        print(f'📦 Proj criado em z={proj.z}, player z={self.player.sprite.z}')
-
 
     def end_bossfight(self, success):
         self.active = False
