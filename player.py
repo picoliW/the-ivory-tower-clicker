@@ -8,7 +8,6 @@ class Player:
         self.floor = 1
         self.dash_unlocked = False
         
-        # Criação do sprite do jogador
         self.sprite = Entity(
             model='quad',
             texture='assets/player',
@@ -19,9 +18,35 @@ class Player:
         
         # Temporizador para gold passivo
         self.gold_timer = 0
-        
+
+        self.attack_textures = [
+            load_texture(f'assets/Player/AttackAnimations/AttackRight/attack_right_{i}') for i in range(6)
+        ]
+        self.is_attacking = False
+
+    def play_attack_animation(self):
+        if self.is_attacking:
+            return 
+
+        self.is_attacking = True
+
+        all_frames = self.attack_textures + self.attack_textures[-2::-1]
+
+        tempo_por_frame = 0.05
+
+        for i, texture in enumerate(all_frames):
+            invoke(setattr, self.sprite, 'texture', texture, delay=tempo_por_frame * i)
+
+        duracao_total = tempo_por_frame * len(all_frames)
+
+        def reset_texture():
+            self.sprite.texture = 'assets/player'
+            self.sprite.collider = 'box'
+            self.is_attacking = False
+
+        invoke(reset_texture, delay=duracao_total)
+
     def update(self):
-        # Ganho passivo de gold
         self.gold_timer += time.dt
         if self.gold_timer >= 1:
             self.gold += self.gold_per_second
@@ -30,3 +55,4 @@ class Player:
     def attack(self, enemy):
         if hasattr(enemy, 'take_damage'):
             enemy.take_damage(self.damage)
+        self.play_attack_animation()

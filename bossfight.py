@@ -71,7 +71,9 @@ class BossFight(Entity):
         self.frame_speed = 0.1
         self.facing = 'right'
 
-
+        self.player.sprite.collider = BoxCollider(self.player.sprite, size=(1.2, 1.6, 1)) 
+        print('Collider do player:', self.player.sprite.collider)
+        self.hitbox_debug.scale = (1.2, 1.6)
 
     def update(self):
         if not self.active:
@@ -87,14 +89,21 @@ class BossFight(Entity):
             self.spawn_projectile()
             self.spawn_cooldown = self.spawn_timer
 
-        # Atualizar projéteis
         for proj in self.projectiles:
             proj.y -= 5 * time.dt
             if proj.y < -5:
                 destroy(proj)
                 self.projectiles.remove(proj)
-            elif proj.intersects(self.player.sprite).hit:
-                self.end_bossfight(success=False)
+            else:
+                result = proj.intersects(self.player.sprite)
+                if result.hit:
+                    print('🔥 COLISÃO DETECTADA')
+                    self.end_bossfight(success=False)
+                else:
+                    # Debug visual para mostrar se estão próximos
+                    dist = distance(proj.position, self.player.sprite.position)
+                    if dist < 1.5:
+                        print(f'❓Proximo mas sem colisão: dist={dist:.2f}, proj={proj.position}, player={self.player.sprite.position}')
 
         move = Vec2(
             held_keys['d'] - held_keys['a'],
@@ -143,12 +152,17 @@ class BossFight(Entity):
             else:
                 self.player.sprite.texture = self.walk_frames_left[0]
 
+        self.hitbox_debug.position = self.player.sprite.position
+
+
     def spawn_projectile(self):
         arena_x_min = self.arena_fill.x - self.arena_fill.scale_x / 2
         arena_x_max = self.arena_fill.x + self.arena_fill.scale_x / 2
         x = random.uniform(arena_x_min, arena_x_max)
         proj = Entity(model='circle', color=color.white, scale=0.5, position=(x, 5), collider='box')
+        proj.z = self.player.sprite.z
         self.projectiles.append(proj)
+        print(f'📦 Proj criado em z={proj.z}, player z={self.player.sprite.z}')
 
 
     def end_bossfight(self, success):
