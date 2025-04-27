@@ -5,11 +5,12 @@ class Background(Entity):
         super().__init__(
             model='quad',
             texture=texture,
-            scale=(camera.aspect_ratio * 12.5, 12.5), 
+            scale=(22, 12.5),
             position=(0, 0),
-            z=10, 
-            texture_scale=(1, 1),  
+            z=10,
+            texture_scale=(1, 1),
             name='background'
         )
         self.texture.filtering = None
         self.texture.wrap = 'clamp'
+
