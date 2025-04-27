@@ -3,7 +3,7 @@ from ursina import *
 from ursina.color import rgb
 
 class Enemy(Entity):
-    def __init__(self, enemy_type, health, position=(2, 0)):
+    def __init__(self, enemy_type, health, position=(2, -2)):
         super().__init__(
             model='quad',
             texture=f'assets/enemies/enemy_{enemy_type}',

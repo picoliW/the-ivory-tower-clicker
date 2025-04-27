@@ -7,6 +7,7 @@ from background import Background
 from screeninfo import get_monitors
 from bossfight import BossFight
 from ursina import Audio
+from pause_menu import PauseMenu
 
 app = Ursina()
 
@@ -15,9 +16,8 @@ monitor_width = monitor.width
 monitor_height = monitor.height
 
 window.title = 'The Ivory Tower'
-window.borderless = False
+window.borderless = True
 window.fullscreen = True
-window.exit_button.visible = True
 window.size = (monitor_width, monitor_height)
 
 boss_fight = None
@@ -54,17 +54,24 @@ def update():
 
 
 def input(key):
-    if key == 'left mouse down':
+    if key == 'left mouse down' and not pause_menu.enabled:
         for enemy in enemy_manager.enemies:
             if enemy.hovered:
                 player.attack(enemy)
                 break
+    if key == 'escape':
+        if pause_menu.enabled:
+            pause_menu.close()
+        else:
+            pause_menu.open()
+
 
 player = Player()
 enemy_manager = EnemyManager(player)
 shop = Shop(player)
 ui = UI(player, enemy_manager, shop)
 background = Background()
+pause_menu = PauseMenu()
 
 
 app.run()
