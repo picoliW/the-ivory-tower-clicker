@@ -13,12 +13,10 @@ class Shop(Entity):
         self.player = player
         self.background_enabled = False
 
-        # Carregar dados
         self.all_items = self.load_shop_items(shop_items_path)
         self.armor_list = self.load_armor_items(armor_items_path)
         self.available_items = [item for item in self.all_items if not item.purchased]
 
-        # Interface da loja
         self.background = Entity(parent=camera.ui, model='quad', color=color.black66, scale=(0.8,0.8), enabled=False)
         self.title = Text(parent=self.background, text='SHOP', y=0.35, scale=2, origin=(0,0))
         
@@ -33,7 +31,6 @@ class Shop(Entity):
         self.armor_button.on_click = self.show_armors
         self.close_button.on_click = self.hide
 
-        # Botão na HUD principal para abrir a loja
         self.open_shop_button = Button(text='Shop', position=(-0.7, 0.45), scale=(0.15, 0.08), color=color.lime)
         self.open_shop_button.on_click = self.show
 
@@ -64,7 +61,6 @@ class Shop(Entity):
 
     def show_items(self):
         self.clear_list()
-        # Limitar a no máximo 3 itens
         for i, item in enumerate(self.available_items[:3]):
             b = Button(
                 parent=self.background, 
@@ -77,7 +73,6 @@ class Shop(Entity):
 
     def show_armors(self):
         self.clear_list()
-        # Limitar a no máximo 3 armaduras
         for i, armor in enumerate(self.armor_list[:3]):
             b = Button(
                 parent=self.background,

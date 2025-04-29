@@ -49,4 +49,5 @@ class PauseMenu(Entity):
     
     def close(self):
         self.enabled = False
-        mouse.locked = True
+        mouse.locked = False
+        mouse.visible = True
