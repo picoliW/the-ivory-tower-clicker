@@ -5,7 +5,8 @@
     "cost": 15,
     "stat_type": "damage",
     "stat_value": 2,
-    "description": "+2 Damage"
+    "description": "+2 Damage",
+    "image_path": "assets/sword/sword_wood.png"
   },
   {
     "name": "Iron Sword",
@@ -13,7 +14,8 @@
     "cost": 150,
     "stat_type": "damage",
     "stat_value": 5,
-    "description": "+5 Damage"
+    "description": "+5 Damage",
+    "image_path": "assets/sword/sword_iron.png"
   },
   {
     "name": "Steel Sword",
@@ -21,7 +23,8 @@
     "cost": 325,
     "stat_type": "damage",
     "stat_value": 15,
-    "description": "+15 Damage"
+    "description": "+15 Damage",
+    "image_path": "assets/sword/sword_steel.png"
   },
   {
     "name": "Small Pouch",
@@ -29,7 +32,8 @@
     "cost": 25,
     "stat_type": "gold_per_second",
     "stat_value": 1,
-    "description": "+1 Gold/s"
+    "description": "+1 Gold/s",
+    "image_path": "assets/pouch/pouch_small.png"
   },
   {
     "name": "Coin Purse",
@@ -37,7 +41,8 @@
     "cost": 70,
     "stat_type": "gold_per_second",
     "stat_value": 3,
-    "description": "+3 Gold/s"
+    "description": "+3 Gold/s",
+    "image_path": "assets/pouch/purse_coin.png"
   },
   {
     "name": "Treasure Chest",
@@ -45,7 +50,8 @@
     "cost": 500,
     "stat_type": "gold_per_second",
     "stat_value": 10,
-    "description": "+10 Gold/s"
+    "description": "+10 Gold/s",
+    "image_path": "assets/pouch/chest_treasure.png"
   },
   {
     "name": "Dash Boots",
@@ -53,6 +59,7 @@
     "cost": 5000,
     "stat_type": "dash",
     "stat_value": 0,
-    "description": "Unlock Dash Ability"
+    "description": "Unlock Dash Ability",
+    "image_path": "assets/boots/boots_dash.png"
   }
 ]
