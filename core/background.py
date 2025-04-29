@@ -1,7 +1,7 @@
 from ursina import *
 
 class Background(Entity):
-    def __init__(self, texture='bg.png'):
+    def __init__(self, texture='../assets/bg.png'):
         super().__init__(
             model='quad',
             texture=texture,

@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Wooden Chestplate",
+    "texture": "wooden_chestplate",
+    "base_damage": 2,
+    "base_cost": 15
+  },
+  {
+    "name": "Wooden Shield",
+    "texture": "wooden_shield",
+    "base_damage": 5,
+    "base_cost": 300
+  },
+  {
+    "name": "Wooden Ring",
+    "texture": "wooden_ring",
+    "base_damage": 10,
+    "base_cost": 1000
+  },
+  {
+    "name": "Wooden Boots",
+    "texture": "wooden_boots",
+    "base_damage": 20,
+    "base_cost": 2000
+  }
+]

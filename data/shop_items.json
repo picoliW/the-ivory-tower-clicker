@@ -1,0 +1,58 @@
+[
+  {
+    "name": "Wooden Sword",
+    "texture": "sword_wood",
+    "cost": 15,
+    "stat_type": "damage",
+    "stat_value": 2,
+    "description": "+2 Damage"
+  },
+  {
+    "name": "Iron Sword",
+    "texture": "sword_iron",
+    "cost": 150,
+    "stat_type": "damage",
+    "stat_value": 5,
+    "description": "+5 Damage"
+  },
+  {
+    "name": "Steel Sword",
+    "texture": "sword_steel",
+    "cost": 325,
+    "stat_type": "damage",
+    "stat_value": 15,
+    "description": "+15 Damage"
+  },
+  {
+    "name": "Small Pouch",
+    "texture": "pouch_small",
+    "cost": 25,
+    "stat_type": "gold_per_second",
+    "stat_value": 1,
+    "description": "+1 Gold/s"
+  },
+  {
+    "name": "Coin Purse",
+    "texture": "purse_coin",
+    "cost": 70,
+    "stat_type": "gold_per_second",
+    "stat_value": 3,
+    "description": "+3 Gold/s"
+  },
+  {
+    "name": "Treasure Chest",
+    "texture": "chest_treasure",
+    "cost": 500,
+    "stat_type": "gold_per_second",
+    "stat_value": 10,
+    "description": "+10 Gold/s"
+  },
+  {
+    "name": "Dash Boots",
+    "texture": "boots_dash",
+    "cost": 5000,
+    "stat_type": "dash",
+    "stat_value": 0,
+    "description": "Unlock Dash Ability"
+  }
+]

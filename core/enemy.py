@@ -6,7 +6,7 @@ class Enemy(Entity):
     def __init__(self, enemy_type, health, position=(2, -2)):
         super().__init__(
             model='quad',
-            texture=f'assets/enemies/enemy_{enemy_type}',
+            texture=f'../assets/enemies/enemy_{enemy_type}',
             scale=(1.5, 1.5),
             position=position,
             collider='box'
@@ -45,7 +45,7 @@ class Enemy(Entity):
             background_color=color.black)
 
         try:
-            self.death_sound = Audio(f'assets/sounds/enemySounds/enemy_{self.type}_die.wav', autoplay=False)
+            self.death_sound = Audio(f'../assets/sounds/enemySounds/enemy_{self.type}_die.wav', autoplay=False)
         except:
             print(f"Erro ao carregar som para inimigo tipo {self.type}")
             self.death_sound = None

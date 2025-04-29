@@ -11,8 +11,8 @@ class Player:
 
         
         self.idle_textures = [
-            load_texture('assets/Player/idle/idle_0'),
-            load_texture('assets/Player/idle/idle_1')
+            load_texture('../assets/Player/idle/idle_0'),
+            load_texture('../assets/Player/idle/idle_1')
         ]
         self.idle_index = 0
         self.idle_timer = 0
@@ -29,7 +29,7 @@ class Player:
         self.gold_timer = 0
 
         self.attack_textures = [
-            load_texture(f'assets/Player/AttackAnimations/AttackRight/attack_right_{i}') for i in range(6)
+            load_texture(f'../assets/Player/AttackAnimations/AttackRight/attack_right_{i}') for i in range(6)
         ]
         self.is_attacking = False
 

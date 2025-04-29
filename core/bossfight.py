@@ -34,7 +34,7 @@ class BossFight(Entity):
 
         self.boss_entity = Entity(
             model='quad',
-            texture='assets/bosses/boss1', 
+            texture='../assets/bosses/boss1', 
             scale=(3.5, 3), 
             position=(0, offset_y + h/2 + 1.5),
             z=0.8
@@ -64,8 +64,8 @@ class BossFight(Entity):
             z=-0.5  # Atrás do player
         )
 
-        self.walk_frames_right = [f'assets/Player/PlayerMovement/Right/move_right_{i}' for i in range(8)]
-        self.walk_frames_left = [f'assets/Player/PlayerMovement/Left/move_left_{i}' for i in range(8)]
+        self.walk_frames_right = [f'../assets/Player/PlayerMovement/Right/move_right_{i}' for i in range(8)]
+        self.walk_frames_left = [f'../assets/Player/PlayerMovement/Left/move_left_{i}' for i in range(8)]
         self.current_frame = 0
         self.frame_timer = 0
         self.frame_speed = 0.1

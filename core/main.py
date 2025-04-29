@@ -21,7 +21,7 @@ window.fullscreen = True
 window.size = (monitor_width, monitor_height)
 
 boss_fight = None
-bossfight_win_sound = Audio('assets/sounds/bossfightSounds/bossfightWin.wav', autoplay=False)
+bossfight_win_sound = Audio('../assets/sounds/bossfightSounds/bossfightWin.wav', autoplay=False)
 
 def update():
     global boss_fight
@@ -69,7 +69,7 @@ def input(key):
 player = Player()
 enemy_manager = EnemyManager(player)
 shop = Shop(player)
-ui = UI(player, enemy_manager, shop)
+ui = UI(player, enemy_manager)
 background = Background()
 pause_menu = PauseMenu()
 
