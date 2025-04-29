@@ -4,27 +4,27 @@
     "texture": "wooden_chestplate",
     "base_damage": 2,
     "base_cost": 15,
-    "image_path": "assets/armor/wooden_chestplate.png"
+    "image_path": "../assets/shop_items/wooden_chestplate.png"
   },
   {
     "name": "Wooden Shield",
     "texture": "wooden_shield",
     "base_damage": 5,
     "base_cost": 300,
-    "image_path": "assets/armor/wooden_shield.png"
+    "image_path": "../assets/shop_items/wooden_shield.png"
   },
   {
     "name": "Wooden Ring",
     "texture": "wooden_ring",
     "base_damage": 10,
     "base_cost": 1000,
-    "image_path": "assets/armor/wooden_ring.png"
+    "image_path": "../assets/shop_items/wooden_ring.png"
   },
   {
     "name": "Wooden Boots",
     "texture": "wooden_boots",
     "base_damage": 20,
     "base_cost": 2000,
-    "image_path": "assets/armor/wooden_boots.png"
+    "image_path": "../assets/shop_items/wooden_boots.png"
   }
 ]

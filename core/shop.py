@@ -63,13 +63,24 @@ class Shop(Entity):
         self.clear_list()
         for i, item in enumerate(self.available_items[:3]):
             b = Button(
-                parent=self.background, 
-                text=f'{item.name}\n{item.cost} gold', 
+                parent=self.background,
+                text=f'{item.name}\n{item.cost} gold',
                 y=0.1 - i*0.15,
                 scale=(0.6, 0.1)
             )
             b.on_click = lambda i=i: self.buy_item(i)
             self.item_list.append(b)
+
+            print(f"Trying to load texture from: {item.image_path}")
+            
+            sprite = Sprite(
+                parent=self.background,
+                texture=item.image_path,
+                scale=(0.1, 0.1),
+                position=(-0.25, 0.1 - i*0.15)
+            )
+            
+
 
     def show_armors(self):
         self.clear_list()
@@ -82,6 +93,14 @@ class Shop(Entity):
             )
             b.on_click = lambda i=i: self.upgrade_armor(i)
             self.item_list.append(b)
+
+            sprite = Sprite(
+                parent=self.background,
+                texture=armor.image_path,  
+                scale=(0.01, 0.01),
+                position=(-0.25, 0.1 - i*0.15)
+        )
+
 
     def buy_item(self, index):
         if index >= len(self.available_items):
