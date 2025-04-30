@@ -5,7 +5,7 @@
     "cost": 15,
     "stat_type": "damage",
     "stat_value": 2,
-    "description": "+2 Damage",
+    "description": "+2 Click Damage",
     "image_path": "../assets/shop_items/sword_wood.png"
   },
   {
@@ -14,7 +14,7 @@
     "cost": 150,
     "stat_type": "damage",
     "stat_value": 5,
-    "description": "+5 Damage",
+    "description": "+5 Click Damage",
     "image_path": "../assets/shop_items/sword_iron.png"
   },
   {
@@ -23,7 +23,7 @@
     "cost": 325,
     "stat_type": "damage",
     "stat_value": 15,
-    "description": "+15 Damage",
+    "description": "+15 Click Damage",
     "image_path": "../assets/shop_items/sword_steel.png"
   },
   {

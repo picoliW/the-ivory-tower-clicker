@@ -58,17 +58,20 @@ class Shop(Entity):
         for i in self.item_list:
             destroy(i)
         self.item_list.clear()
-
+            
     def show_items(self):
         self.clear_list()
-        for i, item in enumerate(self.available_items[:3]):
+        sorted_items = sorted(self.available_items, key=lambda item: item.cost)
+        for i, item in enumerate(sorted_items[:3]):
+            can_afford = self.player.gold >= item.cost
             b = Button(
                 parent=self.background,
-                text=f'{item.name}\n{item.cost} gold',
+                text=f'{item.name}\n{item.description}\n{item.cost} gold',
                 y=0.1 - i*0.15,
-                scale=(0.6, 0.1)
+                scale=(0.6, 0.1),
+                color=color.rgb(0, 224, 0) if can_afford else color.black66
             )
-            b.on_click = lambda i=i: self.buy_item(i)
+            b.on_click = lambda i=i: self.buy_item(self.available_items.index(sorted_items[i]))
             self.item_list.append(b)
             
             sprite = Sprite(
@@ -78,15 +81,17 @@ class Shop(Entity):
                 position=(-0.25, 0.1 - i*0.15)
             )
             self.item_list.append(sprite)
-            
+
     def show_armors(self):
         self.clear_list()
         for i, armor in enumerate(self.armor_list[:3]):
+            can_afford = self.player.gold >= armor.current_cost
             b = Button(
                 parent=self.background,
                 text=f'{armor.name}\nLevel {armor.level}\nCost {armor.current_cost}',
                 y=0.1 - i*0.15,
-                scale=(0.6, 0.1)
+                scale=(0.6, 0.1),
+                color=color.rgb(0, 224, 0) if can_afford else color.black66
             )
             b.on_click = lambda i=i: self.upgrade_armor(i)
             self.item_list.append(b)
