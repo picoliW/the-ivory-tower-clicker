@@ -70,18 +70,15 @@ class Shop(Entity):
             )
             b.on_click = lambda i=i: self.buy_item(i)
             self.item_list.append(b)
-
-            print(f"Trying to load texture from: {item.image_path}")
             
             sprite = Sprite(
                 parent=self.background,
                 texture=item.image_path,
-                scale=(0.1, 0.1),
+                scale=(0.01, 0.01),
                 position=(-0.25, 0.1 - i*0.15)
             )
+            self.item_list.append(sprite)
             
-
-
     def show_armors(self):
         self.clear_list()
         for i, armor in enumerate(self.armor_list[:3]):
@@ -100,6 +97,7 @@ class Shop(Entity):
                 scale=(0.01, 0.01),
                 position=(-0.25, 0.1 - i*0.15)
         )
+        self.item_list.append(sprite)
 
 
     def buy_item(self, index):
