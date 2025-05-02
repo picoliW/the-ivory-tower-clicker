@@ -34,7 +34,23 @@ class Shop(Entity):
         self.armor_button.on_click = self.show_armors
         self.close_button.on_click = self.hide
 
-        self.open_shop_button = Button(text='Shop', position=(-0.7, 0.45), scale=(0.15, 0.08), color=color.lime)
+        self.open_shop_button = Button(
+            parent=camera.ui,
+            position=(0.63, -0.4),
+            scale=(0.13, 0.09), 
+            color=color.orange,  
+            text='',
+            highlight_color=color.orange.tint(-0.2),  
+            pressed_color=color.orange.tint(-0.3), 
+        )
+
+        self.shop_icon = Entity(
+            parent=self.open_shop_button,
+            model='quad',
+            texture='../assets/shop.png', 
+            scale=(0.6, 0.9),  
+            z=-0.1,  
+        )
         self.open_shop_button.on_click = self.show
 
     def load_shop_items(self, filepath):
@@ -86,14 +102,13 @@ class Shop(Entity):
             sprite = Sprite(
                 parent=self.background,
                 texture=item.image_path,
-                scale=(0.01, 0.01),
+                scale=(0.01, 0.011),
                 position=(-0.25, 0.1 - i*0.15, 0) 
             )
             self.item_sprites.append(sprite)
 
         for sprite in self.armor_sprites:
             sprite.z = 10
-
 
     def show_armors(self):
         self.clear_list()
