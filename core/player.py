@@ -7,8 +7,6 @@ class Player:
         self.gold_per_second = 0
         self.floor = 1
         self.dash_unlocked = False
-
-
         
         self.idle_textures = [
             load_texture('../assets/Player/idle/idle_0'),
@@ -19,7 +17,7 @@ class Player:
 
         self.sprite = Entity(
             model='quad',
-            texture=self.idle_textures[0],  # começa já na idle
+            texture=self.idle_textures[0],  
             scale=(2.4, 2),
             position=(-5, -2),
             collider='box'
