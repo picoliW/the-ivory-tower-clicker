@@ -71,8 +71,13 @@ class BossFight(Entity):
         self.frame_speed = 0.1
         self.facing = 'right'
 
-        self.player.sprite.collider = BoxCollider(self.player.sprite, size=(1.2, 1.6, 1)) 
-        self.hitbox_debug.scale = (1.2, 1.6)
+        self.player.sprite.collider = BoxCollider(
+            self.player.sprite,
+            center=Vec3(0, -0.2, 0),  
+            size=Vec3(0.8, 0.8, 1)  
+        )
+        self.hitbox_debug.scale = (0.8, 0.8)
+        self.hitbox_debug.position = self.player.sprite.position + Vec3(0, -0.2, 0)
 
     def update(self):
         if not self.active:
