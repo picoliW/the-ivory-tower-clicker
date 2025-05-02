@@ -13,6 +13,9 @@ class Shop(Entity):
         self.player = player
         self.background_enabled = False
 
+        self.item_sprites = []
+        self.armor_sprites = []
+
         self.all_items = self.load_shop_items(shop_items_path)
         self.armor_list = self.load_armor_items(armor_items_path)
         self.available_items = [item for item in self.all_items if not item.purchased]
@@ -57,7 +60,13 @@ class Shop(Entity):
     def clear_list(self):
         for i in self.item_list:
             destroy(i)
+        for s in self.item_sprites:
+            destroy(s)
+        for s in self.armor_sprites:
+            destroy(s)
         self.item_list.clear()
+        self.item_sprites.clear()
+        self.armor_sprites.clear()
             
     def show_items(self):
         self.clear_list()
@@ -78,9 +87,13 @@ class Shop(Entity):
                 parent=self.background,
                 texture=item.image_path,
                 scale=(0.01, 0.01),
-                position=(-0.25, 0.1 - i*0.15)
+                position=(-0.25, 0.1 - i*0.15, 0) 
             )
-            self.item_list.append(sprite)
+            self.item_sprites.append(sprite)
+
+        for sprite in self.armor_sprites:
+            sprite.z = 10
+
 
     def show_armors(self):
         self.clear_list()
@@ -98,11 +111,15 @@ class Shop(Entity):
 
             sprite = Sprite(
                 parent=self.background,
-                texture=armor.image_path,  
+                texture=armor.image_path,
                 scale=(0.01, 0.01),
-                position=(-0.25, 0.1 - i*0.15)
-        )
-        self.item_list.append(sprite)
+                position=(-0.25, 0.1 - i*0.15, 0)  
+            )
+            self.armor_sprites.append(sprite)
+
+        for sprite in self.item_sprites:
+            sprite.z = 10
+
 
 
     def buy_item(self, index):
