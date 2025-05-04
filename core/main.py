@@ -25,6 +25,7 @@ pause_menu = PauseMenu()
 start_bossfight = Start_bossfight(player, enemy_manager)
 
 def update():
+    background.update()
     start_bossfight.update()
     ui.update()
 

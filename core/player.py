@@ -7,22 +7,22 @@ class Player:
         self.gold_per_second = 0
         self.floor = 1
         self.dash_unlocked = False
-        
-        self.idle_textures = [
-            load_texture('../assets/Player/idle/idle_0'),
-            load_texture('../assets/Player/idle/idle_1')
+
+        self.run_textures = [
+            load_texture(f'../assets/Player/PlayerMovement/Run/Right/run_right_{i}') for i in range(8)
         ]
-        self.idle_index = 0
-        self.idle_timer = 0
+        self.run_index = 0
+        self.run_timer = 0
+        self.run_frame_duration = 0.1  # ajuste a velocidade da animação
 
         self.sprite = Entity(
             model='quad',
-            texture=self.idle_textures[0],  
-            scale=(2.4, 2),
+            texture=self.run_textures[0],  
+            scale=(2, 1.6),
             position=(-5, -2),
             collider='box'
         )
-        
+
         # Temporizador para gold passivo
         self.gold_timer = 0
 
@@ -31,16 +31,12 @@ class Player:
         ]
         self.is_attacking = False
 
-    def play_attack_animation(self):
-        if self.is_attacking:
-            return 
-        
     def play_idle_animation(self):
-        self.idle_timer += time.dt
-        if self.idle_timer >= 0.5:  
-            self.idle_index = (self.idle_index + 1) % len(self.idle_textures)
-            self.sprite.texture = self.idle_textures[self.idle_index]
-            self.idle_timer = 0
+        self.run_timer += time.dt
+        if self.run_timer >= self.run_frame_duration:
+            self.run_index = (self.run_index + 1) % len(self.run_textures)
+            self.sprite.texture = self.run_textures[self.run_index]
+            self.run_timer = 0
 
     def play_attack_animation(self):
         if self.is_attacking:
@@ -58,11 +54,10 @@ class Player:
 
         def reset_texture():
             self.is_attacking = False
-            self.idle_index = 0
-            self.sprite.texture = self.idle_textures[self.idle_index]
+            self.run_index = 0
+            self.sprite.texture = self.run_textures[self.run_index]
 
         invoke(reset_texture, delay=duracao_total)
-
 
     def update(self):
         self.gold_timer += time.dt
@@ -72,7 +67,7 @@ class Player:
 
         if not self.is_attacking:
             self.play_idle_animation()
-            
+
     def attack(self, enemy):
         if hasattr(enemy, 'take_damage'):
             enemy.take_damage(self.damage)

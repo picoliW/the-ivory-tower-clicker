@@ -11,6 +11,12 @@ class Background(Entity):
             texture_scale=(1, 1),
             name='background'
         )
-        self.texture.filtering = None
-        self.texture.wrap = 'clamp'
 
+        self.texture.filtering = None
+        self.texture.wrap = 'repeat'  # permite repetir a imagem automaticamente
+        self.offset = 0
+        self.scroll_speed = 0.06  # ajuste a velocidade conforme preferir
+
+    def update(self):
+        self.offset += time.dt * self.scroll_speed
+        self.texture_offset = (self.offset % 1, 0)  
