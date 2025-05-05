@@ -17,10 +17,10 @@ window.fullscreen = True
 window.size = (monitor.width, monitor.height)
 
 player = Player()
-enemy_manager = EnemyManager(player)
 shop = Shop(player)
-ui = UI(player, enemy_manager)
 background = Background()
+enemy_manager = EnemyManager(player, background)
+ui = UI(player, enemy_manager)
 pause_menu = PauseMenu()
 start_bossfight = Start_bossfight(player, enemy_manager)
 
@@ -29,6 +29,7 @@ def update():
     start_bossfight.update()
     ui.update()
     enemy_manager.update()
+    
 
 def input(key):
     if key == 'left mouse down' and not pause_menu.enabled:

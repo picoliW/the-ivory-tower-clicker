@@ -79,8 +79,9 @@ class Enemy(Entity):
 
 
 class EnemyManager:
-    def __init__(self, player):
+    def __init__(self, player, background):
         self.player = player
+        self.background = background
         self.enemies = []
         self.enemies_defeated = 0
         self.current_enemy = None
@@ -109,6 +110,8 @@ class EnemyManager:
         enemy.player_ref = self.player  
         self.enemies.append(enemy)
         self.current_enemy = enemy
+        self.player.is_colliding_with_enemy = False 
+        self.background.should_scroll = True
 
     def update(self):
         if not self.current_enemy:
@@ -118,12 +121,17 @@ class EnemyManager:
             self.current_enemy.x -= self.current_enemy.speed * time.dt
             
             self.current_enemy.is_colliding = (
-                abs(self.current_enemy.x - self.player.sprite.x) < 1.5 and  
+                abs(self.current_enemy.x - self.player.sprite.x) < 1.5 and
                 abs(self.current_enemy.y - self.player.sprite.y) < 1
             )
             
             if self.current_enemy.is_colliding:
                 self.current_enemy.moving = False
+                self.player.is_colliding_with_enemy = True  
+                self.background.should_scroll = False
+            else:
+                self.player.is_colliding_with_enemy = False
+                self.background.should_scroll = True
                 
         if self.current_enemy.health <= 0:
             self.current_enemy.die()  
