@@ -8,6 +8,14 @@ class BossFight(Entity):
         self.on_win = on_win
         self.on_fail = on_fail
 
+        self.dash_speed = 15
+        self.dash_duration = 0.2
+        self.dash_cooldown = 1.5
+        self.dash_timer = 0
+        self.dash_cooldown_timer = 0
+        self.dashing = False
+        self.has_dash_powerup = True  
+        self.dash_direction = Vec2(0, 0)
         self.active = True
         self.timer = 10
         self.projectiles = []
@@ -123,6 +131,27 @@ class BossFight(Entity):
 
         self.player.sprite.x = clamp(new_x, min_x, max_x)
         self.player.sprite.y = clamp(new_y, min_y, max_y)
+
+        if self.has_dash_powerup and not self.dashing and self.dash_cooldown_timer <= 0:
+            if held_keys['e'] and move != Vec2(0, 0):
+                self.dashing = True
+                self.dash_timer = self.dash_duration
+                self.dash_cooldown_timer = self.dash_cooldown
+                self.dash_direction = move.normalized()
+
+        if self.dashing:
+            dash_move = self.dash_direction * self.dash_speed * time.dt
+            dash_x = self.player.sprite.x + dash_move.x
+            dash_y = self.player.sprite.y + dash_move.y
+            self.player.sprite.x = clamp(dash_x, min_x, max_x)
+            self.player.sprite.y = clamp(dash_y, min_y, max_y)
+
+            self.dash_timer -= time.dt
+            if self.dash_timer <= 0:
+                self.dashing = False
+
+        if self.dash_cooldown_timer > 0:
+            self.dash_cooldown_timer -= time.dt
 
         # Animação de andar
         moving = move.x != 0
