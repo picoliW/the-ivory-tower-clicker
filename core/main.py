@@ -24,16 +24,6 @@ ui = UI(player, enemy_manager)
 pause_menu = PauseMenu()
 start_bossfight = Start_bossfight(player, enemy_manager)
 
-
-# Botão atrás do dinheiro para iniciar a boss fight (DEBUG)
-start_button = Button(
-    text='inicia boss',
-    color=color.azure,
-    scale=(0.2, 0.1),
-    position=(0, 0.4),
-    on_click=start_bossfight.start_bossfight
-)
-
 def update():
     background.update()
     start_bossfight.update()
