@@ -33,7 +33,7 @@ def update():
 def input(key):
     if key == 'left mouse down' and not pause_menu.enabled:
         for enemy in enemy_manager.enemies:
-            if enemy.hovered:
+            if enemy.hovered and enemy.is_colliding:
                 player.attack(enemy)
                 break
     if key == 'escape':

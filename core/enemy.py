@@ -16,6 +16,7 @@ class Enemy(Entity):
         self.type = enemy_type
         self.speed = 1.0 
         self.moving = True
+        self.is_colliding = False 
 
         # Barra de vida
         self.health_bar = Entity(
@@ -116,8 +117,12 @@ class EnemyManager:
         if self.current_enemy.moving:
             self.current_enemy.x -= self.current_enemy.speed * time.dt
             
-            if self.current_enemy.x <= self.player.sprite.x + 1: 
-                self.current_enemy.x = self.player.sprite.x + 1
+            self.current_enemy.is_colliding = (
+                abs(self.current_enemy.x - self.player.sprite.x) < 1.5 and  
+                abs(self.current_enemy.y - self.player.sprite.y) < 1
+            )
+            
+            if self.current_enemy.is_colliding:
                 self.current_enemy.moving = False
                 
         if self.current_enemy.health <= 0:
