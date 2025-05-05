@@ -40,7 +40,6 @@ class BossFight(Entity):
             z=0.8
         )
         
-        # Bordas - valor de z mais alto (mais na frente)
         self.border_top = Entity(model='quad', color=color.white, scale=(w, thickness), y=h/2 + offset_y, z=0.5)
         self.border_bottom = Entity(model='quad', color=color.white, scale=(w, thickness), y=-h/2 + offset_y, z=0.5)
         self.border_left = Entity(model='quad', color=color.white, scale=(thickness, h), x=-w/2, y=offset_y, z=0.5)

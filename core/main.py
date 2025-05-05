@@ -28,6 +28,7 @@ def update():
     background.update()
     start_bossfight.update()
     ui.update()
+    enemy_manager.update()
 
 def input(key):
     if key == 'left mouse down' and not pause_menu.enabled:

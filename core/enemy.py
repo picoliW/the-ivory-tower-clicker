@@ -14,6 +14,8 @@ class Enemy(Entity):
         self.max_health = health
         self.health = health
         self.type = enemy_type
+        self.speed = 1.0 
+        self.moving = True
 
         # Barra de vida
         self.health_bar = Entity(
@@ -33,16 +35,6 @@ class Enemy(Entity):
             position=(0, 0.7),
             origin=(0, 0),
             z=0.1)
-            
-        # Texto da vida
-        self.health_text = Text(
-            parent=self,
-            text=f"{self.health}/{self.max_health}",
-            position=(0, 0.7),
-            origin=(0, 0),
-            scale=1.5,
-            background=True,
-            background_color=color.black)
 
         try:
             self.death_sound = Audio(f'../assets/sounds/enemySounds/enemy_{self.type}_die.wav', autoplay=False)
@@ -59,9 +51,6 @@ class Enemy(Entity):
         red_amount = int(255 * (1 - health_percent))
         green_amount = int(255 * health_percent)
         self.health_bar.color = rgb(red_amount, green_amount, 0)
-        
-        self.health_text.text = f"{int(self.health)}/{int(self.max_health)}"
-        self.health_text.position = (0.4 - (0.4 * health_percent), 0.7)
 
     def take_damage(self, amount):
         self.health -= amount
@@ -81,8 +70,11 @@ class Enemy(Entity):
             self.death_sound.play()
         destroy(self.health_bar)
         destroy(self.health_bar_bg)
-        destroy(self.health_text)
         destroy(self)
+
+    def update(self):
+        if self.moving:
+            self.x -= self.speed * time.dt
 
 
 class EnemyManager:
@@ -112,12 +104,23 @@ class EnemyManager:
         enemy_type = randint(1, 3)
         health = 10 + (self.player.floor * 5)
         
-        enemy = Enemy(enemy_type, health)
+        enemy = Enemy(enemy_type, health, position=(10, -2)) 
+        enemy.player_ref = self.player  
         self.enemies.append(enemy)
         self.current_enemy = enemy
 
     def update(self):
-        if self.current_enemy and self.current_enemy.health <= 0:
+        if not self.current_enemy:
+            return
+            
+        if self.current_enemy.moving:
+            self.current_enemy.x -= self.current_enemy.speed * time.dt
+            
+            if self.current_enemy.x <= self.player.sprite.x + 1: 
+                self.current_enemy.x = self.player.sprite.x + 1
+                self.current_enemy.moving = False
+                
+        if self.current_enemy.health <= 0:
             self.current_enemy.die()  
             self.enemies_defeated += 1
             self.player.gold += 5 + (self.player.floor * 2)

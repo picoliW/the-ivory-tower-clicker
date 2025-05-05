@@ -13,9 +13,9 @@ class Background(Entity):
         )
 
         self.texture.filtering = None
-        self.texture.wrap = 'repeat'  # permite repetir a imagem automaticamente
+        self.texture.wrap = 'repeat'  
         self.offset = 0
-        self.scroll_speed = 0.06  # ajuste a velocidade conforme preferir
+        self.scroll_speed = 0.06  
 
     def update(self):
         self.offset += time.dt * self.scroll_speed
