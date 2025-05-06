@@ -1,5 +1,6 @@
 from ursina import *
 import random
+import json
 
 class LoadingScreen(Entity):
     def __init__(self, on_complete):
@@ -35,9 +36,11 @@ class LoadingScreen(Entity):
             parent=self
         )
 
+        self.tips = self.load_tips()
+
         self.tips_text = Text(
-            "You can buy items in the shop", 
-            origin=(2.4, 14), 
+            random.choice(self.tips), 
+            origin=(1.4, 14), 
             scale=7,
             y=0.2, 
             parent=self
@@ -48,6 +51,15 @@ class LoadingScreen(Entity):
         self.timer = 0
         self.duration = random.uniform(2, 4)
         self.on_complete = on_complete
+
+    def load_tips(self):
+        try:
+            with open('data/tips.json', 'r') as file:
+                data = json.load(file)
+                return data['tips']
+        except FileNotFoundError:
+            print("Error: 'tips.json' not found.")
+            return []
 
     def update(self):
         self.frame_time += time.dt
