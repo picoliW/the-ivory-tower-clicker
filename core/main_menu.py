@@ -10,10 +10,16 @@ class MainMenu(Entity):
         base_height = 10
         base_width = base_height * window_ratio
 
+        self.frames = [load_texture(f'../assets/background_video/frame_{i}.png') for i in range(56)]
+        self.frame_index = 0
+        self.is_forward = True
+        self.frame_timer = 0
+        self.frame_delay = 0.1
+
         self.menu_bg = Entity(
             model='quad',
             scale=(base_width, base_height),
-            texture='../assets/unnamed.png',
+            texture=self.frames[0],
             z=1,
             parent=self
         )
@@ -28,17 +34,16 @@ class MainMenu(Entity):
             on_click=self.start_game,
             parent=self
         )
-
         self.start_button.text_entity.scale = (4, 9)
 
         self.options_button = Button(
             text='Opções',
             scale=(2.2, .7),
             y=-3,
-            x=-0,
+            x=0,
             color=color.gray,
             text_color=color.white,
-            on_click=self.open_options, 
+            on_click=self.open_options,
             parent=self
         )
         self.options_button.text_entity.scale = (4, 9)
@@ -58,25 +63,43 @@ class MainMenu(Entity):
         self.game_logo = Entity(
             parent=self,
             model='quad',
-            texture='../assets/game_logo.png', 
-            scale=(6, 5),  
-            position=(0, 2.5) 
+            texture='../assets/game_logo.png',
+            scale=(6, 5),
+            position=(0, 2.5)
         )
 
         self.dev_logo = Entity(
             parent=self,
             model='quad',
-            texture='../assets/dev_logo.png', 
-            scale=(2, 1),  
-            position=(6.4, -3.7) 
+            texture='../assets/dev_logo.png',
+            scale=(2, 1),
+            position=(6.4, -3.7)
         )
 
         self.disable()
+        self.update = self.animate_background
+
+    def animate_background(self):
+        self.frame_timer += time.dt
+        if self.frame_timer >= self.frame_delay:
+            self.frame_timer = 0
+            self.menu_bg.texture = self.frames[self.frame_index]
+
+            # Ping-pong da animação
+            if self.is_forward:
+                self.frame_index += 1
+                if self.frame_index >= len(self.frames):
+                    self.frame_index = len(self.frames) - 2
+                    self.is_forward = False
+            else:
+                self.frame_index -= 1
+                if self.frame_index < 0:
+                    self.frame_index = 1
+                    self.is_forward = True
 
     def start_game(self):
         self.disable()
         self.start_game_callback()
-    
+
     def open_options(self):
         print("Abrir menu de opções (futuro)")
-
