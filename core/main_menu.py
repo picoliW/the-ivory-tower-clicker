@@ -28,6 +28,15 @@ class MainMenu(Entity):
             parent=self
         )
 
+        
+        self.copyright_text = Text(
+            text="© 2025 LEG Studios. The Ivory Tower™ is a trademark of LEG.\nAll rights reserved.",
+            origin=(0, 14),
+            color=color.white,
+            scale=5.5,
+            parent=self
+        )
+
         self.start_button = Button(
             text='Start Game',
             scale=(2.2, .7),
