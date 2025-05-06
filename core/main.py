@@ -9,6 +9,7 @@ from pause_menu import PauseMenu
 from start_bossfight import Start_bossfight
 from main_menu import MainMenu
 from splash_screen import SplashScreen
+from loading_screen import LoadingScreen
 
 app = Ursina()
 
@@ -21,19 +22,22 @@ window.size = (monitor.width, monitor.height)
 game_started = False
 
 def start_game():
-    global game_started, player, shop, background, enemy_manager, ui, pause_menu, start_bossfight
-
     splash_screen.disable()
     main_menu.disable()
-    game_started = True
 
-    player = Player()
-    shop = Shop(player)
-    background = Background()
-    enemy_manager = EnemyManager(player, background)
-    ui = UI(player, enemy_manager)
-    pause_menu = PauseMenu()
-    start_bossfight = Start_bossfight(player, enemy_manager)
+    def load_game():
+        global game_started, player, shop, background, enemy_manager, ui, pause_menu, start_bossfight
+
+        game_started = True
+        player = Player()
+        shop = Shop(player)
+        background = Background()
+        enemy_manager = EnemyManager(player, background)
+        ui = UI(player, enemy_manager)
+        pause_menu = PauseMenu()
+        start_bossfight = Start_bossfight(player, enemy_manager)
+
+    loading_screen = LoadingScreen(on_complete=load_game)
 
 splash_screen = SplashScreen()
 
