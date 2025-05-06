@@ -1,4 +1,3 @@
-# main_menu.py
 from ursina import *
 
 class MainMenu(Entity):
@@ -20,6 +19,22 @@ class MainMenu(Entity):
         )
 
         self.start_button.text_entity.scale = (4, 9)
+
+        self.game_logo = Entity(
+            parent=self,
+            model='quad',
+            texture='../assets/game_logo.png', 
+            scale=(6, 5),  
+            position=(0, 2.5) 
+        )
+
+        self.dev_logo = Entity(
+            parent=self,
+            model='quad',
+            texture='../assets/dev_logo.png', 
+            scale=(2, 1),  
+            position=(6.4, -3.7) 
+        )
 
         self.disable()
 
