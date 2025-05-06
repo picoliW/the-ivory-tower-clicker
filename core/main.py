@@ -8,6 +8,7 @@ from screeninfo import get_monitors
 from pause_menu import PauseMenu
 from start_bossfight import Start_bossfight
 from main_menu import MainMenu
+from splash_screen import SplashScreen
 
 app = Ursina()
 
@@ -33,17 +34,8 @@ def start_game():
     ui = UI(player, enemy_manager)
     pause_menu = PauseMenu()
     start_bossfight = Start_bossfight(player, enemy_manager)
-    
-splash_screen = Entity()
 
-splash_logo = Entity(
-    parent=splash_screen,
-    model='quad',
-    texture='../assets/splash_screen.png',
-    position=(0, 0, -10),  # posição central e em frente à câmera
-    scale=(1.5, 0.75),
-    color=color.white
-)
+splash_screen = SplashScreen()
 
 main_menu = MainMenu(start_game)
 main_menu.disable()
