@@ -5,7 +5,18 @@ class MainMenu(Entity):
         super().__init__()
         self.start_game_callback = start_game_callback
 
-        self.menu_bg = Entity(model='quad', scale=(20, 20), color=color.black, z=1, parent=self)
+        window_ratio = window.aspect_ratio
+
+        base_height = 10
+        base_width = base_height * window_ratio
+
+        self.menu_bg = Entity(
+            model='quad',
+            scale=(base_width, base_height),
+            texture='../assets/unnamed.png',
+            z=1,
+            parent=self
+        )
 
         self.start_button = Button(
             text='Start Game',
