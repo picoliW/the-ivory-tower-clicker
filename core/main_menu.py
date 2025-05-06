@@ -16,6 +16,10 @@ class MainMenu(Entity):
         self.frame_timer = 0
         self.frame_delay = 0.1
 
+        self.bg_music = Audio('../assets/sounds/main_menu_song.mp3', loop=True, autoplay=False)
+        self.music_fade_out_start = 5  
+        self.is_fading_out = False
+
         self.menu_bg = Entity(
             model='quad',
             scale=(base_width, base_height),
@@ -85,7 +89,6 @@ class MainMenu(Entity):
             self.frame_timer = 0
             self.menu_bg.texture = self.frames[self.frame_index]
 
-            # Ping-pong da animação
             if self.is_forward:
                 self.frame_index += 1
                 if self.frame_index >= len(self.frames):
@@ -96,6 +99,31 @@ class MainMenu(Entity):
                 if self.frame_index < 0:
                     self.frame_index = 1
                     self.is_forward = True
+        
+        if self.bg_music.playing:
+            remaining_time = self.bg_music.length - self.bg_music.time
+            if remaining_time < self.music_fade_out_start and not self.is_fading_out:
+                self.is_fading_out = True
+            
+            if self.is_fading_out:
+                fade_amount = remaining_time / self.music_fade_out_start
+                self.bg_music.volume = max(0, fade_amount)
+                
+                if remaining_time <= 0:
+                    self.bg_music.stop()
+                    self.bg_music.play()
+                    self.bg_music.volume = 1
+                    self.is_fading_out = False
+
+    def enable(self):
+        super().enable()
+        self.bg_music.play()
+        self.bg_music.volume = 1
+        self.is_fading_out = False
+
+    def disable(self):
+        super().disable()
+        self.bg_music.stop()
 
     def start_game(self):
         self.disable()
