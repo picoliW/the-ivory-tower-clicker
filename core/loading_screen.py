@@ -7,12 +7,13 @@ class LoadingScreen(Entity):
 
         self.bg = Entity(model='quad', color=color.black, scale=(20, 20), z=1, parent=self)
 
-        self.text = Text(
+        self.loading_text = Text(
             "Loading...", 
             origin=(-8, 20), 
             scale=7,
             y=0.2, 
-            parent=self)
+            parent=self
+        )
 
         self.spinner_frames = [f'../assets/loading_spinner/frame_{i}.png' for i in range(12)]
         self.current_frame = 0
@@ -26,6 +27,23 @@ class LoadingScreen(Entity):
             position=(6.4, -3.7),
             parent=self
         )
+
+        self.gradient_line = Entity(
+            model='quad',
+            scale=(10, 0.01),  
+            position=(-5, -2),
+            parent=self
+        )
+
+        self.tips_text = Text(
+            "You can buy items in the shop", 
+            origin=(2.4, 14), 
+            scale=7,
+            y=0.2, 
+            parent=self
+        )
+        self.tips_text.color = color.white
+
 
         self.timer = 0
         self.duration = random.uniform(2, 4)
