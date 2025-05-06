@@ -31,38 +31,38 @@ class MainMenu(Entity):
         self.start_button = Button(
             text='Start Game',
             scale=(2.2, .7),
-            y=-3,
-            x=-4,
-            color=color.azure,        
+            position=(0, 1),
+            color=color.clear,        
             text_color=color.white,
             on_click=self.start_game,
             parent=self
         )
-        self.start_button.text_entity.scale = (4, 9)
+        self.start_button.text_entity.scale = (6, 13)
+        self.apply_hover_effect(self.start_button)
 
         self.options_button = Button(
-            text='Opções',
+            text='Options',
             scale=(2.2, .7),
-            y=-3,
-            x=0,
-            color=color.gray,
+            position=(0, .5),
+            color=color.clear,
             text_color=color.white,
             on_click=self.open_options,
             parent=self
         )
-        self.options_button.text_entity.scale = (4, 9)
+        self.options_button.text_entity.scale = (6, 13)
+        self.apply_hover_effect(self.options_button)
 
         self.quit_button = Button(
             text='Quit',
             scale=(2.2, .7),
-            y=-3,
-            x=4,
-            color=color.red,
+            position=(0, -1),
+            color=color.clear,
             text_color=color.white,
             on_click=application.quit,
             parent=self
         )
-        self.quit_button.text_entity.scale = (4, 9)
+        self.quit_button.text_entity.scale = (6, 13)
+        self.apply_hover_effect(self.quit_button)
 
         self.game_logo = Entity(
             parent=self,
@@ -131,3 +131,20 @@ class MainMenu(Entity):
 
     def open_options(self):
         print("Abrir menu de opções (futuro)")
+
+    def apply_hover_effect(self, button):
+        original_scale = Vec3(6, 13, 1)
+        hover_scale = original_scale * 1.1
+        original_color = color.white
+        hover_color = color.azure
+
+        def update_hover():
+            if button.hovered:
+                button.text_entity.scale = lerp(button.text_entity.scale, hover_scale, 8 * time.dt)
+                button.text_entity.color = hover_color
+            else:
+                button.text_entity.scale = lerp(button.text_entity.scale, original_scale, 8 * time.dt)
+                button.text_entity.color = original_color
+
+        button.update = update_hover
+
