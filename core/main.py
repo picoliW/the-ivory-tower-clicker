@@ -41,9 +41,8 @@ main_menu = MainMenu(start_game)
 main_menu.disable()
 
 def show_main_menu():
-    splash_screen.disable()
-    main_menu.enable()
-
+    splash_screen.fade_out(on_complete=main_menu.enable)
+    
 invoke(show_main_menu, delay=3)
 
 def update():
