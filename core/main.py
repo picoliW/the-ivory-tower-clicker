@@ -7,6 +7,7 @@ from background import Background
 from screeninfo import get_monitors
 from pause_menu import PauseMenu
 from start_bossfight import Start_bossfight
+from main_menu import MainMenu
 
 app = Ursina()
 
@@ -16,15 +17,47 @@ window.borderless = True
 window.fullscreen = True
 window.size = (monitor.width, monitor.height)
 
-player = Player()
-shop = Shop(player)
-background = Background()
-enemy_manager = EnemyManager(player, background)
-ui = UI(player, enemy_manager)
-pause_menu = PauseMenu()
-start_bossfight = Start_bossfight(player, enemy_manager)
+game_started = False
+
+def start_game():
+    global game_started, player, shop, background, enemy_manager, ui, pause_menu, start_bossfight
+
+    splash_screen.disable()
+    main_menu.disable()
+    game_started = True
+
+    player = Player()
+    shop = Shop(player)
+    background = Background()
+    enemy_manager = EnemyManager(player, background)
+    ui = UI(player, enemy_manager)
+    pause_menu = PauseMenu()
+    start_bossfight = Start_bossfight(player, enemy_manager)
+    
+splash_screen = Entity()
+
+splash_logo = Entity(
+    parent=splash_screen,
+    model='quad',
+    texture='../assets/splash_screen.png',
+    position=(0, 0, -10),  # posição central e em frente à câmera
+    scale=(1.5, 0.75),
+    color=color.white
+)
+
+main_menu = MainMenu(start_game)
+main_menu.disable()
+
+def show_main_menu():
+    splash_screen.disable()
+    main_menu.enable()
+
+invoke(show_main_menu, delay=3)
 
 def update():
+    if not game_started:
+        return
+
     background.update()
     start_bossfight.update()
     ui.update()
@@ -32,6 +65,9 @@ def update():
     
 
 def input(key):
+    if not game_started:
+        return
+
     if key == 'left mouse down' and not pause_menu.enabled:
         for enemy in enemy_manager.enemies:
             if enemy.hovered and enemy.is_colliding:
