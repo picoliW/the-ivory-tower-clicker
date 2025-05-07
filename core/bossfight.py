@@ -132,7 +132,7 @@ class BossFight(Entity):
         self.player.sprite.x = clamp(new_x, min_x, max_x)
         self.player.sprite.y = clamp(new_y, min_y, max_y)
 
-        if self.has_dash_powerup and not self.dashing and self.dash_cooldown_timer <= 0:
+        if self.player.dash_unlocked and not self.dashing and self.dash_cooldown_timer <= 0:
             if held_keys['e'] and move != Vec2(0, 0):
                 self.dashing = True
                 self.dash_timer = self.dash_duration
