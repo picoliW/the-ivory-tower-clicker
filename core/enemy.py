@@ -1,6 +1,7 @@
 from random import randint
 from ursina import *
 from ursina.color import rgb
+from dashability import DashAbility
 
 class Enemy(Entity):
     def __init__(self, enemy_type, health, position=(2, -2)):
@@ -17,6 +18,7 @@ class Enemy(Entity):
         self.speed = 1.0 
         self.moving = True
         self.is_colliding = False 
+
 
         # Barra de vida
         self.health_bar = Entity(
@@ -118,7 +120,9 @@ class EnemyManager:
             return
             
         if self.current_enemy.moving:
-            self.current_enemy.x -= self.current_enemy.speed * time.dt
+            dash = DashAbility.instance
+            speed_multiplier = 2 if dash and dash.active else 1
+            self.current_enemy.x -= self.current_enemy.speed * time.dt * speed_multiplier
             
             self.current_enemy.is_colliding = (
                 abs(self.current_enemy.x - self.player.sprite.x) < 1.5 and

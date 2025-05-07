@@ -1,12 +1,14 @@
 from ursina import *
+from dashability import DashAbility
 
 class UI:
     def __init__(self, player, enemy_manager):
         self.player = player
         self.enemy_manager = enemy_manager
-        
+
         self.create_main_ui()
         self.create_hud_ui()
+        self.create_run_button()
 
     def create_main_ui(self):
         self.floor_text = Text(text=f'Floor: {self.player.floor}', position=(-0.8, 0.45), scale=1.5)
@@ -53,7 +55,16 @@ class UI:
 
         self.gold_text.enabled = False
 
+    def create_run_button(self):
+        self.run_button = Button(
+            text='Run!',
+            position=(0.80, -0.4),
+            scale=(0.10, 0.10)
+        )
+        self.dash_ability = DashAbility(self.run_button)
+
     def update(self):
         self.floor_text.text = f'Floor: {self.player.floor}'
         self.gold_value_text.text = str(self.player.gold)
         self.enemy_count_text.text = f'Enemies: {self.enemy_manager.enemies_defeated}/5'
+        self.dash_ability.update()

@@ -15,9 +15,9 @@ app = Ursina()
 
 monitor = get_monitors()[0]
 window.title = 'The Ivory Tower'
-window.borderless = True
+window.borderless = False
 window.fullscreen = True
-window.size = (monitor.width, monitor.height)
+window.size = (1920, 1080)
 
 game_started = False
 
