@@ -4,7 +4,7 @@ from dashability import DashAbility
 class Background(Entity):
     def __init__(self, texture='../assets/bg.png'):
         window_ratio = window.aspect_ratio  
-        base_height = 12.5  
+        base_height = 14
         base_width = base_height * window_ratio
 
         super().__init__(
@@ -13,7 +13,6 @@ class Background(Entity):
             scale=(base_width, base_height),
             position=(0, 0),
             z=10,
-            texture_scale=(1, 1),
             name='background'
         )
 
@@ -30,7 +29,3 @@ class Background(Entity):
             current_speed = self.base_scroll_speed * speed_multiplier
             self.offset += time.dt * current_speed
             self.texture_offset = (self.offset % 1, 0)
-
-        window_ratio = window.aspect_ratio
-        base_height = 12.5
-        self.scale = (base_height * window_ratio, base_height)
