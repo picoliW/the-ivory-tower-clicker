@@ -58,7 +58,7 @@ class UI:
     def create_run_button(self):
         self.run_button = Button(
             text='Run!',
-            position=(0.80, -0.4),
+            position=(-0.70, -0.4),
             scale=(0.10, 0.10)
         )
         self.dash_ability = DashAbility(self.run_button)
