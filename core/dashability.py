@@ -31,7 +31,8 @@ class DashAbility:
     def activate(self):
         self.active = True
         self.activation_time = time.time()
-        self.set_button_color(color.orange)
+        self.button.icon = '../assets/dash_azul.png' 
+        self.button.icon.scale = (1,1)
         invoke(self.deactivate, delay=self.duration)
 
     def deactivate(self):
