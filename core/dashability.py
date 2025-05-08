@@ -63,6 +63,10 @@ class DashAbility:
         else:
             self.button.tooltip.text = 'Run!'
 
+
+        if held_keys['space']:
+            self.toggle()
+
     def set_button_color(self, color_value):
         self.button.color = color_value
         self.button.highlight_color = color_value.tint(-0.2)
