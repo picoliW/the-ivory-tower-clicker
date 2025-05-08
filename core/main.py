@@ -17,7 +17,7 @@ monitor = get_monitors()[0]
 window.title = 'The Ivory Tower'
 window.borderless = False
 window.fullscreen = True
-window.size = (1920, 1080)
+window.size = (monitor.width, monitor.height)
 
 game_started = False
 
