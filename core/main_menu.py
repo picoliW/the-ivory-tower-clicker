@@ -1,4 +1,5 @@
 from ursina import *
+from options_menu import OptionsMenu
 
 class MainMenu(Entity):
     def __init__(self, start_game_callback):
@@ -139,7 +140,11 @@ class MainMenu(Entity):
         self.start_game_callback()
 
     def open_options(self):
-        print("Abrir menu de opções (futuro)")
+        if not hasattr(self, 'options_popup') or not self.options_popup:
+            self.options_popup = OptionsMenu(on_close=self.clear_options_popup)
+
+    def clear_options_popup(self):
+        self.options_popup = None
 
     def apply_hover_effect(self, button):
         original_scale = Vec3(6, 13, 1)
