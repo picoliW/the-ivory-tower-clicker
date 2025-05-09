@@ -4,6 +4,8 @@ class OptionsMenu(Entity):
     def __init__(self, on_close=None):
         super().__init__()
         self.on_close = on_close
+        self.login_button = None
+        self.register_button = None
 
         self.background = Entity(
             parent=self,
@@ -78,8 +80,40 @@ class OptionsMenu(Entity):
 
     def account_clicked(self):
         print("Abrindo conta...")
+        
+        if self.login_button:
+            destroy(self.login_button)
+            destroy(self.register_button)
+            self.login_button = None
+            self.register_button = None
+            return
+            
+        self.login_button = Button(
+            text="Login",
+            scale=(1.5, 0.4),
+            position=(1.8, 1.1),
+            parent=self,
+            color=color.clear,
+            text_size=.5,
+            z=-1
+        )
+        
+        self.register_button = Button(
+            text="Registrar",
+            scale=(1.5, 0.4),
+            position=(1.8, 0.6), 
+            parent=self,
+            color=color.clear,
+            text_size=.5,
+            z=-1
+        )
 
     def close(self):
+        if self.login_button:
+            destroy(self.login_button)
+        if self.register_button:
+            destroy(self.register_button)
+            
         if self.on_close:
             self.on_close()
         destroy(self)
