@@ -1,0 +1,50 @@
+from ursina import *
+
+class LoginForm(Entity):
+    def __init__(self, parent=None):
+        super().__init__(parent=parent)
+
+        self.email_input = InputField(
+            placeholder='E-mail',
+            scale=(2, 0.4),
+            position=(0, -0.5),
+            parent=self,
+            z=-1.1
+        )
+
+        self.password_input = InputField(
+            placeholder='Senha',
+            scale=(2, 0.4),
+            position=(0, -1.2),
+            parent=self,
+            z=-1.1
+        )
+
+
+class RegisterForm(Entity):
+    def __init__(self, parent=None):
+        super().__init__(parent=parent)
+
+        self.email_input = InputField(
+            placeholder='E-mail',
+            scale=(1.5, 0.4),
+            position=(1.8, 0.4),
+            parent=self,
+            z=-1.1
+        )
+
+        self.password_input = InputField(
+            placeholder='Senha',
+            scale=(1.5, 0.4),
+            position=(1.8, 0),
+            parent=self,
+            z=-1.1
+        )
+
+        self.confirm_password_input = InputField(
+            placeholder='Confirmar Senha',
+            scale=(1.5, 0.4),
+            position=(1.8, -0.4),
+            parent=self,
+            z=-1.1
+        )

@@ -1,4 +1,5 @@
 from ursina import *
+from auth_forms import LoginForm, RegisterForm
 
 class OptionsMenu(Entity):
     def __init__(self, on_close=None):
@@ -6,6 +7,8 @@ class OptionsMenu(Entity):
         self.on_close = on_close
         self.login_button = None
         self.register_button = None
+        self.login_form = None
+        self.register_form = None
 
         self.background = Entity(
             parent=self,
@@ -76,18 +79,26 @@ class OptionsMenu(Entity):
         )
 
     def settings_clicked(self):
-        print("Abrindo configurações...")
+        for btn in [self.login_button, self.register_button]:
+            if btn: destroy(btn)
+
+        for form in [self.login_form, self.register_form]:
+            if form: destroy(form)
+
+        self.login_button = self.register_button = None
+        self.login_form = self.register_form = None
 
     def account_clicked(self):
-        print("Abrindo conta...")
-        
-        if self.login_button:
-            destroy(self.login_button)
-            destroy(self.register_button)
-            self.login_button = None
-            self.register_button = None
+        if self.login_button or self.register_button:
+            for btn in [self.login_button, self.register_button]:
+                if btn: destroy(btn)
+            for form in [self.login_form, self.register_form]:
+                if form: destroy(form)
+
+            self.login_button = self.register_button = None
+            self.login_form = self.register_form = None
             return
-            
+
         self.login_button = Button(
             text="Login",
             scale=(1.5, 0.4),
@@ -95,9 +106,10 @@ class OptionsMenu(Entity):
             parent=self,
             color=color.clear,
             text_size=.5,
-            z=-1
+            z=-1,
+            on_click=self.show_login_form
         )
-        
+
         self.register_button = Button(
             text="Registrar",
             scale=(1.5, 0.4),
@@ -105,15 +117,33 @@ class OptionsMenu(Entity):
             parent=self,
             color=color.clear,
             text_size=.5,
-            z=-1
+            z=-1,
+            on_click=self.show_register_form
         )
 
+    def show_login_form(self):
+        if self.register_form:
+            destroy(self.register_form)
+            self.register_form = None
+
+        if not self.login_form:
+            self.login_form = LoginForm(parent=self)
+
+    def show_register_form(self):
+        if self.login_form:
+            destroy(self.login_form)
+            self.login_form = None
+
+        if not self.register_form:
+            self.register_form = RegisterForm(parent=self)
+
     def close(self):
-        if self.login_button:
-            destroy(self.login_button)
-        if self.register_button:
-            destroy(self.register_button)
-            
+        for btn in [self.login_button, self.register_button]:
+            if btn: destroy(btn)
+
+        for form in [self.login_form, self.register_form]:
+            if form: destroy(form)
+
         if self.on_close:
             self.on_close()
         destroy(self)
