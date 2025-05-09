@@ -108,7 +108,7 @@ class EnemyManager:
         enemy_type = randint(1, 3)
         health = 10 + (self.player.floor * 5)
         
-        enemy = Enemy(enemy_type, health, position=(10, -2)) 
+        enemy = Enemy(enemy_type, health, position=(10, -2.6)) 
         enemy.player_ref = self.player  
         self.enemies.append(enemy)
         self.current_enemy = enemy

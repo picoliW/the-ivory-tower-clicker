@@ -26,7 +26,7 @@ class Player:
             model='quad',
             texture=self.run_textures[0],  
             scale=(2, 1.6),
-            position=(-5, -2),
+            position=(-5, -2.5),
             collider='box'
         )
 
