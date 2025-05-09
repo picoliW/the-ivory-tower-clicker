@@ -22,14 +22,14 @@ class Start_bossfight:
     def start_bossfight(self):
         def win():
             self.player.floor += 1
-            self.player.sprite.position = (-5, -2)
+            self.player.sprite.position = (-5, -2.5)
             self.bossfight_win_sound.play()
             self.enemy_manager.show_enemies()
             self.boss_fight = None
 
         def fail():
             self.player.floor -= 1
-            self.player.sprite.position = (-5, -2)
+            self.player.sprite.position = (-5, -2.5)
             self.enemy_manager.show_enemies()
             self.boss_fight = None
 
