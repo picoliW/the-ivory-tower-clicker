@@ -57,7 +57,8 @@ class MainMenu(Entity):
             color=color.clear,
             text_color=color.white,
             on_click=self.open_options,
-            parent=self
+            parent=self,
+            
         )
         self.options_button.text_entity.scale = (6, 13)
         self.apply_hover_effect(self.options_button)
@@ -142,9 +143,41 @@ class MainMenu(Entity):
     def open_options(self):
         if not hasattr(self, 'options_popup') or not self.options_popup:
             self.options_popup = OptionsMenu(on_close=self.clear_options_popup)
+            destroy(self.start_button)
+            destroy(self.quit_button)
 
     def clear_options_popup(self):
         self.options_popup = None
+
+        if not self.start_button:  
+            self.start_button = Button(
+                text='Start Game',
+                scale=(2.2, .7),
+                position=(0, 1),
+                color=color.clear,
+                text_color=color.white,
+                on_click=self.start_game,
+                parent=self
+            )
+            self.start_button.text_entity.scale = (6, 13)
+            self.apply_hover_effect(self.start_button)
+
+        if not self.quit_button:
+            self.quit_button = Button(
+                text='Quit',
+                scale=(2.2, .7),
+                position=(0, -1),
+                color=color.clear,
+                text_color=color.white,
+                on_click=application.quit,
+                parent=self
+            )
+            self.quit_button.text_entity.scale = (6, 13)
+            self.apply_hover_effect(self.quit_button)
+
+        else:  
+            self.start_button.enable()
+            self.quit_button.enable()
 
     def apply_hover_effect(self, button):
         original_scale = Vec3(6, 13, 1)

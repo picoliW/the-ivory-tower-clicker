@@ -121,6 +121,8 @@ class OptionsMenu(Entity):
             on_click=self.show_register_form
         )
 
+    
+
     def show_login_form(self):
         if self.register_form:
             destroy(self.register_form)
@@ -145,5 +147,8 @@ class OptionsMenu(Entity):
             if form: destroy(form)
 
         if self.on_close:
-            self.on_close()
+            self.on_close() 
+
         destroy(self)
+
+         

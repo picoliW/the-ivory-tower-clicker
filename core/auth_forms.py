@@ -1,5 +1,7 @@
 from ursina import *
 
+
+
 class LoginForm(Entity):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
@@ -12,6 +14,8 @@ class LoginForm(Entity):
             z=-1.1
         )
 
+        self.email_input.text_field.scale = (6, 13)
+
         self.password_input = InputField(
             placeholder='Senha',
             scale=(2, 0.4),
@@ -19,6 +23,18 @@ class LoginForm(Entity):
             parent=self,
             z=-1.1
         )
+
+        self.password_input.text_field.scale = (6, 13)
+
+        MAX_CHARS = 5  
+
+        def limit_input(text_field):
+            if len(text_field.text) > MAX_CHARS:
+                text_field.text = text_field.text[:MAX_CHARS]
+
+
+        self.email_input.text_field.on_value_changed = lambda: limit_input(self.email_input.text_field)
+        self.password_input.text_field.on_value_changed = lambda: limit_input(self.password_input.text_field)
 
 
 class RegisterForm(Entity):
@@ -48,3 +64,5 @@ class RegisterForm(Entity):
             parent=self,
             z=-1.1
         )
+
+  
