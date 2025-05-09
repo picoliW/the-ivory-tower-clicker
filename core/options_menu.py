@@ -8,7 +8,7 @@ class OptionsMenu(Entity):
         self.background = Entity(
             parent=self,
             model='quad',
-            color=color.gray,
+            color=color.azure,
             scale=(7, 5),
             z=-1
         )
@@ -23,32 +23,37 @@ class OptionsMenu(Entity):
         )
 
         self.settings_button = Button(
-            scale=(.5, .3),
-            position=(-2, 1),
+            scale=(1.8, .5),
+            position=(-1.8, 1.73),
             parent=self,
-            color=color.clear,
+            color=color.white,
             on_click=self.settings_clicked,
-            text_size=0.5,
             z=-1
         )
 
-        self.x_icon = Entity(
+        self.settings_icon = Entity(
             parent=self.settings_button,
             model='quad',
             texture='../assets/config_icons/config.png', 
-            scale=(.1, .1),  
+            scale=(.25, .65),  
             z=-0.1,  
         )
 
         self.account_button = Button(
-            text='Conta',
-            scale=(1.8, 0.5),
-            position=(2, 1),
+            scale=(1.8, .5),
+            position=(1.8, 1.73),
             parent=self,
-            color=color.orange,
+            color=color.white,
             on_click=self.account_clicked,
-            text_size=0.5,
             z=-1
+        )
+        
+        self.account_icon = Entity(
+            parent=self.account_button,
+            model='quad',
+            texture='../assets/config_icons/account.png', 
+            scale=(.3, 1),  
+            z=-0.1,  
         )
 
         self.close_button = Button(
@@ -57,11 +62,10 @@ class OptionsMenu(Entity):
             parent=self,
             color=color.clear,
             on_click=self.close,
-            text_size=0.5,
             z=-1
         )
 
-        self.x_icon = Entity(
+        self.close_icon = Entity(
             parent=self.close_button,
             model='quad',
             texture='../assets/config_icons/x.png', 
