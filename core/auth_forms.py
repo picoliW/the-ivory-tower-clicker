@@ -1,11 +1,15 @@
 from ursina import *
-import requests
-from core.api.api_requests import APIClient
+from core.api.auth_handlers import AuthHandlers
 
 class LoginForm(Entity):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
+        
+        self.handlers = AuthHandlers()
+        self._setup_ui()
+        self.start_button.on_click = self.submit_form
 
+    def _setup_ui(self):
         self.email_text = Text(
             text="E-Mail",
             position=(-1.8, -0.1),
@@ -52,24 +56,12 @@ class LoginForm(Entity):
             z=-1.1,
         )
 
-        self.api = APIClient()  
-        self.start_button.on_click = self.submit_form 
-    
     def submit_form(self):
         email = self.email_input.text
         password = self.password_input.text
         
-        if not email or not password:
-            print("Por favor, preencha todos os campos")
-            return
-            
-        success, response = self.api.login_user(email, password)
-        
-        if success:
-            print("Login bem-sucedido!")
-            print("Dados do usuário:", response.get("user"))
-        else:
-            print(f"Erro no login: {response}")
+        success, message = self.handlers.handle_login(email, password)
+        print(message)
 
 class RegisterForm(Entity):
     def __init__(self, parent=None):
@@ -136,28 +128,4 @@ class RegisterForm(Entity):
             text_size=.3,
             z=-1.1,
         )
-
-        self.api = APIClient() 
-        self.start_button.on_click = self.submit_form
-    
-    def submit_form(self):
-        email = self.email_input.text
-        password = self.password_input.text
-        confirm_password = self.confirm_password_input.text
-        
-        if not email or not password or not confirm_password:
-            print("Por favor, preencha todos os campos")
-            return
-            
-        if password != confirm_password:
-            print("As senhas não coincidem")
-            return
-            
-        success, message = self.api.register_user(email, password, confirm_password)
-        
-        if success:
-            print("Registro bem-sucedido!")
-        else:
-            print(f"Erro no registro: {message}")
-
   

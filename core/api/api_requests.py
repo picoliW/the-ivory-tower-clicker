@@ -14,11 +14,7 @@ class APIClient:
                     "confirmPassword": confirm_password
                 }
             )
-            
-            if response.status_code == 201:
-                return True, response.json().get("message", "Registro bem-sucedido")
-            else:
-                return False, response.json().get("message", "Erro desconhecido no registro")
+            return self._handle_response(response)
                 
         except requests.exceptions.RequestException as e:
             return False, f"Erro de conexão: {str(e)}"
@@ -32,11 +28,13 @@ class APIClient:
                     "password": password
                 }
             )
-            
-            if response.status_code == 200:
-                return True, response.json()
-            else:
-                return False, response.json().get("message", "Erro desconhecido no login")
+            return self._handle_response(response)
                 
         except requests.exceptions.RequestException as e:
             return False, f"Erro de conexão: {str(e)}"
+    
+    def _handle_response(self, response):
+        if response.status_code in (200, 201):
+            return True, response.json()
+        else:
+            return False, response.json().get("message", "Erro desconhecido")
