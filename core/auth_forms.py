@@ -5,6 +5,7 @@ class LoginForm(Entity):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
         self.on_login_success = None
+        self.error_message = None
 
         self.handlers = AuthHandlers()
         self._setup_ui()
@@ -57,21 +58,42 @@ class LoginForm(Entity):
             z=-1.1,
         )
 
+        self.error_display = Text(
+            text="",
+            position=(-0.78, -2),
+            color=color.red,
+            scale=7,
+            parent=self,
+            z=-1.1,
+            visible=False
+        )
+
     def submit_form(self):
         email = self.email_input.text
         password = self.password_input.text
         
+        self.error_display.visible = False
+        self.error_display.text = ""
+        
         success, response = self.handlers.handle_login(email, password)
         
         if success:
-            print("Login bem-sucedido!")
-            user_data = response.get('playerData', {})
-            user_id = response['user']['id']
-            
-            if self.on_login_success:
-                self.on_login_success(user_id, user_data)
+            try:
+                print("Login bem-sucedido!")
+                user_data = response.get('playerData', {})
+                user_id = response['user']['id']
+                
+                if self.on_login_success:
+                    self.on_login_success(user_id, user_data)
+            except (KeyError, TypeError) as e:
+                print(f"Error processing login response: {e}")
+                self.error_display.text = "Erro inesperado no login"
+                self.error_display.visible = True
         else:
-            print(response.get('message', 'Erro desconhecido no login'))
+            error_msg = response if isinstance(response, str) else response.get('message', 'Erro desconhecido no login')
+            print(error_msg)
+            self.error_display.text = error_msg
+            self.error_display.visible = True
 
 class RegisterForm(Entity):
     def __init__(self, parent=None):

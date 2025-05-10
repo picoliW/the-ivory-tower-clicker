@@ -20,7 +20,7 @@ router.post("/login", async (req, res) => {
     if (users.length === 0) {
       return res.status(404).json({
         success: false,
-        message: "Usuário não encontrado",
+        message: "Account not found",
       });
     }
 
@@ -28,7 +28,7 @@ router.post("/login", async (req, res) => {
     if (user.password !== password) {
       return res.status(401).json({
         success: false,
-        message: "Senha incorreta",
+        message: "Account not found",
       });
     }
 
