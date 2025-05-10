@@ -10,6 +10,7 @@ from core.start_bossfight import Start_bossfight
 from core.main_menu import MainMenu
 from core.splash_screen import SplashScreen
 from core.loading_screen import LoadingScreen
+from core.auth_forms import LoginForm
 
 app = Ursina()
 
@@ -21,7 +22,7 @@ window.size = (monitor.width, monitor.height)
 
 game_started = False
 
-def start_game():
+def start_game(user_id=None, player_data=None):
     splash_screen.disable()
     main_menu.disable()
 
@@ -29,7 +30,7 @@ def start_game():
         global game_started, player, shop, background, enemy_manager, ui, pause_menu, start_bossfight
 
         game_started = True
-        player = Player()
+        player = Player(user_id, player_data)  
         shop = Shop(player)
         background = Background()
         enemy_manager = EnemyManager(player, background)

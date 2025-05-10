@@ -4,6 +4,7 @@ from core.api.auth_handlers import AuthHandlers
 class LoginForm(Entity):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
+        self.on_login_success = None
 
         self.handlers = AuthHandlers()
         self._setup_ui()
@@ -60,8 +61,17 @@ class LoginForm(Entity):
         email = self.email_input.text
         password = self.password_input.text
         
-        success, message = self.handlers.handle_login(email, password)
-        print(message)
+        success, response = self.handlers.handle_login(email, password)
+        
+        if success:
+            print("Login bem-sucedido!")
+            user_data = response.get('playerData', {})
+            user_id = response['user']['id']
+            
+            if self.on_login_success:
+                self.on_login_success(user_id, user_data)
+        else:
+            print(response.get('message', 'Erro desconhecido no login'))
 
 class RegisterForm(Entity):
     def __init__(self, parent=None):

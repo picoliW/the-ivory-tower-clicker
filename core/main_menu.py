@@ -29,7 +29,6 @@ class MainMenu(Entity):
             parent=self
         )
 
-        
         self.copyright_text = Text(
             text="© 2025 LEG Studios. The Ivory Tower™ is a trademark of LEG.\nAll rights reserved.",
             origin=(0, 14),
@@ -142,9 +141,15 @@ class MainMenu(Entity):
 
     def open_options(self):
         if not hasattr(self, 'options_popup') or not self.options_popup:
-            self.options_popup = OptionsMenu(on_close=self.clear_options_popup)
+            self.options_popup = OptionsMenu(
+                on_close=self.clear_options_popup,
+                on_login_success=self.handle_login_success  
+            )
             destroy(self.start_button)
             destroy(self.quit_button)
+            
+    def handle_login_success(self, user_id, player_data):
+        self.start_game_callback(user_id, player_data)
 
     def clear_options_popup(self):
         self.options_popup = None

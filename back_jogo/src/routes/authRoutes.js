@@ -32,6 +32,29 @@ router.post("/login", async (req, res) => {
       });
     }
 
+    const [playerData] = await pool.query(
+      "SELECT * FROM player_data WHERE user_id = ?",
+      [user.id]
+    );
+
+    let data;
+    if (playerData.length === 0) {
+      // Create new player data if none exists
+      const [result] = await pool.query(
+        "INSERT INTO player_data (user_id) VALUES (?)",
+        [user.id]
+      );
+      data = {
+        damage: 1,
+        gold: 0,
+        gold_per_second: 0,
+        floor: 1,
+        dash_unlocked: false,
+      };
+    } else {
+      data = playerData[0];
+    }
+
     res.status(200).json({
       success: true,
       message: "Login realizado com sucesso",
@@ -39,12 +62,38 @@ router.post("/login", async (req, res) => {
         id: user.id,
         email: user.email,
       },
+      playerData: data,
     });
   } catch (error) {
     console.error("Erro no login:", error);
     res.status(500).json({
       success: false,
       message: "Erro no servidor ao fazer login",
+    });
+  }
+});
+
+router.post("/save-player-data", async (req, res) => {
+  const { userId, damage, gold, gold_per_second, floor, dash_unlocked } =
+    req.body;
+
+  try {
+    await pool.query(
+      `UPDATE player_data 
+       SET damage = ?, gold = ?, gold_per_second = ?, floor = ?, dash_unlocked = ?
+       WHERE user_id = ?`,
+      [damage, gold, gold_per_second, floor, dash_unlocked, userId]
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Player data saved successfully",
+    });
+  } catch (error) {
+    console.error("Error saving player data:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error saving player data",
     });
   }
 });

@@ -1,12 +1,25 @@
 from ursina import *
+from core.api.api_requests import APIClient
 
 class Player:
-    def __init__(self):
-        self.damage = 1
-        self.gold = 0
-        self.gold_per_second = 0
-        self.floor = 1
-        self.dash_unlocked = False
+    def __init__(self, user_id=None, player_data=None):
+        self.user_id = user_id
+        self.api = APIClient()
+        self.save_interval = 30  
+        self.save_timer = 0
+
+        if player_data:
+            self.damage = player_data.get('damage', 1)
+            self.gold = player_data.get('gold', 0)
+            self.gold_per_second = player_data.get('gold_per_second', 0)
+            self.floor = player_data.get('floor', 1)
+            self.dash_unlocked = player_data.get('dash_unlocked', False)
+        else:
+            self.damage = 1
+            self.gold = 0
+            self.gold_per_second = 0
+            self.floor = 1
+            self.dash_unlocked = False
 
         self.run_textures = [
             load_texture(f'../assets/Player/PlayerMovement/Run/Right/run_right_{i}') for i in range(8)
@@ -85,11 +98,34 @@ class Player:
                 self.sprite.texture = self.run_textures[self.run_index]
                 self.animation_timer = 0
 
+    def save_data(self):
+        if not self.user_id:
+            return
+            
+        success, response = self.api.save_player_data(
+            self.user_id,
+            self.damage,
+            self.gold,
+            self.gold_per_second,
+            self.floor,
+            self.dash_unlocked
+        )
+        
+        if success:
+            print("Player data saved successfully")
+        else:
+            print(f"Failed to save player data: {response}")
+
     def update(self):
         self.gold_timer += time.dt
         if self.gold_timer >= 1:
             self.gold += self.gold_per_second
             self.gold_timer = 0
+
+        self.save_timer += time.dt
+        if self.save_timer >= self.save_interval:
+            self.save_data()
+            self.save_timer = 0
 
         self.update_animation()
 

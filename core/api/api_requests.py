@@ -38,3 +38,21 @@ class APIClient:
             return True, response.json()
         else:
             return False, response.json().get("message", "Erro desconhecido")
+        
+    def save_player_data(self, user_id, damage, gold, gold_per_second, floor, dash_unlocked):
+        try:
+            response = requests.post(
+                f"{self.base_url}/save-player-data",
+                json={
+                    "userId": user_id,
+                    "damage": damage,
+                    "gold": gold,
+                    "gold_per_second": gold_per_second,
+                    "floor": floor,
+                    "dash_unlocked": dash_unlocked
+                }
+            )
+            return self._handle_response(response)
+                
+        except requests.exceptions.RequestException as e:
+            return False, f"Erro de conexão: {str(e)}"

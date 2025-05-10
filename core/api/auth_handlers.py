@@ -11,7 +11,7 @@ class AuthHandlers:
         success, response = self.api.login_user(email, password)
         
         if success:
-            return True, "Login bem-sucedido!"
+            return True, response
         return False, response
     
     def handle_register(self, email, password, confirm_password):

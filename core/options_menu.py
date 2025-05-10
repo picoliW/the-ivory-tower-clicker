@@ -2,9 +2,10 @@ from ursina import *
 from core.auth_forms import LoginForm, RegisterForm
 
 class OptionsMenu(Entity):
-    def __init__(self, on_close=None):
+    def __init__(self, on_close=None, on_login_success=None):
         super().__init__()
         self.on_close = on_close
+        self.on_login_success = on_login_success
         self.login_button = None
         self.register_button = None
         self.login_form = None
@@ -121,8 +122,6 @@ class OptionsMenu(Entity):
             on_click=self.show_register_form
         )
 
-    
-
     def show_login_form(self):
         if self.register_form:
             destroy(self.register_form)
@@ -130,6 +129,7 @@ class OptionsMenu(Entity):
 
         if not self.login_form:
             self.login_form = LoginForm(parent=self)
+            self.login_form.on_login_success = self.handle_login_success
 
     def show_register_form(self):
         if self.login_form:
@@ -138,6 +138,11 @@ class OptionsMenu(Entity):
 
         if not self.register_form:
             self.register_form = RegisterForm(parent=self)
+
+    def handle_login_success(self, user_id, player_data):
+        self.close()
+        if self.on_login_success:
+            self.on_login_success(user_id, player_data)
 
     def close(self):
         for btn in [self.login_button, self.register_button]:
