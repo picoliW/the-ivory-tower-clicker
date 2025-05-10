@@ -7,3 +7,5 @@ convert.py
 icon.ico
 Cut
 cutIMG.py
+back_jogo/node_modules
+back_jogo/.env

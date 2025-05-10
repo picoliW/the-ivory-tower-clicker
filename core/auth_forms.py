@@ -1,4 +1,6 @@
 from ursina import *
+import requests
+from api_requests import APIClient
 
 class LoginForm(Entity):
     def __init__(self, parent=None):
@@ -116,5 +118,27 @@ class RegisterForm(Entity):
             z=-1.1,
         )
 
+        self.api = APIClient() 
+        self.start_button.on_click = self.submit_form
+    
+    def submit_form(self):
+        email = self.email_input.text
+        password = self.password_input.text
+        confirm_password = self.confirm_password_input.text
+        
+        if not email or not password or not confirm_password:
+            print("Por favor, preencha todos os campos")
+            return
+            
+        if password != confirm_password:
+            print("As senhas não coincidem")
+            return
+            
+        success, message = self.api.register_user(email, password, confirm_password)
+        
+        if success:
+            print("Registro bem-sucedido!")
+        else:
+            print(f"Erro no registro: {message}")
 
   
