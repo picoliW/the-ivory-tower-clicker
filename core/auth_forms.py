@@ -4,7 +4,7 @@ class LoginForm(Entity):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
 
-        self.copyright_text = Text(
+        self.email_text = Text(
             text="E-Mail",
             position=(-1.8, -0.1),
             color=color.white,
@@ -22,7 +22,7 @@ class LoginForm(Entity):
 
         self.email_input.text_field.scale = (2.62, 16)
 
-        self.copyright_text = Text(
+        self.password_text = Text(
             text="Password",
             position=(-1.8, -0.8),
             color=color.white,
@@ -39,35 +39,82 @@ class LoginForm(Entity):
         )
         self.password_input.text_field.scale = (2.62, 16)
 
+        self.start_button = Button(
+            text='Submit',
+            scale=(1, .3),
+            position=(0, -1.8),
+            color=color.blue,        
+            text_color=color.white,
+            parent=self,
+            text_size=.3,
+            z=-1.1,
+        )
+
 class RegisterForm(Entity):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
 
+        self.email_text = Text(
+            text="E-mail",
+            position=(-1.8, 0.4),
+            color=color.white,
+            scale=5.5,
+            parent=self,
+            z=-1.1
+        )
+
         self.email_input = InputField(
-            placeholder='E-mail',
             scale=(4, 0.4),
-            position=(0, -0.5),
+            position=(0, 0),
             parent=self,
             z=-1.1
         )
         self.email_input.text_field.scale = (2.62, 16)
 
+        self.password_text = Text(
+            text="Password",
+            position=(-1.8, -.24),
+            color=color.white,
+            scale=5.5,
+            parent=self,
+            z=-1.1
+        )
+
         self.password_input = InputField(
-            placeholder='Senha',
             scale=(4, 0.4),
-            position=(0, -1.2),
+            position=(0, -.6),
             parent=self,
             z=-1.1
         )
         self.password_input.text_field.scale = (2.62, 16)
 
+        self.confirm_password_text = Text(
+            text="Confirm Password",
+            position=(-1.8, -.84),
+            color=color.white,
+            scale=5.5,
+            parent=self,
+            z=-1.1
+        )
+
         self.confirm_password_input = InputField(
-            placeholder='Confirmar Senha',
             scale=(4, 0.4),
-            position=(0, -1.9),
+            position=(0, -1.2),
             parent=self,
             z=-1.1
         )
         self.confirm_password_input.text_field.scale = (2.62, 16)
+
+        self.start_button = Button(
+            text='Submit',
+            scale=(1, .3),
+            position=(0, -1.8),
+            color=color.blue,        
+            text_color=color.white,
+            parent=self,
+            text_size=.3,
+            z=-1.1,
+        )
+
 
   

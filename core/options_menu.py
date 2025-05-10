@@ -111,7 +111,7 @@ class OptionsMenu(Entity):
         )
 
         self.register_button = Button(
-            text="Registrar",
+            text="Register",
             scale=(1.5, 0.4),
             position=(1.8, 0.6), 
             parent=self,
