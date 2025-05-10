@@ -1,5 +1,5 @@
 from ursina import *
-from dashability import DashAbility
+from core.dashability import DashAbility
 
 class UI:
     def __init__(self, player, enemy_manager):

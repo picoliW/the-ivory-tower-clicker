@@ -1,7 +1,7 @@
 from ursina import *
 import json
 import os
-from shop_items import ShopItem, ArmorItem
+from core.shop_items import ShopItem, ArmorItem
 
 class Shop(Entity):
     DATA_DIR = os.path.join(os.path.dirname(__file__), '..', 'data')

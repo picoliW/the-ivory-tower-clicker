@@ -1,15 +1,15 @@
 from ursina import *
-from player import Player
-from enemy import EnemyManager
-from shop import Shop
-from ui import UI
-from background import Background
+from core.player import Player
+from core.enemy import EnemyManager
+from core.shop import Shop
+from core.ui import UI
+from core.background import Background
 from screeninfo import get_monitors
-from pause_menu import PauseMenu
-from start_bossfight import Start_bossfight
-from main_menu import MainMenu
-from splash_screen import SplashScreen
-from loading_screen import LoadingScreen
+from core.pause_menu import PauseMenu
+from core.start_bossfight import Start_bossfight
+from core.main_menu import MainMenu
+from core.splash_screen import SplashScreen
+from core.loading_screen import LoadingScreen
 
 app = Ursina()
 

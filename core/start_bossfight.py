@@ -1,4 +1,4 @@
-from bossfight import BossFight
+from core.bossfight import BossFight
 from ursina import Audio
 
 class Start_bossfight:

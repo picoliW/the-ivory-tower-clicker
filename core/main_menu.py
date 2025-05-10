@@ -1,5 +1,5 @@
 from ursina import *
-from options_menu import OptionsMenu
+from core.options_menu import OptionsMenu
 
 class MainMenu(Entity):
     def __init__(self, start_game_callback):

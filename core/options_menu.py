@@ -1,5 +1,5 @@
 from ursina import *
-from auth_forms import LoginForm, RegisterForm
+from core.auth_forms import LoginForm, RegisterForm
 
 class OptionsMenu(Entity):
     def __init__(self, on_close=None):

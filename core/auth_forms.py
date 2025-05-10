@@ -1,6 +1,6 @@
 from ursina import *
 import requests
-from api_requests import APIClient
+from core.api.api_requests import APIClient
 
 class LoginForm(Entity):
     def __init__(self, parent=None):
