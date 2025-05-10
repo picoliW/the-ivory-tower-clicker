@@ -4,7 +4,7 @@ from core.api.auth_handlers import AuthHandlers
 class LoginForm(Entity):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
-        
+
         self.handlers = AuthHandlers()
         self._setup_ui()
         self.start_button.on_click = self.submit_form
@@ -67,6 +67,11 @@ class RegisterForm(Entity):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
 
+        self.handlers = AuthHandlers()
+        self._setup_ui()
+        self.start_button.on_click = self.submit_form
+
+    def _setup_ui(self):
         self.email_text = Text(
             text="E-mail",
             position=(-1.8, 0.4),
@@ -128,4 +133,14 @@ class RegisterForm(Entity):
             text_size=.3,
             z=-1.1,
         )
-  
+    def submit_form(self):
+        email = self.email_input.text
+        password = self.password_input.text
+        confirm_password = self.confirm_password_input.text
+        
+        success, message = self.handlers.handle_register(
+            email, 
+            password, 
+            confirm_password
+        )
+        print(message)
