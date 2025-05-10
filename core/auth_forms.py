@@ -52,6 +52,25 @@ class LoginForm(Entity):
             z=-1.1,
         )
 
+        self.api = APIClient()  
+        self.start_button.on_click = self.submit_form 
+    
+    def submit_form(self):
+        email = self.email_input.text
+        password = self.password_input.text
+        
+        if not email or not password:
+            print("Por favor, preencha todos os campos")
+            return
+            
+        success, response = self.api.login_user(email, password)
+        
+        if success:
+            print("Login bem-sucedido!")
+            print("Dados do usuário:", response.get("user"))
+        else:
+            print(f"Erro no login: {response}")
+
 class RegisterForm(Entity):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
