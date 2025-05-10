@@ -19,8 +19,6 @@ class Enemy(Entity):
         self.moving = True
         self.is_colliding = False 
 
-
-        # Barra de vida
         self.health_bar = Entity(
             parent=self,
             model='quad',
@@ -29,7 +27,6 @@ class Enemy(Entity):
             position=(0, 0.7),
             origin=(0, 0))
             
-        # Fundo da barra de vida
         self.health_bar_bg = Entity(
             parent=self,
             model='quad',
@@ -104,7 +101,6 @@ class EnemyManager:
                 enemy.die()
         self.enemies.clear()
         
-        # Cria novo inimigo
         enemy_type = randint(1, 3)
         health = 10 + (self.player.floor * 5)
         

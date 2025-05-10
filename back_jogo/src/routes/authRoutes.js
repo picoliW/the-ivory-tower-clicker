@@ -39,7 +39,6 @@ router.post("/login", async (req, res) => {
 
     let data;
     if (playerData.length === 0) {
-      // Create new player data if none exists
       const [result] = await pool.query(
         "INSERT INTO player_data (user_id) VALUES (?)",
         [user.id]

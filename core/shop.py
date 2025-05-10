@@ -103,7 +103,8 @@ class Shop(Entity):
                 parent=self.background,
                 texture=item.image_path,
                 scale=(0.01, 0.011),
-                position=(-0.25, 0.1 - i*0.15, 0) 
+                position=(-0.25, 0.1 - i*0.15, 0),
+                z=-1
             )
             self.item_sprites.append(sprite)
 
@@ -128,14 +129,13 @@ class Shop(Entity):
                 parent=self.background,
                 texture=armor.image_path,
                 scale=(0.01, 0.01),
-                position=(-0.25, 0.1 - i*0.15, 0)  
+                position=(-0.25, 0.1 - i*0.15, 0),
+                z=-1
             )
             self.armor_sprites.append(sprite)
 
         for sprite in self.item_sprites:
             sprite.z = 10
-
-
 
     def buy_item(self, index):
         if index >= len(self.available_items):

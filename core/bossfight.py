@@ -61,14 +61,13 @@ class BossFight(Entity):
         self.spawn_timer = 0.5
         self.spawn_cooldown = 0
 
-        # Hitbox de debug
         self.hitbox_debug = Entity(
             model='quad',
             color=color.azure,
             scale=self.player.sprite.scale,
             position=self.player.sprite.position,
             wireframe=True,
-            z=-0.5  # Atrás do player
+            z=-0.5  
         )
 
         self.walk_frames_right = [f'../assets/Player/PlayerMovement/Walk/Right/move_right_{i}' for i in range(8)]
@@ -94,7 +93,6 @@ class BossFight(Entity):
         if self.timer <= 0:
             self.end_bossfight(success=True)
 
-        # Spawning de projéteis
         self.spawn_cooldown -= time.dt
         if self.spawn_cooldown <= 0:
             self.spawn_projectile()
@@ -153,7 +151,6 @@ class BossFight(Entity):
         if self.dash_cooldown_timer > 0:
             self.dash_cooldown_timer -= time.dt
 
-        # Animação de andar
         moving = move.x != 0
 
         if move.x < 0:

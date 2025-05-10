@@ -43,7 +43,6 @@ class Player:
             collider='box'
         )
 
-        # Temporizador para gold passivo
         self.gold_timer = 0
 
         self.attack_textures = [
