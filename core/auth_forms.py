@@ -8,34 +8,22 @@ class LoginForm(Entity):
 
         self.email_input = InputField(
             placeholder='E-mail',
-            scale=(2, 0.4),
+            scale=(4, 0.4),
             position=(0, -0.5),
             parent=self,
             z=-1.1
         )
 
-        self.email_input.text_field.scale = (6, 13)
+        self.email_input.text_field.scale = (2, 16)
 
         self.password_input = InputField(
-            placeholder='Senha',
-            scale=(2, 0.4),
+            placeholder='Password',
+            scale=(4, 0.4),
             position=(0, -1.2),
             parent=self,
             z=-1.1
         )
-
-        self.password_input.text_field.scale = (6, 13)
-
-        MAX_CHARS = 5  
-
-        def limit_input(text_field):
-            if len(text_field.text) > MAX_CHARS:
-                text_field.text = text_field.text[:MAX_CHARS]
-
-
-        self.email_input.text_field.on_value_changed = lambda: limit_input(self.email_input.text_field)
-        self.password_input.text_field.on_value_changed = lambda: limit_input(self.password_input.text_field)
-
+        self.password_input.text_field.scale = (6, 16)
 
 class RegisterForm(Entity):
     def __init__(self, parent=None):
