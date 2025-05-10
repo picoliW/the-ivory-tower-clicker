@@ -6,6 +6,9 @@ class MainMenu(Entity):
         super().__init__()
         self.start_game_callback = start_game_callback
 
+        self.hover_sound = Audio('../assets/sounds/hover_sound.mp3', autoplay=False)
+        self.hover_sound.volume = 0.5
+    
         window_ratio = window.aspect_ratio
 
         base_height = 10
@@ -189,14 +192,21 @@ class MainMenu(Entity):
         hover_scale = original_scale * 1.1
         original_color = color.white
         hover_color = color.azure
+        was_hovered = False 
 
         def update_hover():
+            nonlocal was_hovered
+            
             if button.hovered:
                 button.text_entity.scale = lerp(button.text_entity.scale, hover_scale, 8 * time.dt)
                 button.text_entity.color = hover_color
+                
+                if not was_hovered:
+                    self.hover_sound.play()
+                    was_hovered = True
             else:
                 button.text_entity.scale = lerp(button.text_entity.scale, original_scale, 8 * time.dt)
                 button.text_entity.color = original_color
+                was_hovered = False
 
         button.update = update_hover
-
