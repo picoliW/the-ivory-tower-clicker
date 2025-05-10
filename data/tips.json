@@ -3,6 +3,8 @@
     "You can buy items in the shop.",
     "Press 'ESC' to open the menu.",
     "You can move in bossfight by pressing 'WASD'.",
-    "You can save your game in the options menu."
+    "You can save your game in the options menu.",
+    "You can press space to use dash.",
+    "The game automatically saves your progress every 30 seconds."
   ]
 }
