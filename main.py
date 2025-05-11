@@ -85,12 +85,16 @@ def input(key):
     if not game_started:
         return
 
-    if key == 'left mouse down' and pause_menu and not pause_menu.enabled:
-        if enemy_manager: 
+    if key == 'left mouse down' and (not pause_menu or not pause_menu.enabled):
+        if enemy_manager:
             for enemy in enemy_manager.enemies:
                 if enemy.hovered and enemy.is_colliding:
                     player.attack(enemy)
+                    
+                    if player.golden_touch.add_gold_on_click():
+                        ui.gold_value_text.text = str(player.gold)
                     break
+
     if key == 'escape':
         if pause_menu:  
             if pause_menu.enabled:

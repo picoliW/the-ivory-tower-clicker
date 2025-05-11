@@ -7,6 +7,7 @@ class Player:
         self.api = APIClient()
         self.save_interval = 30  
         self.save_timer = 0
+        self.golden_touch = None
 
         if player_data:
             self.damage = player_data.get('damage', 1)

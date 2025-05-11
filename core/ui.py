@@ -1,5 +1,6 @@
 from ursina import *
 from core.dashability import DashAbility
+from core.goldentouch import GoldenTouch
 
 class UI:
     def __init__(self, player, enemy_manager):
@@ -8,6 +9,7 @@ class UI:
 
         self.create_main_ui()
         self.create_hud_ui()
+        self.create_golden_touch_button()
         self.create_run_button()
 
     def create_main_ui(self):
@@ -55,11 +57,21 @@ class UI:
 
         self.gold_text.enabled = False
 
+    def create_golden_touch_button(self):
+        self.golden_touch_button = Button(
+            text='Golden Touch!',
+            position=(-0.7, 0),  
+            scale=(0.1, 0.1)
+        )
+        self.golden_touch = GoldenTouch(self.golden_touch_button, self.player)
+        setattr(self.player, 'golden_touch', self.golden_touch)
+    
+
     def create_run_button(self):
         self.run_button = Button(
             text='Run!',
-            position=(-0.70, -0.4),
-            scale=(0.10, 0.10)
+            position=(-0.7, -0.4),
+            scale=(0.1, 0.1)
         )
         self.dash_ability = DashAbility(self.run_button)
 
@@ -68,3 +80,4 @@ class UI:
         self.gold_value_text.text = str(self.player.gold)
         self.enemy_count_text.text = f'Enemies: {self.enemy_manager.enemies_defeated}/5'
         self.dash_ability.update()
+        self.golden_touch.update()
