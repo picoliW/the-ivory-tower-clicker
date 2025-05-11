@@ -16,6 +16,7 @@ class Player:
             self.floor = player_data.get('floor', 1)
             self.dash_unlocked = player_data.get('dash_unlocked', False)
             self.movespeed = player_data.get('movespeed', 1.0)
+            self.dps = player_data.get('dps', 0)
         else:
             self.damage = 1
             self.gold = 0
@@ -23,6 +24,7 @@ class Player:
             self.floor = 1
             self.dash_unlocked = False
             self.movespeed = 1.0
+            self.dps = 0
 
         self.run_textures = [
             load_texture(f'../assets/Player/PlayerMovement/Run/Right/run_right_{i}') for i in range(8)
@@ -112,7 +114,8 @@ class Player:
             self.gold_per_second,
             self.floor,
             self.dash_unlocked,
-            self.movespeed
+            self.movespeed,
+            self.dps
         )
         
         if success:

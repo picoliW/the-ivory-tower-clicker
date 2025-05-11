@@ -10,29 +10,29 @@ class ShopItem:
         self.purchased = False
 
 class ArmorItem:
-    def __init__(self, name, texture, base_damage, base_cost, image_path):
+    def __init__(self, name, texture, base_dps, base_cost, image_path):
         self.name = name
         self.texture = texture
-        self.base_damage = base_damage
+        self.base_dps = base_dps  
         self.base_cost = base_cost
         self.image_path = image_path
         self.level = 1
         self.max_level = 100
-        self.total_damage_added = 0
+        self.total_dps_added = 0
 
     @property
     def current_cost(self):
-        return int(self.base_cost * (1.6 ** (self.level - 1)))
+        return int(self.base_cost * (1.2 ** (self.level - 1)))
 
     @property
-    def current_damage(self):
-        return self.base_damage * self.level
+    def current_dps(self):
+        return self.base_dps * self.level
 
     def upgrade(self, player):
         if self.level < self.max_level and player.gold >= self.current_cost:
             player.gold -= self.current_cost
-            player.damage += self.base_damage
-            self.total_damage_added += self.base_damage
+            player.dps += self.base_dps  
+            self.total_dps_added += self.base_dps
             self.level += 1
             return True
         return False
