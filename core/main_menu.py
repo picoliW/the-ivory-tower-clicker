@@ -7,8 +7,10 @@ class MainMenu(Entity):
         self.start_game_callback = start_game_callback
 
         self.hover_sound = Audio('../assets/sounds/hover_sound.mp3', autoplay=False)
-        self.hover_sound.volume = 0.5
-    
+        self.hover_sound.volume = 1
+        self.click_sound = Audio('../assets/sounds/click_sound.mp3', autoplay=False)
+        self.click_sound.volume = 1
+
         window_ratio = window.aspect_ratio
 
         base_height = 10
@@ -46,8 +48,12 @@ class MainMenu(Entity):
             position=(0, 1),
             color=color.clear,        
             text_color=color.white,
-            on_click=self.start_game,
+            on_click=Func(self.play_click_sound),
             parent=self
+        )
+        self.start_button.on_click = Sequence(  
+            Func(self.play_click_sound),
+            Func(self.start_game)
         )
         self.start_button.text_entity.scale = (6, 13)
         self.apply_hover_effect(self.start_button)
@@ -58,9 +64,12 @@ class MainMenu(Entity):
             position=(0, .5),
             color=color.clear,
             text_color=color.white,
-            on_click=self.open_options,
+            on_click=Func(self.play_click_sound), 
             parent=self,
-            
+        )
+        self.options_button.on_click = Sequence(  
+            Func(self.play_click_sound),
+            Func(self.open_options)
         )
         self.options_button.text_entity.scale = (6, 13)
         self.apply_hover_effect(self.options_button)
@@ -71,8 +80,12 @@ class MainMenu(Entity):
             position=(0, -1),
             color=color.clear,
             text_color=color.white,
-            on_click=application.quit,
+            on_click=Func(self.play_click_sound),
             parent=self
+        )
+        self.quit_button.on_click = Sequence( 
+            Func(self.play_click_sound),
+            Func(application.quit)
         )
         self.quit_button.text_entity.scale = (6, 13)
         self.apply_hover_effect(self.quit_button)
@@ -164,8 +177,11 @@ class MainMenu(Entity):
                 position=(0, 1),
                 color=color.clear,
                 text_color=color.white,
-                on_click=self.start_game,
                 parent=self
+            )
+            self.start_button.on_click = Sequence(
+                Func(self.play_click_sound),
+                Func(self.start_game)
             )
             self.start_button.text_entity.scale = (6, 13)
             self.apply_hover_effect(self.start_button)
@@ -177,12 +193,14 @@ class MainMenu(Entity):
                 position=(0, -1),
                 color=color.clear,
                 text_color=color.white,
-                on_click=application.quit,
                 parent=self
+            )
+            self.quit_button.on_click = Sequence(
+                Func(self.play_click_sound),
+                Func(application.quit)
             )
             self.quit_button.text_entity.scale = (6, 13)
             self.apply_hover_effect(self.quit_button)
-
         else:  
             self.start_button.enable()
             self.quit_button.enable()
@@ -210,3 +228,6 @@ class MainMenu(Entity):
                 was_hovered = False
 
         button.update = update_hover
+
+    def play_click_sound(self):
+        self.click_sound.play()
