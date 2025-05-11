@@ -17,7 +17,7 @@ class GoldenTouch:
         self.player = player
 
         self.button.text = ''
-        self.button.icon = '../assets/golden_touch.png'  
+        self.button.icon = '../assets/powerups/golden_touch.png'  
         self.button.icon.scale = (1, 1)
         self.set_button_color(color.gold)
 
@@ -33,7 +33,7 @@ class GoldenTouch:
     def activate(self):
         self.active = True
         self.activation_time = time.time()
-        self.button.icon = '../assets/golden_touch.png' 
+        self.button.icon = '../assets/powerups/golden_touch.png' 
         self.button.icon.scale = (1, 1)
         self.set_button_color(color.yellow)
         invoke(self.deactivate, delay=self.duration)
@@ -43,14 +43,14 @@ class GoldenTouch:
         self.on_cooldown = True
         self.activation_time = time.time()
         self.set_button_color(color.gray)
-        self.button.icon = '../assets/golden_touch.png'  
+        self.button.icon = '../assets/powerups/golden_touch.png' 
         self.button.icon.scale = (1, 1)
         invoke(self.reset_cooldown, delay=self.cooldown)
 
     def reset_cooldown(self):
         self.on_cooldown = False
         self.set_button_color(color.gold)
-        self.button.icon = '../assets/golden_touch.png'
+        self.button.icon = '../assets/powerups/golden_touch.png' 
         self.button.icon.scale = (1, 1)
 
     def add_gold_on_click(self):
