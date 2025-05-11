@@ -39,7 +39,7 @@ class APIClient:
         else:
             return False, response.json().get("message", "Erro desconhecido")
         
-    def save_player_data(self, user_id, damage, gold, gold_per_second, floor, dash_unlocked):
+    def save_player_data(self, user_id, damage, gold, gold_per_second, floor, dash_unlocked, movespeed):
         try:
             response = requests.post(
                 f"{self.base_url}/save-player-data",
@@ -49,7 +49,8 @@ class APIClient:
                     "gold": gold,
                     "gold_per_second": gold_per_second,
                     "floor": floor,
-                    "dash_unlocked": dash_unlocked
+                    "dash_unlocked": dash_unlocked,
+                    "movespeed": movespeed
                 }
             )
             return self._handle_response(response)

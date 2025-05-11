@@ -117,7 +117,7 @@ class EnemyManager:
             
         if self.current_enemy.moving:
             dash = DashAbility.instance
-            speed_multiplier = 2 if dash and dash.active else 1
+            speed_multiplier = (2 if dash and dash.active else 1) * self.player.movespeed
             self.current_enemy.x -= self.current_enemy.speed * time.dt * speed_multiplier
             
             self.current_enemy.is_colliding = (

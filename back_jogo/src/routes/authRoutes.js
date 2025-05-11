@@ -49,6 +49,7 @@ router.post("/login", async (req, res) => {
         gold_per_second: 0,
         floor: 1,
         dash_unlocked: false,
+        movespeed: 1,
       };
     } else {
       data = playerData[0];
@@ -73,15 +74,22 @@ router.post("/login", async (req, res) => {
 });
 
 router.post("/save-player-data", async (req, res) => {
-  const { userId, damage, gold, gold_per_second, floor, dash_unlocked } =
-    req.body;
+  const {
+    userId,
+    damage,
+    gold,
+    gold_per_second,
+    floor,
+    dash_unlocked,
+    movespeed,
+  } = req.body;
 
   try {
     await pool.query(
       `UPDATE player_data 
-       SET damage = ?, gold = ?, gold_per_second = ?, floor = ?, dash_unlocked = ?
+       SET damage = ?, gold = ?, gold_per_second = ?, floor = ?, dash_unlocked = ?, movespeed = ?
        WHERE user_id = ?`,
-      [damage, gold, gold_per_second, floor, dash_unlocked, userId]
+      [damage, gold, gold_per_second, floor, dash_unlocked, movespeed, userId]
     );
 
     res.status(200).json({
