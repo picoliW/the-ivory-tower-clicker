@@ -54,8 +54,7 @@ class Enemy(Entity):
 
     def take_damage(self, amount):
         self.health -= amount
-        self.blink(color.white, duration=0.1)
-        self.shake(duration=0.2, magnitude=0.1)
+        self.blink(color.black, duration=0.1)
         
         if self.health <= 0:
             self.health = 0
@@ -116,9 +115,13 @@ class EnemyManager:
     def update(self):
         if not self.current_enemy:
             return
-            
+        
         self.dps_timer += time.dt
-            
+        if self.dps_timer >= self.dps_interval:
+            if self.player.dps > 0:
+                self.current_enemy.take_damage(self.player.dps)
+            self.dps_timer = 0
+
         if self.current_enemy.moving:
             dash = DashAbility.instance
             speed_multiplier = (2 if dash and dash.active else 1) * self.player.movespeed
@@ -131,16 +134,11 @@ class EnemyManager:
             
             if self.current_enemy.is_colliding:
                 self.current_enemy.moving = False
-                self.player.is_colliding_with_enemy = True  
+                self.player.is_colliding_with_enemy = True
                 self.background.should_scroll = False
             else:
                 self.player.is_colliding_with_enemy = False
                 self.background.should_scroll = True
-                
-        if self.dps_timer >= self.dps_interval and self.current_enemy:
-            if self.current_enemy.is_colliding and self.player.dps > 0:
-                self.current_enemy.take_damage(self.player.dps)
-            self.dps_timer = 0
                 
         if self.current_enemy.health <= 0:
             self.current_enemy.die()  
