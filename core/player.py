@@ -40,7 +40,8 @@ class Player:
             texture=self.run_textures[0],  
             scale=(2, 1.6),
             position=(-5, -2.5),
-            collider='box'
+            collider='box',
+            z=0
         )
 
         self.gold_timer = 0

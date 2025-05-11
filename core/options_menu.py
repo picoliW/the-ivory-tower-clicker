@@ -11,12 +11,10 @@ class OptionsMenu(Entity):
         self.login_form = None
         self.register_form = None
         
-        # Volume settings (default values)
         self.master_volume = 1.0
         self.music_volume = 1.0
         self.sfx_volume = 1.0
         
-        # Volume slider references
         self.master_slider = None
         self.music_slider = None
         self.sfx_slider = None
