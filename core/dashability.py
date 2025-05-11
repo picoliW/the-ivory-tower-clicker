@@ -31,7 +31,7 @@ class DashAbility:
     def activate(self):
         self.active = True
         self.activation_time = time.time()
-        self.button.icon = '../assets/powerups/dash_azul.png' 
+        self.button.icon = '../assets/powerups/dash_blue.png' 
         self.button.icon.scale = (1,1)
         invoke(self.deactivate, delay=self.duration)
 
@@ -40,7 +40,7 @@ class DashAbility:
         self.on_cooldown = True
         self.activation_time = time.time()
         self.set_button_color(color.gray)
-        self.button.icon = '../assets/powerups/run_icon_bw.png'
+        self.button.icon = '../assets/powerups/dash_bw.png'
         self.button.icon.scale = (1,1)
         invoke(self.reset_cooldown, delay=self.cooldown)
 

@@ -33,7 +33,7 @@ class GoldenTouch:
     def activate(self):
         self.active = True
         self.activation_time = time.time()
-        self.button.icon = '../assets/powerups/golden_touch.png' 
+        self.button.icon = '../assets/powerups/golden_touch_blue.png' 
         self.button.icon.scale = (1, 1)
         self.set_button_color(color.yellow)
         invoke(self.deactivate, delay=self.duration)
@@ -43,7 +43,7 @@ class GoldenTouch:
         self.on_cooldown = True
         self.activation_time = time.time()
         self.set_button_color(color.gray)
-        self.button.icon = '../assets/powerups/golden_touch.png' 
+        self.button.icon = '../assets/powerups/golden_touch_bw.png' 
         self.button.icon.scale = (1, 1)
         invoke(self.reset_cooldown, delay=self.cooldown)
 
