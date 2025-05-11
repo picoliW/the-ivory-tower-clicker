@@ -20,6 +20,8 @@ class DashAbility:
         self.set_button_color(color.lime)
 
         self.button.tooltip = Tooltip('Run!')
+        self.button.tooltip.background.scale = (2.3, 0.8)
+        self.button.tooltip.background.position = (0.1, 0.015)
         self.button.tooltip.enabled = False 
         
         self.button.on_click = self.toggle
@@ -62,10 +64,10 @@ class DashAbility:
         if remaining > 0:
             self.button.tooltip.text = f'{remaining:.1f}s'
         else:
-            self.button.tooltip.text = 'Run!'
+            self.button.tooltip.text = 'Run! (Right Click)'
 
 
-        if held_keys['space']:
+        if mouse.right:
             self.toggle()
 
     def set_button_color(self, color_value):

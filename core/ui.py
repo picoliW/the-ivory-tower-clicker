@@ -60,7 +60,7 @@ class UI:
     def create_golden_touch_button(self):
         self.golden_touch_button = Button(
             text='Golden Touch!',
-            position=(-0.7, 0),  
+            position=(-.8, -0.3),  
             scale=(0.1, 0.1)
         )
         self.golden_touch = GoldenTouch(self.golden_touch_button, self.player)
@@ -70,7 +70,7 @@ class UI:
     def create_run_button(self):
         self.run_button = Button(
             text='Run!',
-            position=(-0.7, -0.4),
+            position=(-.8, -0.42),
             scale=(0.1, 0.1)
         )
         self.dash_ability = DashAbility(self.run_button)

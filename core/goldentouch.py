@@ -22,6 +22,8 @@ class GoldenTouch:
         self.set_button_color(color.gold)
 
         self.button.tooltip = Tooltip('Golden Touch!')
+        self.button.tooltip.background.scale = (2, 0.8)
+        self.button.tooltip.background.position = (0.15, 0.015)
         self.button.tooltip.enabled = False
 
         self.button.on_click = self.toggle
@@ -70,7 +72,10 @@ class GoldenTouch:
         if remaining > 0:
             self.button.tooltip.text = f'{remaining:.1f}s'
         else:
-            self.button.tooltip.text = 'Golden Touch!'
+            self.button.tooltip.text = 'Golden Touch! (Spacebar)'
+
+        if held_keys['space']:
+            self.toggle()
 
     def set_button_color(self, color_value):
         self.button.color = color_value
