@@ -15,6 +15,7 @@ class Shop(Entity):
 
         self.item_sprites = []
         self.armor_sprites = []
+        self.dps_texts = []
 
         self.all_items = self.load_shop_items(shop_items_path)
         self.armor_list = self.load_armor_items(armor_items_path)
@@ -80,9 +81,12 @@ class Shop(Entity):
             destroy(s)
         for s in self.armor_sprites:
             destroy(s)
+        for t in self.dps_texts:  
+            destroy(t)
         self.item_list.clear()
         self.item_sprites.clear()
         self.armor_sprites.clear()
+        self.dps_texts.clear() 
             
     def show_items(self):
         self.clear_list()
@@ -115,6 +119,7 @@ class Shop(Entity):
         self.clear_list()
         for i, armor in enumerate(self.armor_list[:3]):
             can_afford = self.player.gold >= armor.current_cost
+            
             b = Button(
                 parent=self.background,
                 text=f'{armor.name}\nLevel {armor.level}\nCost {armor.current_cost}',
@@ -133,6 +138,17 @@ class Shop(Entity):
                 z=-1
             )
             self.armor_sprites.append(sprite)
+
+            dps_text = Text(
+                parent=self.background,
+                text=f'+{armor.base_dps} DPS\nPer\nLevel',
+                position=(0.35, 0.1 - i*0.15),  
+                origin=(0, 0),  
+                scale=(0.7, 0.7), 
+                color=color.green,
+                z=-1
+            )
+            self.dps_texts.append(dps_text)
 
         for sprite in self.item_sprites:
             sprite.z = 10
