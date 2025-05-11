@@ -21,52 +21,108 @@ class FirstTimeScene(Entity):
             texture='../assets/pacific_time.png', 
             scale=(10, 5), 
             color=color.white,
-            alpha=0 
+            alpha=0,
+            z=0.5
         )
-        self.image_shown = False
         
-        self.skip_button = Button(text="Pular", position=(0,-0.3), scale=(0.2, 0.1), on_click=self.skip)
+        self.second_text = Text(
+            "But things have changed...", 
+            y=0.2, 
+            origin=(0,0), 
+            scale=2, 
+            color=color.white,
+            alpha=0,
+            z=0.6
+        )
         
-        invoke(self.start_fade_out, delay=2)  
+        self.second_image = Entity(
+            model='quad',
+            texture='../assets/things_changed.png', 
+            scale=(10, 5),
+            color=color.white,
+            alpha=0,
+            z=0.5
+        )
+        
+        self.current_stage = 0
+        self.skip_button = Button(text="Pular", position=(0,-0.3), scale=(0.2, 0.1), on_click=self.skip, z=0.7)
+        
+        invoke(self.start_fade_out, delay=2)
         
     def start_fade_out(self):
         self.intro_text.fade_out = True
         
     def update(self):
-        if self.intro_text.fade_out and self.intro_text.alpha > 0:
-            self.intro_text.alpha -= time.dt * self.intro_text.fade_speed
-            if self.intro_text.alpha <= 0 and not self.image_shown:
-                self.show_image()
+        if self.current_stage == 0: 
+            if self.intro_text.fade_out and self.intro_text.alpha > 0:
+                self.intro_text.alpha -= time.dt * self.intro_text.fade_speed
+                if self.intro_text.alpha <= 0:
+                    self.current_stage = 1
+                    self.intro_image.alpha = 0  
+                    invoke(self.start_image_fade_out, delay=3)  
         
-        if hasattr(self, 'intro_image') and self.image_shown:
+        elif self.current_stage == 1:  
             if self.intro_image.alpha < 1:
                 self.intro_image.alpha += time.dt * 0.5
-            else:
-                if self.text.alpha < 1:
-                    self.text.alpha += time.dt * 0.5
-    
-    def show_image(self):
-        self.image_shown = True
-        self.intro_image.alpha = 0 
-        invoke(self.start_image_fade_out, delay=3)  
         
+        elif self.current_stage == 1.5:  
+            if hasattr(self.intro_image, 'fade_out') and self.intro_image.alpha > 0:
+                self.intro_image.alpha -= time.dt * 0.5
+                if self.intro_image.alpha <= 0:
+                    self.current_stage = 2
+                    self.second_text.alpha = 0  
+                    invoke(self.start_second_text_fade_out, delay=3)
+        
+        elif self.current_stage == 2:
+            if self.second_text.alpha < 1:
+                self.second_text.alpha += time.dt * 0.5
+        
+        elif self.current_stage == 2.5: 
+            if hasattr(self.second_text, 'fade_out') and self.second_text.alpha > 0:
+                self.second_text.alpha -= time.dt * 0.5
+                if self.second_text.alpha <= 0:
+                    self.current_stage = 3
+                    self.second_image.alpha = 0 
+        
+        elif self.current_stage == 3: 
+            if self.second_image.alpha < 1:
+                self.second_image.alpha += time.dt * 0.5
+            elif not hasattr(self.second_image, 'fade_out'):
+                invoke(self.start_second_image_fade_out, delay=3)
+        
+        elif self.current_stage == 3.5: 
+            if hasattr(self.second_image, 'fade_out') and self.second_image.alpha > 0:
+                self.second_image.alpha -= time.dt * 0.5
+                if self.second_image.alpha <= 0:
+                    self.complete_scene()
+    
     def start_image_fade_out(self):
-        if hasattr(self, 'intro_image'):
-            self.intro_image.fade_out = True
-            self.intro_image.fade_speed = 0.5
-            
-        if self.intro_image.fade_out and self.intro_image.alpha > 0:
-            self.intro_image.alpha -= time.dt * self.intro_image.fade_speed
-            
+        self.intro_image.fade_out = True
+        self.current_stage = 1.5
+    
+    def start_second_text_fade_out(self):
+        self.second_text.fade_out = True
+        self.current_stage = 2.5
+    
+    def start_second_image_fade_out(self):
+        self.second_image.fade_out = True
+        self.current_stage = 3.5
+    
+    def complete_scene(self):
+        self.skip()
+    
     def skip(self):
         self.background.disable()
         if hasattr(self, 'intro_text'):
             self.intro_text.disable()
         if hasattr(self, 'intro_image'):
             self.intro_image.disable()
+        if hasattr(self, 'second_text'):
+            self.second_text.disable()
+        if hasattr(self, 'second_image'):
+            self.second_image.disable()
         if hasattr(self, 'skip_button'):
             self.skip_button.disable()
         if self.player:
             self.player.sprite.z = 0
-
         self.on_complete()
