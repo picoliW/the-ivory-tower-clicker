@@ -10,6 +10,16 @@ class OptionsMenu(Entity):
         self.register_button = None
         self.login_form = None
         self.register_form = None
+        
+        # Volume settings (default values)
+        self.master_volume = 1.0
+        self.music_volume = 1.0
+        self.sfx_volume = 1.0
+        
+        # Volume slider references
+        self.master_slider = None
+        self.music_slider = None
+        self.sfx_slider = None
 
         self.background = Entity(
             parent=self,
@@ -88,6 +98,82 @@ class OptionsMenu(Entity):
 
         self.login_button = self.register_button = None
         self.login_form = self.register_form = None
+        
+        for slider in [self.master_slider, self.music_slider, self.sfx_slider]:
+            if slider: destroy(slider)
+        
+        if not self.master_slider:
+            self.create_volume_controls()
+
+    def create_volume_controls(self):
+        self.master_slider = Slider(
+            min=0, 
+            max=1, 
+            default=self.master_volume,
+            dynamic=True,
+            position=(-2.1, 0.8),
+            parent=self,
+            scale=(9, 7),
+            on_value_changed=self.update_master_volume,
+            z=-1.1
+        )
+        Text(
+            text="Master Volume",
+            position=(-.5, 1.1),
+            parent=self,
+            scale=7.5,
+            z=-1.2
+        )
+        
+        self.music_slider = Slider(
+            min=0, 
+            max=1, 
+            default=self.music_volume,
+            dynamic=True,
+            position=(-2.1, 0.3),
+            parent=self,
+            scale=(9, 7),
+            on_value_changed=self.update_music_volume,
+            z=-1.1
+        )
+        Text(
+            text="Music Volume",
+            position=(-.5, 0.6),
+            parent=self,
+            scale=7.5,
+            z=-1.2
+        )
+        
+        self.sfx_slider = Slider(
+            min=0, 
+            max=1, 
+            default=self.sfx_volume,
+            dynamic=True,
+            position=(-2.1, -.2),
+            parent=self,
+            scale=(9, 7),
+            on_value_changed=self.update_sfx_volume,
+            z=-1.1
+        )
+        Text(
+            text="SFX Volume",
+            position=(-.5, .1),
+            parent=self,
+            scale=7.5,
+            z=-1.2
+        )
+
+    def update_master_volume(self):
+        self.master_volume = self.master_slider.value
+
+        
+    def update_music_volume(self):
+        self.music_volume = self.music_slider.value
+
+        
+    def update_sfx_volume(self):
+        self.sfx_volume = self.sfx_slider.value
+
 
     def account_clicked(self):
         if self.login_button or self.register_button:
@@ -150,10 +236,11 @@ class OptionsMenu(Entity):
 
         for form in [self.login_form, self.register_form]:
             if form: destroy(form)
+            
+        for slider in [self.master_slider, self.music_slider, self.sfx_slider]:
+            if slider: destroy(slider)
 
         if self.on_close:
             self.on_close() 
 
         destroy(self)
-
-         
