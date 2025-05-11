@@ -61,15 +61,6 @@ class BossFight(Entity):
         self.spawn_timer = 0.5
         self.spawn_cooldown = 0
 
-        self.hitbox_debug = Entity(
-            model='quad',
-            color=color.azure,
-            scale=self.player.sprite.scale,
-            position=self.player.sprite.position,
-            wireframe=True,
-            z=-0.5  
-        )
-
         self.walk_frames_right = [f'../assets/Player/PlayerMovement/Walk/Right/move_right_{i}' for i in range(8)]
         self.walk_frames_left = [f'../assets/Player/PlayerMovement/Walk/Left/move_left_{i}' for i in range(8)]
         self.current_frame = 0
@@ -82,8 +73,6 @@ class BossFight(Entity):
             center=Vec3(0, -0.2, 0),  
             size=Vec3(0.8, 0.8, 1)  
         )
-        self.hitbox_debug.scale = (0.8, 0.8)
-        self.hitbox_debug.position = self.player.sprite.position + Vec3(0, -0.2, 0)
 
     def update(self):
         if not self.active:
@@ -175,9 +164,6 @@ class BossFight(Entity):
             else:
                 self.player.sprite.texture = self.walk_frames_left[0]
 
-        self.hitbox_debug.position = self.player.sprite.position
-
-
     def spawn_projectile(self):
         arena_x_min = self.arena_fill.x - self.arena_fill.scale_x / 2
         arena_x_max = self.arena_fill.x + self.arena_fill.scale_x / 2
@@ -203,5 +189,3 @@ class BossFight(Entity):
             self.on_win()
         else:
             self.on_fail()
-
-        self.hitbox_debug.position = self.player.sprite.position
