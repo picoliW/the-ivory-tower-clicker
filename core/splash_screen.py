@@ -9,7 +9,7 @@ class SplashScreen(Entity):
         self.logo = Entity(
             parent=self,
             model='quad',
-            texture='../assets/dev_logo.png',
+            texture='../assets/logos/dev_logo.png',
             position=(0, 0, -10),
             scale=(3, 2),
             color=color.white

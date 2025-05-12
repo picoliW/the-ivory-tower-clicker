@@ -93,7 +93,7 @@ class MainMenu(Entity):
         self.game_logo = Entity(
             parent=self,
             model='quad',
-            texture='../assets/game_logo.png',
+            texture='../assets/logos/game_logo.png',
             scale=(6, 5),
             position=(0, 2.5)
         )
@@ -101,7 +101,7 @@ class MainMenu(Entity):
         self.dev_logo = Entity(
             parent=self,
             model='quad',
-            texture='../assets/dev_logo.png',
+            texture='../assets/logos/dev_logo.png',
             scale=(2, 1),
             position=(6.4, -3.7)
         )

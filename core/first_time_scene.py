@@ -16,7 +16,7 @@ class FirstTimeScene(Entity):
         
         self.intro_image = Entity(
             model='quad', 
-            texture='../assets/pacific_time.png', 
+            texture='../assets/cutscene_images/pacific_time.png', 
             scale=(10, 5), 
             color=color.white,
             alpha=1, 
@@ -37,7 +37,7 @@ class FirstTimeScene(Entity):
         
         self.second_image = Entity(
             model='quad',
-            texture='../assets/things_changed.png', 
+            texture='../assets/cutscene_images/things_changed.png', 
             scale=(10, 5),
             color=color.white,
             alpha=1,  
@@ -58,7 +58,7 @@ class FirstTimeScene(Entity):
         
         self.third_image = Entity(
             model='quad',
-            texture='../assets/risk_it_all.png',
+            texture='../assets/cutscene_images/risk_it_all.png',
             scale=(10, 5),
             color=color.white,
             alpha=1, 
