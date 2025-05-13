@@ -70,7 +70,7 @@ class Start_bossfight:
         )
         
         self.damage_button = Button(
-            text="+ Damage / - Movespeed\n\n(10% Increased DMG Dealt\n20% Decreased MS)",
+            text="+ Damage / - Movespeed\n\n(20% Increased DMG Dealt\n10% Decreased MS)",
             parent=self.choice_panel,
             position=(0.25, 0),
             scale=(0.4, 0.2),

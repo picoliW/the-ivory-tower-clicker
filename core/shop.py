@@ -21,13 +21,87 @@ class Shop(Entity):
         self.armor_list = self.load_armor_items(armor_items_path)
         self.available_items = [item for item in self.all_items if not item.purchased]
 
-        self.background = Entity(parent=camera.ui, model='quad', color=color.black66, scale=(0.8,0.8), enabled=False)
-        self.title = Text(parent=self.background, text='SHOP', y=0.35, scale=2, origin=(0,0))
+        self.background = Entity(
+            parent=camera.ui, 
+            model='quad', 
+            color=color.black66, 
+            position=(.5, 0),
+            scale=(0.8, 1), 
+            enabled=False,
+            z=-1
+        )
+
+        self.title = Text(
+            parent=self.background, 
+            text='SHOP', 
+            y=0.35, 
+            scale=2, 
+            origin=(0,0),
+            z=-1.1
+        )
         
-        self.items_button = Button(text='Items', parent=self.background, position=(-0.2, 0.25), scale=(0.3,0.1), color=color.azure)
-        self.armor_button = Button(text='Armor', parent=self.background, position=(0.2, 0.25), scale=(0.3,0.1), color=color.orange)
+        self.items_button = Button(
+            parent=self.background, 
+            position=(0.25, -0.45), 
+            scale=(0.15, 0.08), 
+            color=color.clear
+        )
+        self.items_icon = Entity(
+            parent=self.items_button,
+            model='quad',
+            texture='../assets/shop_items/open_items_shop.png',
+            scale=(0.9, 1.3),
+            z=-1.1
+        )
+        self.items_label = Text(
+            parent=self.items_button,
+            text='Items',
+            y=-0.5,
+            scale=1,
+            color=color.white
+        )
         
-        self.close_button = Button(text='Close', parent=self.background, position=(0, -0.35), scale=(0.3, 0.1), color=color.red)
+        self.armor_button = Button(
+            parent=self.background, 
+            position=(0.39, -0.45), 
+            scale=(0.15, 0.08), 
+            color=color.clear
+        )
+        self.armor_icon = Entity(
+            parent=self.armor_button,
+            model='quad',
+            texture='../assets/shop_items/open_armor_shop.png', 
+            scale=(0.9, 1.3),
+            z=-1.1
+        )
+        self.armor_label = Text(
+            parent=self.armor_button,
+            text='Armor',
+            y=-0.5,
+            scale=1,
+            color=color.white
+        )
+        
+        self.close_button = Button(
+            parent=self.background, 
+            position=(0.45, 0.445), 
+            scale=(0.08, 0.06), 
+            color=color.clear
+        )
+        self.close_icon = Entity(
+            parent=self.close_button,
+            model='quad',
+            texture='../assets/config_icons/x.png', 
+            scale=(0.9, 0.9),
+            z=-1.1
+        )
+        self.close_label = Text(
+            parent=self.close_button,
+            text='Close',
+            y=-0.5,
+            scale=1,
+            color=color.white
+        )
         
         self.item_list = []
 
