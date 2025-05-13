@@ -67,7 +67,7 @@ class FirstTimeScene(Entity):
         self.third_image.enabled = False 
         
         self.current_stage = 0
-        self.skip_button = Button(text="Pular", position=(0,-0.42), scale=(0.2, 0.1), on_click=self.skip, z=0.7)
+        self.skip_button = Button(text="Skip", position=(0,-0.42), scale=(0.2, 0.1), on_click=self.skip, z=0.7)
         
         invoke(self.start_fade_out, delay=10)
         
