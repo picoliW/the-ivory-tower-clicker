@@ -3,6 +3,7 @@ import requests
 class APIClient:
     def __init__(self, base_url="http://localhost:3000/auth"):
         self.base_url = base_url
+        self.base_ranking_url = "http://localhost:3000/ranking"
     
     def register_user(self, nickname, email, password, confirm_password):
         try:
@@ -57,5 +58,13 @@ class APIClient:
             )
             return self._handle_response(response)
                 
+        except requests.exceptions.RequestException as e:
+            return False, f"Erro de conexão: {str(e)}"
+        
+
+    def get_players_ranking(self):
+        try:
+            response = requests.get(f"{self.base_ranking_url}/players-ranking")
+            return self._handle_response(response)
         except requests.exceptions.RequestException as e:
             return False, f"Erro de conexão: {str(e)}"
