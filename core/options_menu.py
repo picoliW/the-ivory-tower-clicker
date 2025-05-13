@@ -24,16 +24,7 @@ class OptionsMenu(Entity):
             model='quad',
             color=color.azure,
             scale=(7, 5),
-            z=-1
-        )
-
-        self.title = Text(
-            text='Opções',
-            origin=(0, 0),
-            scale=(2,2),
-            position=(0, 1.1),
-            parent=self,
-            z=-1
+            z=-0.3
         )
 
         self.settings_button = Button(
@@ -42,7 +33,7 @@ class OptionsMenu(Entity):
             parent=self,
             color=color.white,
             on_click=self.settings_clicked,
-            z=-1
+            z=-0.4
         )
 
         self.settings_icon = Entity(
@@ -50,7 +41,7 @@ class OptionsMenu(Entity):
             model='quad',
             texture='../assets/config_icons/config.png', 
             scale=(.25, .65),  
-            z=-0.1,  
+            z=-0.4 
         )
 
         self.account_button = Button(
@@ -59,7 +50,7 @@ class OptionsMenu(Entity):
             parent=self,
             color=color.white,
             on_click=self.account_clicked,
-            z=-1
+            z=-0.4
         )
         
         self.account_icon = Entity(
@@ -67,7 +58,7 @@ class OptionsMenu(Entity):
             model='quad',
             texture='../assets/config_icons/account.png', 
             scale=(.3, 1),  
-            z=-0.1,  
+            z=-0.4 
         )
 
         self.close_button = Button(
@@ -76,7 +67,7 @@ class OptionsMenu(Entity):
             parent=self,
             color=color.clear,
             on_click=self.close,
-            z=-1
+            z=-0.4
         )
 
         self.close_icon = Entity(
@@ -84,7 +75,7 @@ class OptionsMenu(Entity):
             model='quad',
             texture='../assets/config_icons/x.png', 
             scale=(0.6, 0.9),  
-            z=-0.1,  
+            z=-0.4  
         )
 
     def settings_clicked(self):
@@ -113,14 +104,14 @@ class OptionsMenu(Entity):
             parent=self,
             scale=(9, 7),
             on_value_changed=self.update_master_volume,
-            z=-1.1
+            z=-0.4
         )
         Text(
             text="Master Volume",
             position=(-.5, 1.1),
             parent=self,
             scale=7.5,
-            z=-1.2
+            z=-0.4
         )
         
         self.music_slider = Slider(
@@ -132,14 +123,14 @@ class OptionsMenu(Entity):
             parent=self,
             scale=(9, 7),
             on_value_changed=self.update_music_volume,
-            z=-1.1
+            z=-0.4
         )
         Text(
             text="Music Volume",
             position=(-.5, 0.6),
             parent=self,
             scale=7.5,
-            z=-1.2
+            z=-0.4
         )
         
         self.sfx_slider = Slider(
@@ -151,14 +142,14 @@ class OptionsMenu(Entity):
             parent=self,
             scale=(9, 7),
             on_value_changed=self.update_sfx_volume,
-            z=-1.1
+            z=-0.4
         )
         Text(
             text="SFX Volume",
             position=(-.5, .1),
             parent=self,
             scale=7.5,
-            z=-1.2
+            z=-0.4
         )
 
     def update_master_volume(self):
@@ -191,7 +182,7 @@ class OptionsMenu(Entity):
             parent=self,
             color=color.clear,
             text_size=.5,
-            z=-1,
+            z=-0.4,
             on_click=self.show_login_form
         )
 
@@ -202,11 +193,16 @@ class OptionsMenu(Entity):
             parent=self,
             color=color.clear,
             text_size=.5,
-            z=-1,
+            z=-0.4,
             on_click=self.show_register_form
         )
 
     def show_login_form(self):
+        for btn in [self.login_button, self.register_button]:
+            if btn: 
+                destroy(btn)
+        self.login_button = self.register_button = None
+
         if self.register_form:
             destroy(self.register_form)
             self.register_form = None
@@ -216,6 +212,11 @@ class OptionsMenu(Entity):
             self.login_form.on_login_success = self.handle_login_success
 
     def show_register_form(self):
+        for btn in [self.login_button, self.register_button]:
+            if btn: 
+                destroy(btn)
+        self.login_button = self.register_button = None
+
         if self.login_form:
             destroy(self.login_form)
             self.login_form = None

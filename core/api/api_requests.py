@@ -4,11 +4,12 @@ class APIClient:
     def __init__(self, base_url="http://localhost:3000/auth"):
         self.base_url = base_url
     
-    def register_user(self, email, password, confirm_password):
+    def register_user(self, nickname, email, password, confirm_password):
         try:
             response = requests.post(
                 f"{self.base_url}/register",
                 json={
+                    "nickname" : nickname,
                     "email": email,
                     "password": password,
                     "confirmPassword": confirm_password

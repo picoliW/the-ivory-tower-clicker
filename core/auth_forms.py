@@ -104,6 +104,24 @@ class RegisterForm(Entity):
         self.start_button.on_click = self.submit_form
 
     def _setup_ui(self):
+        self.nickname_text = Text(
+            text="Nickname",
+            position=(-1.8, 1),
+            color=color.white,
+            scale=5.5,
+            parent=self,
+            z=-1.1
+        )
+
+        self.nickname_input = InputField(
+            scale=(4, 0.4),
+            position=(0, 0.63),
+            parent=self,
+            z=-1.1
+        )
+
+        self.nickname_input.text_field.scale = (2.62, 16)
+
         self.email_text = Text(
             text="E-mail",
             position=(-1.8, 0.4),
@@ -166,11 +184,13 @@ class RegisterForm(Entity):
             z=-1.1,
         )
     def submit_form(self):
+        nickname = self.nickname_input.text
         email = self.email_input.text
         password = self.password_input.text
         confirm_password = self.confirm_password_input.text
         
         success, message = self.handlers.handle_register(
+            nickname,
             email, 
             password, 
             confirm_password

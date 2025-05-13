@@ -30,7 +30,7 @@ class MainMenu(Entity):
             model='quad',
             scale=(base_width, base_height),
             texture=self.frames[0],
-            z=1,
+            z=-0.1,
             parent=self
         )
 
@@ -39,7 +39,8 @@ class MainMenu(Entity):
             origin=(0, 14),
             color=color.white,
             scale=5.5,
-            parent=self
+            parent=self,
+            z=-0.2
         )
 
         self.start_button = Button(
@@ -49,7 +50,8 @@ class MainMenu(Entity):
             color=color.clear,        
             text_color=color.white,
             on_click=Func(self.play_click_sound),
-            parent=self
+            parent=self,
+            z=-0.2
         )
         self.start_button.on_click = Sequence(  
             Func(self.play_click_sound),
@@ -66,6 +68,7 @@ class MainMenu(Entity):
             text_color=color.white,
             on_click=Func(self.play_click_sound), 
             parent=self,
+            z=-0.2
         )
         self.options_button.on_click = Sequence(  
             Func(self.play_click_sound),
@@ -81,7 +84,8 @@ class MainMenu(Entity):
             color=color.clear,
             text_color=color.white,
             on_click=Func(self.play_click_sound),
-            parent=self
+            parent=self,
+            z=-0.2
         )
         self.quit_button.on_click = Sequence( 
             Func(self.play_click_sound),
@@ -95,7 +99,8 @@ class MainMenu(Entity):
             model='quad',
             texture='../assets/logos/game_logo.png',
             scale=(6, 5),
-            position=(0, 2.5)
+            position=(0, 2.5),
+            z=-0.2
         )
 
         self.dev_logo = Entity(
@@ -103,7 +108,8 @@ class MainMenu(Entity):
             model='quad',
             texture='../assets/logos/dev_logo.png',
             scale=(2, 1),
-            position=(6.4, -3.7)
+            position=(6.4, -3.7),
+            z=-0.2
         )
 
         self.disable()
@@ -177,7 +183,8 @@ class MainMenu(Entity):
                 position=(0, 1),
                 color=color.clear,
                 text_color=color.white,
-                parent=self
+                parent=self,
+                z=-0.2
             )
             self.start_button.on_click = Sequence(
                 Func(self.play_click_sound),
@@ -193,7 +200,8 @@ class MainMenu(Entity):
                 position=(0, -1),
                 color=color.clear,
                 text_color=color.white,
-                parent=self
+                parent=self,
+                z=-0.2
             )
             self.quit_button.on_click = Sequence(
                 Func(self.play_click_sound),

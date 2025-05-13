@@ -117,9 +117,9 @@ router.post("/save-player-data", async (req, res) => {
 });
 
 router.post("/register", async (req, res) => {
-  const { email, password, confirmPassword } = req.body;
+  const { nickname, email, password, confirmPassword } = req.body;
 
-  if (!email || !password || !confirmPassword) {
+  if (!nickname || !email || !password || !confirmPassword) {
     return res.status(400).json({
       success: false,
       message: "Todos os campos são obrigatórios",
@@ -147,8 +147,8 @@ router.post("/register", async (req, res) => {
     }
 
     const [result] = await pool.query(
-      "INSERT INTO users (email, password) VALUES (?, ?)",
-      [email, password]
+      "INSERT INTO users (nickname, email, password) VALUES (?, ?, ?)",
+      [nickname, email, password]
     );
 
     res.status(201).json({
