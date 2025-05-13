@@ -59,7 +59,7 @@ class UI:
             texture="../assets/gold_coin.png",
             position=(-0.4, 0),
             scale=(0.15, 0.65),
-            origin=(0, 0)
+            origin=(0, 0),
         )
 
         self.gold_value_text = Text(
@@ -68,7 +68,8 @@ class UI:
             position=(0, 0),
             scale=(3, 15),
             origin=(0, 0),
-            color=color.gold
+            color=color.gold,
+            z=-0.2
         )
 
         self.gold_text.enabled = False
