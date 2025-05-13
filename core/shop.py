@@ -165,12 +165,12 @@ class Shop(Entity):
     def show_items(self):
         self.clear_list()
         sorted_items = sorted(self.available_items, key=lambda item: item.cost)
-        for i, item in enumerate(sorted_items[:3]):
+        for i, item in enumerate(sorted_items[:4]):
             can_afford = self.player.gold >= item.cost
             b = Button(
                 parent=self.background,
                 text=f'{item.name}\n{item.description}\n{item.cost} gold',
-                y=0.1 - i*0.15,
+                position=(0, 0.25 - i*0.15),
                 scale=(0.6, 0.1),
                 color=color.rgb(0, 224, 0) if can_afford else color.black66
             )
@@ -180,8 +180,8 @@ class Shop(Entity):
             sprite = Sprite(
                 parent=self.background,
                 texture=item.image_path,
-                scale=(0.01, 0.011),
-                position=(-0.25, 0.1 - i*0.15, 0),
+                scale=(0.01, 0.01),
+                position=(-0.22, 0.25 - i*0.15),
                 z=-1
             )
             self.item_sprites.append(sprite)
@@ -191,13 +191,13 @@ class Shop(Entity):
 
     def show_armors(self):
         self.clear_list()
-        for i, armor in enumerate(self.armor_list[:3]):
+        for i, armor in enumerate(self.armor_list[:4]):
             can_afford = self.player.gold >= armor.current_cost
             
             b = Button(
                 parent=self.background,
                 text=f'{armor.name}\nLevel {armor.level}\nCost {armor.current_cost}',
-                y=0.1 - i*0.15,
+                position=(0, 0.25 - i*0.15),
                 scale=(0.6, 0.1),
                 color=color.rgb(0, 224, 0) if can_afford else color.black66
             )
@@ -208,7 +208,7 @@ class Shop(Entity):
                 parent=self.background,
                 texture=armor.image_path,
                 scale=(0.01, 0.01),
-                position=(-0.25, 0.1 - i*0.15, 0),
+                position=(-0.22, 0.25 - i*0.15),
                 z=-1
             )
             self.armor_sprites.append(sprite)
@@ -216,7 +216,7 @@ class Shop(Entity):
             dps_text = Text(
                 parent=self.background,
                 text=f'+{armor.base_dps} DPS\nPer\nLevel',
-                position=(0.35, 0.1 - i*0.15),  
+                position=(0.35, 0.25 - i*0.15),  
                 origin=(0, 0),  
                 scale=(0.7, 0.7), 
                 color=color.green,
