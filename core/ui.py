@@ -13,9 +13,24 @@ class UI:
         self.create_run_button()
 
     def create_main_ui(self):
-        self.floor_text = Text(text=f'Floor: {self.player.floor}', position=(-0.8, 0.45), scale=1.5)
-        self.gold_text = Text(text=f'Gold: {self.player.gold}', position=(-0.8, 0.4), scale=1.5)
-        self.enemy_count_text = Text(text=f'Enemies: {self.enemy_manager.enemies_defeated}/5', position=(-0.8, 0.35), scale=1.5)
+        self.floor_text = Text(
+            text=f'Floor: {self.player.floor}', 
+            position=(-0.8, 0.45), 
+            scale=1.5,
+            z=-0.1
+        )
+        self.gold_text = Text(
+            text=f'Gold: {self.player.gold}', 
+            position=(-0.8, 0.4), 
+            scale=1.5,
+            z=-0.2
+        )
+        self.enemy_count_text = Text(
+            text=f'Enemies: {self.enemy_manager.enemies_defeated}/5', 
+            position=(-0.8, 0.35), 
+            scale=1.5,
+            z=-0.1
+        )
 
     def create_hud_ui(self):
         self.gold_bg = Panel(
@@ -23,8 +38,8 @@ class UI:
             position=(0, 0.40), 
             texture='white_cube',
             texture_scale=(1, 1),
-            color=color.rgba(50, 50, 50, 200),
-            z=-1
+            color=color.gray,
+            z=-0.1
         )
 
         self.gold_label = Text(
@@ -35,6 +50,7 @@ class UI:
             origin=(0, 0),
             color=color.gold,
             bold=True,
+            z=-0.2
         )
 
         self.gold_coin_img = Entity(
@@ -52,7 +68,7 @@ class UI:
             position=(0, 0),
             scale=(3, 15),
             origin=(0, 0),
-            color=color.white
+            color=color.gold
         )
 
         self.gold_text.enabled = False

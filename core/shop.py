@@ -140,12 +140,12 @@ class Shop(Entity):
 
     def show(self):
         self.background.enabled = True
-        self.background.enabled = True
+        self.open_shop_button.enabled = False        
         self.show_items()
 
     def hide(self):
         self.background.enabled = False
-        self.background_enabled = False
+        self.open_shop_button.enabled = True
         self.clear_list()
 
     def clear_list(self):
