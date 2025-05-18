@@ -65,7 +65,7 @@ class RankingHandler:
         
         title = Text(
             parent=self.shop_background,
-            text="Ranking de Jogadores",
+            text="Player Ranking",
             position=(0, 0.3),
             scale=1.5,
             origin=(0, 0),

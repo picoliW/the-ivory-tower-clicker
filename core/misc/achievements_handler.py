@@ -66,8 +66,38 @@ class AchievementsHandler:
         )
         self.achievement_entities.append(back_button)
 
+        self._add_back_button()
+
         for i, achievement in enumerate(self.achievement_manager.achievements):
             self._create_achievement_card(achievement, 0.25 - i*0.15, achievement.unlocked)
+
+    def _add_back_button(self):
+        back_button = Button(
+            parent=self.shop_background,
+            position=(0.39, -0.45),  
+            scale=(0.15, 0.08),   
+            color=color.clear,
+            on_click=self._return_from_achievements,
+            z=-0.5
+        )
+        
+        back_icon = Entity(
+            parent=back_button,
+            model='quad',
+            texture='../assets/misc_icons/back_icon.png',
+            scale=(0.9, 1.3),
+            z=-0.6
+        )
+        
+        back_label = Text(
+            parent=back_button,
+            text="Voltar",
+            y=-0.5,
+            scale=1,
+            color=color.white
+        )
+        
+        self.achievement_entities.extend([back_button, back_icon, back_label])
 
     def _create_achievement_card(self, achievement, y_pos, unlocked):
         bg_color = color.rgba(50, 205, 50, 150) if unlocked else color.rgba(169, 169, 169, 150)

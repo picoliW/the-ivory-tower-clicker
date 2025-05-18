@@ -1,27 +1,20 @@
 [
   {
-    "name": "Primeiros Passos",
-    "description": "Chegue ao 2º andar",
+    "name": "First Steps",
+    "description": "Get to the second floor",
     "condition": "player.floor >= 2",
     "icon": "assets/achievements/first_steps.png"
   },
   {
-    "name": "Rico",
-    "description": "Acumule 1000 de ouro",
+    "name": "Rich",
+    "description": "Get 1000 gold",
     "condition": "player.gold >= 1000",
     "icon": "assets/achievements/rich.png"
   },
   {
-    "name": "Caçador",
-    "description": "Derrote 50 inimigos",
+    "name": "Hunter",
+    "description": "Defeat 50 enemies",
     "condition": "enemy_manager.enemies_defeated >= 50",
     "icon": "assets/achievements/hunter.png"
-  },
-  {
-    "name": "Mestre dos Andares",
-    "description": "Complete todos os andares",
-    "condition": "player.floor >= 10",
-    "icon": "assets/achievements/floor_master.png"
   }
-  
 ]

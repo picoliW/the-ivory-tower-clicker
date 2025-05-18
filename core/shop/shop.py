@@ -171,6 +171,7 @@ class Shop(Entity):
         self.background.enabled = False
         self.open_shop_button.enabled = True
         self.clear_list()
+        self.clear_ranking()
         self.misc_options.hide_options() 
 
     def clear_list(self):
@@ -188,6 +189,7 @@ class Shop(Entity):
         self.dps_texts.clear() 
             
     def show_items(self):
+        self.clear_ranking()
         self.clear_list()
         self.misc_options.hide_options() 
         sorted_items = sorted(self.available_items, key=lambda item: item.cost)
@@ -217,6 +219,7 @@ class Shop(Entity):
             sprite.z = 10
 
     def show_armors(self):
+        self.clear_ranking()
         self.clear_list()
         self.misc_options.hide_options() 
         for i, armor in enumerate(self.armor_list[:4]):
@@ -280,3 +283,6 @@ class Shop(Entity):
         armor = self.armor_list[index]
         if armor.upgrade(self.player):
             self.show_armors()
+
+    def clear_ranking(self):
+        self.misc_options.ranking_handler.clear_ranking()
