@@ -16,7 +16,7 @@ class RankingHandler:
         
         loading_text = Text(
             parent=self.shop_background,
-            text="Carregando ranking...",
+            text="Loading ranking...",
             position=(0, 0),
             scale=1,
             color=color.white,
@@ -51,7 +51,7 @@ class RankingHandler:
         if not players:
             no_data_msg = Text(
                 parent=self.shop_background,
-                text="Nenhum dado de ranking disponível",
+                text="No ranking data available.",
                 position=(0, 0),
                 scale=0.8,
                 color=color.yellow,

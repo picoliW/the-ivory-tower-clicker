@@ -3,12 +3,14 @@ import json
 
 
 class Achievement:
-    def __init__(self, name, description, condition, icon_path, unlocked=False):
+    def __init__(self, name, description, condition, icon_path, reward=0, unlocked=False, claimed=False):
         self.name = name
         self.description = description
         self.condition = condition
         self.icon_path = icon_path
+        self.reward = reward
         self.unlocked = unlocked
+        self.claimed = claimed
     
     def check_condition(self, player, enemy_manager=None):
         try:
@@ -21,13 +23,21 @@ class Achievement:
                 if key.startswith('_'):
                     del eval_globals[key]
             
+            if 'enemy_manager' in self.condition and enemy_manager is None:
+                return False
+                
             self.unlocked = eval(self.condition, {}, eval_globals)
             return self.unlocked
         except Exception as e:
             print(f"Erro ao verificar conquista {self.name}: {e}")
             self.unlocked = False
             return False
-
+        
+    def claim(self):
+        if self.unlocked and not self.claimed:
+            self.claimed = True
+            return True
+        return False
 
 class AchievementManager:
     def __init__(self):
@@ -48,7 +58,8 @@ class AchievementManager:
                         name=item['name'],
                         description=item['description'],
                         condition=item['condition'],
-                        icon_path=icon_path
+                        icon_path=icon_path,
+                        reward=item.get('reward', 0)  
                     )
                 )
             return True

@@ -21,14 +21,15 @@ class AchievementsHandler:
             if not self.achievement_manager.load_from_json(achievement_path):
                 raise Exception("Falha ao carregar arquivo de achievements")
             
+            enemy_manager = getattr(self.player, 'enemy_manager', None)
             self.achievement_manager.check_all_conditions(
                 self.player,
-                getattr(self.player, 'enemy_manager', None)
+                enemy_manager
             )
 
             loading_text = Text(
                 parent=self.shop_background,
-                text="Carregando conquistas...",
+                text="Loading achievements...",
                 position=(0, 0),
                 scale=1.5,
                 color=color.white,
@@ -46,7 +47,7 @@ class AchievementsHandler:
         
         title = Text(
             parent=self.shop_background,
-            text="CONQUISTAS",
+            text="ACHIEVEMENTS",
             position=(0, 0.4),
             scale=2.0,
             origin=(0, 0),
@@ -57,7 +58,7 @@ class AchievementsHandler:
 
         back_button = Button(
             parent=self.shop_background,
-            text='Voltar',
+            text='Back',
             position=(0.7, 0.4),
             scale=(0.15, 0.07),
             color=color.dark_gray,
@@ -68,7 +69,10 @@ class AchievementsHandler:
 
         self._add_back_button()
 
-        for i, achievement in enumerate(self.achievement_manager.achievements):
+        visible_achievements = [a for a in self.achievement_manager.achievements 
+                          if not a.claimed or not a.unlocked]
+
+        for i, achievement in enumerate(visible_achievements):
             self._create_achievement_card(achievement, 0.25 - i*0.15, achievement.unlocked)
 
     def _add_back_button(self):
@@ -91,7 +95,7 @@ class AchievementsHandler:
         
         back_label = Text(
             parent=back_button,
-            text="Voltar",
+            text="Back",
             y=-0.5,
             scale=1,
             color=color.white
@@ -149,7 +153,20 @@ class AchievementsHandler:
         )
         self.achievement_entities.append(desc_text)
 
-        if unlocked:
+        if unlocked and not achievement.claimed:
+            claim_button = Button(
+                parent=panel,
+                text='Claim',
+                position=(0.35, 0),
+                scale=(0.15, 0.3),
+                color=color.green,
+                on_click=Func(self._claim_achievement, achievement, y_pos),
+                z=-0.6,
+                enabled=True
+            )
+
+            self.achievement_entities.append(claim_button)
+        elif unlocked:
             status_icon = Entity(
                 parent=panel,
                 model='quad',
@@ -171,6 +188,24 @@ class AchievementsHandler:
         )
         border.color = color.gold if unlocked else color.gray
         self.achievement_entities.append(border)
+
+    def _claim_achievement(self, achievement, y_pos):
+        if achievement.claim():  
+            reward = achievement.reward  
+            self.player.gold += reward
+            
+            reward_text = Text(
+                parent=self.shop_background,
+                text=f"+{reward} gold!",
+                position=(0.35, y_pos),
+                scale=1,
+                color=color.gold,
+                z=-0.4
+            )
+            self.achievement_entities.append(reward_text)
+            destroy(reward_text, delay=1)
+            
+            invoke(self._display_achievements, delay=1.1)
 
     def _return_from_achievements(self):
         self.clear_achievements()
