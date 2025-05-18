@@ -12,13 +12,11 @@ class Achievement:
     
     def check_condition(self, player, enemy_manager=None):
         try:
-            # Ambiente seguro para eval
             eval_globals = {
                 'player': player,
                 'enemy_manager': enemy_manager
             }
             
-            # Remove atributos privados por segurança
             for key in list(eval_globals.keys()):
                 if key.startswith('_'):
                     del eval_globals[key]
