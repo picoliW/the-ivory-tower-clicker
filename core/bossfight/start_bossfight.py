@@ -1,4 +1,4 @@
-from core.bossfight import BossFight
+from core.bossfight.bossfight import BossFight
 from ursina import *
 
 class Start_bossfight:

@@ -1,6 +1,6 @@
 from ursina import *
-from core.dashability import DashAbility
-from core.goldentouch import GoldenTouch
+from core.abilities.dashability import DashAbility
+from core.abilities.goldentouch import GoldenTouch
 
 class UI:
     def __init__(self, player, enemy_manager):

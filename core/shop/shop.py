@@ -1,11 +1,11 @@
 from ursina import *
 import json
 import os
-from core.shop_items import ShopItem, ArmorItem
-from core.misc import MiscOptions
+from core.shop.shop_items import ShopItem, ArmorItem
+from core.misc.misc import MiscOptions
 
 class Shop(Entity):
-    DATA_DIR = os.path.join(os.path.dirname(__file__), '..', 'data')
+    DATA_DIR = os.path.join(os.path.dirname(__file__), '..', '..', 'data')
     shop_path = os.path.join(DATA_DIR, 'shop_items.json')
     armor_path = os.path.join(DATA_DIR, 'armor_items.json')
 

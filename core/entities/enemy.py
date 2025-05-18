@@ -1,7 +1,7 @@
 from random import randint
 from ursina import *
 from ursina.color import rgb
-from core.dashability import DashAbility
+from core.abilities.dashability import DashAbility
 
 class Enemy(Entity):
     def __init__(self, enemy_type, health, position=(2, -2)):

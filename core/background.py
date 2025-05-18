@@ -1,5 +1,5 @@
 from ursina import *
-from core.dashability import DashAbility
+from core.abilities.dashability import DashAbility
 
 class Background(Entity):
     def __init__(self, texture='../assets/bg.png'):

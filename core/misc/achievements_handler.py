@@ -1,6 +1,6 @@
 from ursina import *
 import os
-from core.achievements import AchievementManager
+from core.misc.achievements import AchievementManager
 
 class AchievementsHandler:
     def __init__(self, parent, player, shop_background):
@@ -14,7 +14,7 @@ class AchievementsHandler:
         self.clear_achievements()
 
         self.achievement_manager = AchievementManager()
-        DATA_DIR = os.path.join(os.path.dirname(__file__), '..', 'data')
+        DATA_DIR = os.path.join(os.path.dirname(__file__), '..', '..', 'data')
         achievement_path = os.path.join(DATA_DIR, 'achievements.json')
         
         try:
@@ -152,7 +152,7 @@ class AchievementsHandler:
         error_panel = Entity(
             parent=self.shop_background,
             model='quad',
-            color=color.dark_red,
+            color=color.red,
             position=(0, 0),
             scale=(0.7, 0.3),
             z=-0.5

@@ -1,8 +1,8 @@
 from ursina import *
 from core.api.api_requests import APIClient
 import os
-from core.ranking_handler import RankingHandler
-from core.achievements_handler import AchievementsHandler
+from core.misc.ranking_handler import RankingHandler
+from core.misc.achievements_handler import AchievementsHandler
 
 class MiscOptions(Entity):
     def __init__(self, player, shop_background):
