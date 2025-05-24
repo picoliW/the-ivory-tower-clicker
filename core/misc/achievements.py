@@ -1,7 +1,6 @@
 from ursina import *
 import json
 
-
 class Achievement:
     def __init__(self, name, description, condition, icon_path, reward=0, unlocked=False, claimed=False):
         self.name = name
@@ -45,14 +44,18 @@ class AchievementManager:
     
     def load_from_json(self, json_path):
         try:
-            current_dir = os.path.dirname(os.path.abspath(__file__))
-            full_path = os.path.normpath(os.path.join(current_dir, '..', json_path))
+            json_dir = os.path.dirname(os.path.abspath(json_path))
             
-            with open(full_path, 'r', encoding='utf-8') as f:
+            project_root = os.path.normpath(os.path.join(json_dir, '..'))
+            
+            with open(json_path, 'r', encoding='utf-8') as f:
                 data = json.load(f)
                 
             for item in data:
-                icon_path = os.path.normpath(os.path.join(current_dir, '..', item['icon']))
+                icon_path = item['icon_path']
+                icon_path = os.path.normpath(icon_path).replace(os.sep, '/')
+                print(f"Carregando ícone: {icon_path}") 
+                
                 self.achievements.append(
                     Achievement(
                         name=item['name'],

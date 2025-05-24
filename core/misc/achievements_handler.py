@@ -117,16 +117,34 @@ class AchievementsHandler:
         )
         self.achievement_entities.append(panel)
 
-        icon_texture = achievement.icon_path if os.path.exists(achievement.icon_path) else 'white_cube'
-        icon = Entity(
-            parent=panel,
-            model='quad',
-            texture=icon_texture,
-            position=(-0.4, 0),
-            scale=(0.08, 0.08),
-            color=color.white if unlocked else color.gray,
-            z=-0.6
-        )
+        print(f"Tentando carregar ícone em: {achievement.icon_path}")
+        print(f"Arquivo existe? {os.path.exists(achievement.icon_path)}")
+        try:
+            icon_texture = load_texture(achievement.icon_path)
+            if icon_texture:
+                icon = Entity(
+                    parent=panel,
+                    model='quad',
+                    texture=icon_texture,
+                    position=(-0.43, 0),
+                    scale=(0.13, 0.6),
+                    color=color.white if unlocked else color.gray,
+                    z=-0.6
+                )
+            else:
+                raise Exception("Texture não carregada")
+        except:
+            print(f"Falha ao carregar textura: {achievement.icon_path}")
+            icon = Entity(
+                parent=panel,
+                model='quad',
+                texture='white_cube',
+                position=(-0.4, 0),
+                scale=(0.08, 0.08),
+                color=color.white if unlocked else color.gray,
+                z=-0.6
+            )
+        
         if not unlocked:
             icon.alpha = 0.6
         self.achievement_entities.append(icon)
