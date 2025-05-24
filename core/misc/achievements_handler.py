@@ -13,13 +13,21 @@ class AchievementsHandler:
         self.parent.hide_options()
         self.clear_achievements()
 
-        self.achievement_manager = AchievementManager()
-        DATA_DIR = os.path.join(os.path.dirname(__file__), '..', '..', 'data')
-        achievement_path = os.path.join(DATA_DIR, 'achievements.json')
+        self.achievement_manager = AchievementManager(self.player.user_id)
+        
+        loading_text = Text(
+            parent=self.shop_background,
+            text="Loading achievements...",
+            position=(0, 0),
+            scale=1.5,
+            color=color.white,
+            z=-0.5
+        )
+        self.achievement_entities.append(loading_text)
         
         try:
-            if not self.achievement_manager.load_from_json(achievement_path):
-                raise Exception("Falha ao carregar arquivo de achievements")
+            if not self.achievement_manager.load_from_server():
+                raise Exception("Failed to load achievements from server")
             
             enemy_manager = getattr(self.player, 'enemy_manager', None)
             self.achievement_manager.check_all_conditions(
@@ -27,20 +35,10 @@ class AchievementsHandler:
                 enemy_manager
             )
 
-            loading_text = Text(
-                parent=self.shop_background,
-                text="Loading achievements...",
-                position=(0, 0),
-                scale=1.5,
-                color=color.white,
-                z=-0.5
-            )
-            self.achievement_entities.append(loading_text)
-            
             invoke(self._display_achievements, delay=0.1)
             
         except Exception as e:
-            self._show_achievements_error(f"Erro: {str(e)}")
+            self._show_achievements_error(f"Error: {str(e)}")
 
     def _display_achievements(self):
         self.clear_achievements()

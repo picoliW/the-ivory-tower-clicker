@@ -165,4 +165,158 @@ router.post("/register", async (req, res) => {
   }
 });
 
+router.get("/achievements/:userId", async (req, res) => {
+  try {
+    const userId = req.params.userId;
+
+    const [achievements] = await pool.query(
+      `
+      SELECT 
+        a.*,
+        ua.unlocked,
+        ua.completed
+      FROM achievements a
+      LEFT JOIN user_achievements ua ON a.id = ua.achievement_id AND ua.user_id = ?
+    `,
+      [userId]
+    );
+
+    res.status(200).json({
+      success: true,
+      achievements,
+    });
+  } catch (error) {
+    console.error("Error fetching achievements:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error fetching achievements",
+    });
+  }
+});
+
+router.post("/claim-achievement", async (req, res) => {
+  try {
+    const { userId, achievementId } = req.body;
+
+    const [result] = await pool.query(
+      `
+      UPDATE user_achievements 
+      SET completed = TRUE 
+      WHERE user_id = ? AND achievement_id = ? AND unlocked = TRUE AND completed = FALSE
+    `,
+      [userId, achievementId]
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Achievement not found or not eligible for claiming",
+      });
+    }
+
+    const [achievement] = await pool.query(
+      "SELECT reward FROM achievements WHERE id = ?",
+      [achievementId]
+    );
+
+    await pool.query(
+      "UPDATE player_data SET gold = gold + ? WHERE user_id = ?",
+      [achievement[0].reward, userId]
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Achievement claimed successfully",
+      reward: achievement[0].reward,
+    });
+  } catch (error) {
+    console.error("Error claiming achievement:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error claiming achievement",
+    });
+  }
+});
+
+router.post("/check-achievements", async (req, res) => {
+  try {
+    const { userId, playerData } = req.body;
+
+    const [achievements] = await pool.query("SELECT * FROM achievements");
+
+    const [player] = await pool.query(
+      "SELECT * FROM player_data WHERE user_id = ?",
+      [userId]
+    );
+
+    if (player.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Player not found",
+      });
+    }
+
+    const playerObj = player[0];
+    const enemyManager = playerData.enemyManager || { enemies_defeated: 0 };
+
+    for (const achievement of achievements) {
+      try {
+        const conditionMet = evalAchievementCondition(
+          achievement.condition_text,
+          playerObj,
+          enemyManager
+        );
+
+        if (conditionMet) {
+          await pool.query(
+            `
+            INSERT INTO user_achievements (user_id, achievement_id, unlocked)
+            VALUES (?, ?, TRUE)
+            ON DUPLICATE KEY UPDATE unlocked = TRUE
+          `,
+            [userId, achievement.id]
+          );
+        }
+      } catch (e) {
+        console.error(`Error checking achievement ${achievement.id}:`, e);
+      }
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Achievements checked successfully",
+    });
+  } catch (error) {
+    console.error("Error checking achievements:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error checking achievements",
+    });
+  }
+});
+
+function evalAchievementCondition(condition, player, enemyManager) {
+  const evalGlobals = {
+    player,
+    enemyManager,
+  };
+
+  for (const key in evalGlobals) {
+    if (key.startsWith("_")) {
+      delete evalGlobals[key];
+    }
+  }
+
+  if (condition.includes("enemy_manager") && !enemyManager) {
+    return false;
+  }
+
+  try {
+    return eval(condition, {}, evalGlobals);
+  } catch (e) {
+    console.error("Error evaluating condition:", e);
+    return false;
+  }
+}
+
 module.exports = router;

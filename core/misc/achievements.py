@@ -1,15 +1,22 @@
+import requests
 from ursina import *
-import json
+import os
 
 class Achievement:
-    def __init__(self, name, description, condition, icon_path, reward=0, unlocked=False, claimed=False):
+    def __init__(self, id, name, description, condition_text, icon_path, reward=0, unlocked=False, completed=False, player_id=None):
+        self.id = id
         self.name = name
         self.description = description
-        self.condition = condition
+        self.condition = condition_text
         self.icon_path = icon_path
         self.reward = reward
         self.unlocked = unlocked
-        self.claimed = claimed
+        self.completed = completed
+        self.player_id = player_id
+
+    @property
+    def claimed(self):
+        return self.completed
     
     def check_condition(self, player, enemy_manager=None):
         try:
@@ -28,49 +35,92 @@ class Achievement:
             self.unlocked = eval(self.condition, {}, eval_globals)
             return self.unlocked
         except Exception as e:
-            print(f"Erro ao verificar conquista {self.name}: {e}")
+            print(f"Error checking achievement {self.name}: {e}")
             self.unlocked = False
             return False
         
     def claim(self):
-        if self.unlocked and not self.claimed:
-            self.claimed = True
-            return True
+        if self.unlocked and not self.completed:
+            try:
+                response = requests.post(
+                    "http://localhost:3000/auth/claim-achievement",
+                    json={
+                        "userId": self.player_id,
+                        "achievementId": self.id
+                    }
+                )
+                
+                if response.json().get('success'):
+                    self.completed = True
+                    return True
+            except Exception as e:
+                print(f"Error claiming achievement: {e}")
+            
         return False
 
 class AchievementManager:
-    def __init__(self):
+    def __init__(self, player_id):
         self.achievements = []
+        self.player_id = player_id
     
-    def load_from_json(self, json_path):
+    def load_from_server(self):
         try:
-            json_dir = os.path.dirname(os.path.abspath(json_path))
+            response = requests.get(
+                f"http://localhost:3000/auth/achievements/{self.player_id}"
+            )
             
-            project_root = os.path.normpath(os.path.join(json_dir, '..'))
-            
-            with open(json_path, 'r', encoding='utf-8') as f:
-                data = json.load(f)
-                
-            for item in data:
-                icon_path = item['icon_path']
-                icon_path = os.path.normpath(icon_path).replace(os.sep, '/')
-                print(f"Carregando ícone: {icon_path}") 
-                
-                self.achievements.append(
-                    Achievement(
-                        name=item['name'],
-                        description=item['description'],
-                        condition=item['condition'],
-                        icon_path=icon_path,
-                        reward=item.get('reward', 0)  
-                    )
-                )
-            return True
+            if response.status_code == 200:
+                data = response.json()
+                if data.get('success'):
+                    for item in data['achievements']:
+                        achievement = Achievement(
+                            id=item['id'],
+                            name=item['name'],
+                            description=item['description'],
+                            condition_text=item['condition_text'],
+                            icon_path=item['icon_path'],
+                            reward=item.get('reward', 0),
+                            unlocked=item.get('unlocked', False),
+                            completed=item.get('completed', False),
+                            player_id=self.player_id
+                        )
+                        achievement.player_id = self.player_id
+                        self.achievements.append(achievement)
+                    return True
         except Exception as e:
-            print(f"Erro ao carregar achievements: {e}")
-            return False
+            print(f"Error loading achievements from server: {e}")
+        
+        return False
     
     def check_all_conditions(self, player, enemy_manager=None):
-        for achievement in self.achievements:
-            if not achievement.unlocked:
-                achievement.check_condition(player, enemy_manager)
+        try:
+            player_data = {
+                'damage': player.damage,
+                'gold': player.gold,
+                'gold_per_second': player.gold_per_second,
+                'floor': player.floor,
+                'dash_unlocked': player.dash_unlocked,
+                'movespeed': player.movespeed,
+                'dps': player.dps
+            }
+            
+            enemy_data = {
+                'enemies_defeated': enemy_manager.enemies_defeated if enemy_manager else 0
+            }
+            
+            response = requests.post(
+                "http://localhost:3000/auth/check-achievements",
+                json={
+                    "userId": self.player_id,
+                    "playerData": {
+                        **player_data,
+                        "enemyManager": enemy_data
+                    }
+                }
+            )
+            
+            if response.status_code == 200:
+                self.load_from_server()
+                
+        except Exception as e:
+            print(f"Error checking achievements on server: {e}")
