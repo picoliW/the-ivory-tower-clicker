@@ -80,6 +80,8 @@ def update():
         ui.update()
     if enemy_manager:
         enemy_manager.update()
+    if hasattr(player, 'achievement_manager'):
+        player.achievement_manager.update(player, enemy_manager)
 
 def input(key):
     if not game_started:

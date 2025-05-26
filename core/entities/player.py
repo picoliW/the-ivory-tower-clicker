@@ -136,6 +136,11 @@ class Player:
 
         self.update_animation()
 
+    def add_gold(self, amount):
+        self.gold += amount
+        if hasattr(self, 'achievement_manager'):
+            self.achievement_manager.check_all_conditions(self, getattr(self, 'enemy_manager', None))
+
 
 
 

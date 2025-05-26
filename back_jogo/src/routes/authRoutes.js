@@ -243,37 +243,35 @@ router.post("/check-achievements", async (req, res) => {
     const { userId, playerData } = req.body;
 
     const [achievements] = await pool.query("SELECT * FROM achievements");
-
     const [player] = await pool.query(
       "SELECT * FROM player_data WHERE user_id = ?",
       [userId]
     );
 
     if (player.length === 0) {
-      return res.status(404).json({
-        success: false,
-        message: "Player not found",
-      });
+      return res
+        .status(404)
+        .json({ success: false, message: "Player not found" });
     }
 
     const playerObj = player[0];
-    const enemyManager = playerData.enemyManager || { enemies_defeated: 0 };
+    const enemyData = {
+      enemies_defeated: playerData.enemies_defeated || 0,
+    };
 
     for (const achievement of achievements) {
       try {
         const conditionMet = evalAchievementCondition(
           achievement.condition_text,
-          playerObj,
-          enemyManager
+          { ...playerObj, ...playerData },
+          enemyData
         );
 
         if (conditionMet) {
           await pool.query(
-            `
-            INSERT INTO user_achievements (user_id, achievement_id, unlocked)
-            VALUES (?, ?, TRUE)
-            ON DUPLICATE KEY UPDATE unlocked = TRUE
-          `,
+            `INSERT INTO user_achievements (user_id, achievement_id, unlocked)
+             VALUES (?, ?, TRUE)
+             ON DUPLICATE KEY UPDATE unlocked = TRUE`,
             [userId, achievement.id]
           );
         }
@@ -282,16 +280,12 @@ router.post("/check-achievements", async (req, res) => {
       }
     }
 
-    res.status(200).json({
-      success: true,
-      message: "Achievements checked successfully",
-    });
+    res.status(200).json({ success: true });
   } catch (error) {
     console.error("Error checking achievements:", error);
-    res.status(500).json({
-      success: false,
-      message: "Error checking achievements",
-    });
+    res
+      .status(500)
+      .json({ success: false, message: "Error checking achievements" });
   }
 });
 

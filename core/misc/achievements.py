@@ -23,18 +23,25 @@ class Achievement:
         try:
             eval_globals = {
                 'player': player,
-                'enemy_manager': enemy_manager
+                'enemy_manager': enemy_manager or {'enemies_defeated': 0}
             }
+            
             for key in list(eval_globals.keys()):
                 if key.startswith('_'):
                     del eval_globals[key]
-            if 'enemy_manager' in self.condition and enemy_manager is None:
-                return False
-            self.unlocked = eval(self.condition, {}, eval_globals)
+            
+            condition_met = False
+            try:
+                condition_met = eval(self.condition, {}, eval_globals)
+            except:
+                pass
+                
+            if not self.completed:
+                self.unlocked = bool(condition_met)
+                
             return self.unlocked
         except Exception as e:
             print(f"Error checking achievement {self.name}: {e}")
-            self.unlocked = False
             return False
 
     def claim(self):
@@ -58,6 +65,18 @@ class AchievementManager:
     def __init__(self, player_id=None):
         self.achievements = []
         self.player_id = player_id
+        self.last_check_time = 0
+        self.check_interval = 1.0
+
+    def update(self, player, enemy_manager=None, current_time=None):
+        if not current_time:
+            current_time = time.time()
+        
+        if current_time - self.last_check_time < self.check_interval:
+            return
+            
+        self.last_check_time = current_time
+        self.check_all_conditions(player, enemy_manager)
 
     def load_from_server(self):
         if not self.player_id:
@@ -120,35 +139,33 @@ class AchievementManager:
 
 
     def check_all_conditions(self, player, enemy_manager=None):
-        if not self.player_id:
-            for achievement in self.achievements:
+        for achievement in self.achievements:
+            if not achievement.claimed:  
                 achievement.check_condition(player, enemy_manager)
-            return
-
-        try:
-            player_data = {
-                'damage': player.damage,
-                'gold': player.gold,
-                'gold_per_second': player.gold_per_second,
-                'floor': player.floor,
-                'dash_unlocked': player.dash_unlocked,
-                'movespeed': player.movespeed,
-                'dps': player.dps
-            }
-            enemy_data = {
-                'enemies_defeated': enemy_manager.enemies_defeated if enemy_manager else 0
-            }
-            response = requests.post(
-                "http://localhost:3000/auth/check-achievements",
-                json={
-                    "userId": self.player_id,
-                    "playerData": {
-                        **player_data,
-                        "enemyManager": enemy_data
-                    }
+        
+        if self.player_id:
+            try:
+                player_data = {
+                    'damage': player.damage,
+                    'gold': player.gold,
+                    'gold_per_second': player.gold_per_second,
+                    'floor': player.floor,
+                    'dash_unlocked': player.dash_unlocked,
+                    'movespeed': player.movespeed,
+                    'dps': player.dps,
+                    'enemies_defeated': enemy_manager.enemies_defeated if enemy_manager else 0
                 }
-            )
-            if response.status_code == 200:
-                self.load_from_server()
-        except Exception as e:
-            print(f"Error checking achievements on server: {e}")
+                
+                response = requests.post(
+                    "http://localhost:3000/auth/check-achievements",
+                    json={
+                        "userId": self.player_id,
+                        "playerData": player_data
+                    }
+                )
+                
+                if response.status_code == 200:
+                    if self.parent.showing_achievements:
+                        self.load_from_server()
+            except Exception as e:
+                print(f"Error syncing achievements with server: {e}")
