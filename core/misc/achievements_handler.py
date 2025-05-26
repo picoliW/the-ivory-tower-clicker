@@ -8,13 +8,13 @@ class AchievementsHandler:
         self.player = player
         self.shop_background = shop_background
         self.achievement_entities = []
-        
+
     def show_achievements(self):
         self.parent.hide_options()
         self.clear_achievements()
 
-        self.achievement_manager = AchievementManager(self.player.user_id)
-        
+        self.achievement_manager = AchievementManager(self.player.user_id if hasattr(self.player, 'user_id') else None)
+
         loading_text = Text(
             parent=self.shop_background,
             text="Loading achievements...",
@@ -24,19 +24,22 @@ class AchievementsHandler:
             z=-0.5
         )
         self.achievement_entities.append(loading_text)
-        
+
         try:
-            if not self.achievement_manager.load_from_server():
-                raise Exception("Failed to load achievements from server")
-            
+            loaded = False
+            if self.player.user_id:
+                loaded = self.achievement_manager.load_from_server()
+            else:
+                loaded = self.achievement_manager.load_from_json()
+
+            if not loaded:
+                raise Exception("Failed to load achievements")
+
             enemy_manager = getattr(self.player, 'enemy_manager', None)
-            self.achievement_manager.check_all_conditions(
-                self.player,
-                enemy_manager
-            )
+            self.achievement_manager.check_all_conditions(self.player, enemy_manager)
 
             invoke(self._display_achievements, delay=0.1)
-            
+
         except Exception as e:
             self._show_achievements_error(f"Error: {str(e)}")
 
@@ -54,16 +57,7 @@ class AchievementsHandler:
         )
         self.achievement_entities.append(title)
 
-        back_button = Button(
-            parent=self.shop_background,
-            text='Back',
-            position=(0.7, 0.4),
-            scale=(0.15, 0.07),
-            color=color.dark_gray,
-            on_click=self._return_from_achievements,
-            z=-0.5
-        )
-        self.achievement_entities.append(back_button)
+
 
         self._add_back_button()
 
@@ -242,7 +236,7 @@ class AchievementsHandler:
             parent=error_panel,
             text=error_msg,
             position=(0, -0.05),
-            scale=0.8,
+            scale=(1, 3),
             color=color.white,
             z=-0.6
         )

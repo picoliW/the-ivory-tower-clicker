@@ -1,23 +1,28 @@
-[
-  {
-    "name": "First Steps",
-    "description": "Get to the third floor",
-    "condition": "player.floor >= 3",
-    "icon_path": "assets/achievements/first_steps.png",
-    "reward": 100
-  },
-  {
-    "name": "Rich",
-    "description": "Get 1000 gold",
-    "condition": "player.gold >= 1000",
-    "icon_path": "assets/achievements/rich.png",
-    "reward": 500
-  },
-  {
-    "name": "Hunter",
-    "description": "Defeat 50 enemies",
-    "condition": "enemy_manager.enemies_defeated >= 50",
-    "icon_path": "assets/achievements/hunter.png",
-    "reward": 1000
-  }
-]
+{
+  "achievements": [
+    {
+      "id": 1,
+      "name": "First Steps",
+      "description": "Get to the third floor",
+      "condition_text": "player.floor >= 3",
+      "icon_path": "assets/achievements/first_steps.png",
+      "reward": 100
+    },
+    {
+      "id": 2,
+      "name": "Rich",
+      "description": "Get 1000 gold",
+      "condition_text": "player.gold >= 1000",
+      "icon_path": "assets/achievements/rich.png",
+      "reward": 500
+    },
+    {
+      "id": 3,
+      "name": "Hunter",
+      "description": "Defeat 50 enemies",
+      "condition_text": "enemy_manager.enemies_defeated >= 50",
+      "icon_path": "assets/achievements/hunter.png",
+      "reward": 1000
+    }
+  ]
+}
