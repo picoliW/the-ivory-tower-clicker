@@ -298,7 +298,8 @@ router.post("/check-achievements", async (req, res) => {
 function evalAchievementCondition(condition, player, enemyManager) {
   const evalGlobals = {
     player,
-    enemyManager,
+    enemy_manager: enemyManager,
+    enemyManager: enemyManager,
   };
 
   for (const key in evalGlobals) {
@@ -307,12 +308,22 @@ function evalAchievementCondition(condition, player, enemyManager) {
     }
   }
 
-  if (condition.includes("enemy_manager") && !enemyManager) {
+  if (
+    (condition.includes("enemy_manager") ||
+      condition.includes("enemyManager")) &&
+    !enemyManager
+  ) {
     return false;
   }
 
   try {
-    return eval(condition, {}, evalGlobals);
+    const evalFn = new Function(
+      "player",
+      "enemyManager",
+      "enemy_manager",
+      `return ${condition}`
+    );
+    return evalFn(player, enemyManager, enemyManager);
   } catch (e) {
     console.error("Error evaluating condition:", e);
     return false;
