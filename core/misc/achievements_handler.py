@@ -91,14 +91,6 @@ class AchievementsHandler:
             z=-0.6
         )
         
-        back_label = Text(
-            parent=back_button,
-            text="Back",
-            y=-0.5,
-            scale=1,
-            color=color.white
-        )
-        
         self.achievement_entities.extend([back_button, back_icon, back_label])
 
     def _create_achievement_card(self, achievement, y_pos, unlocked):
