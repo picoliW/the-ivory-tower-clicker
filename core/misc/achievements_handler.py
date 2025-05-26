@@ -91,7 +91,7 @@ class AchievementsHandler:
             z=-0.6
         )
         
-        self.achievement_entities.extend([back_button, back_icon, back_label])
+        self.achievement_entities.extend([back_button, back_icon])
 
     def _create_achievement_card(self, achievement, y_pos, unlocked):
         bg_color = color.rgba(50, 205, 50, 150) if unlocked else color.rgba(169, 169, 169, 150)
@@ -107,8 +107,6 @@ class AchievementsHandler:
         )
         self.achievement_entities.append(panel)
 
-        print(f"Tentando carregar ícone em: {achievement.icon_path}")
-        print(f"Arquivo existe? {os.path.exists(achievement.icon_path)}")
         try:
             icon_texture = load_texture(achievement.icon_path)
             if icon_texture:
@@ -124,7 +122,6 @@ class AchievementsHandler:
             else:
                 raise Exception("Texture não carregada")
         except:
-            print(f"Falha ao carregar textura: {achievement.icon_path}")
             icon = Entity(
                 parent=panel,
                 model='quad',

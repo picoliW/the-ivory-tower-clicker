@@ -192,6 +192,7 @@ class Shop(Entity):
         self.clear_ranking()
         self.clear_list()
         self.misc_options.hide_options() 
+        self.misc_options.achievements_handler.clear_achievements()
         sorted_items = sorted(self.available_items, key=lambda item: item.cost)
         for i, item in enumerate(sorted_items[:4]):
             can_afford = self.player.gold >= item.cost
@@ -222,6 +223,7 @@ class Shop(Entity):
         self.clear_ranking()
         self.clear_list()
         self.misc_options.hide_options() 
+        self.misc_options.achievements_handler.clear_achievements()
         for i, armor in enumerate(self.armor_list[:4]):
             can_afford = self.player.gold >= armor.current_cost
             
@@ -261,6 +263,7 @@ class Shop(Entity):
 
     def show_misc_options(self):
         self.clear_list()
+        self.misc_options.achievements_handler.clear_achievements()
         self.misc_options.show_options()
 
     def buy_item(self, index):
