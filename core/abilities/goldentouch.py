@@ -74,7 +74,7 @@ class GoldenTouch:
         else:
             self.button.tooltip.text = 'Golden Touch! (Spacebar)'
 
-        if held_keys['space']:
+        if held_keys['e']:
             self.toggle()
 
     def set_button_color(self, color_value):

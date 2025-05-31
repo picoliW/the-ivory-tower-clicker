@@ -68,6 +68,8 @@ def show_main_menu():
     
 invoke(show_main_menu, delay=3)
 
+
+
 def update():
     if not game_started:
         return

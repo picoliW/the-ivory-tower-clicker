@@ -31,7 +31,7 @@
     "texture": "pouch_small",
     "cost": 25,
     "stat_type": "gold_per_second",
-    "stat_value": 1,
+    "stat_value": 1000000,
     "description": "+1 Gold/s",
     "image_path": "../assets/shop_items/pouch_small.png"
   },
