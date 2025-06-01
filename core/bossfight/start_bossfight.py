@@ -2,9 +2,10 @@ from core.bossfight.bossfight import BossFight
 from ursina import *
 
 class Start_bossfight:
-    def __init__(self, player, enemy_manager):
+    def __init__(self, player, enemy_manager, ui):
         self.player = player
         self.enemy_manager = enemy_manager
+        self.ui = ui
         self.boss_fight = None
         self.choice_made = False
         self.bossfight_win_sound = Audio('../assets/sounds/bossfightSounds/bossfightWin.wav', autoplay=False)
@@ -22,21 +23,25 @@ class Start_bossfight:
 
     def start_bossfight(self):
         def win():
+            self.ui.enable_ui() 
             if not self.choice_made: 
                 self.show_choice()
             else:
                 self.finish_win_sequence()
 
         def fail():
+            self.ui.enable_ui() 
             self.player.floor -= 1
             self.player.sprite.position = (-5, -2.5)
             self.enemy_manager.show_enemies()
             self.boss_fight = None
             self.choice_made = False  
 
+        self.ui.disable_ui()
         self.enemy_manager.hide_enemies()
-        self.boss_fight = BossFight(self.player, on_win=win, on_fail=fail)
-        self.choice_made = False  
+        
+        self.boss_fight = BossFight(self.player, self.ui, on_win=win, on_fail=fail)
+        self.choice_made = False
 
     def show_choice(self):
         self.choice_panel = Panel(
@@ -65,7 +70,7 @@ class Start_bossfight:
         self.gradient_line = Entity(
             model='quad',
             scale=(0.01, .5),  
-            position= 0,
+            position=0,
             parent=self.choice_panel,
         )
         
@@ -98,4 +103,4 @@ class Start_bossfight:
         self.bossfight_win_sound.play()
         self.enemy_manager.show_enemies()
         self.boss_fight = None
-        self.player.save_data() 
+        self.player.save_data()

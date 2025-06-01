@@ -12,6 +12,28 @@ class UI:
         self.create_golden_touch_button()
         self.create_run_button()
 
+    def disable_ui(self):
+        self.floor_text.enabled = False
+        self.gold_text.enabled = False
+        self.enemy_count_text.enabled = False
+        self.gold_bg.enabled = False
+        self.gold_label.enabled = False
+        self.gold_coin_img.enabled = False
+        self.gold_value_text.enabled = False
+        self.golden_touch_button.enabled = False
+        self.run_button.enabled = False
+
+    def enable_ui(self):
+        self.floor_text.enabled = True
+        self.gold_text.enabled = False  
+        self.enemy_count_text.enabled = True
+        self.gold_bg.enabled = True
+        self.gold_label.enabled = True
+        self.gold_coin_img.enabled = True
+        self.gold_value_text.enabled = True
+        self.golden_touch_button.enabled = True
+        self.run_button.enabled = True
+
     def create_main_ui(self):
         self.floor_text = Text(
             text=f'Floor: {self.player.floor}', 

@@ -29,6 +29,8 @@ ui = None
 pause_menu = None
 start_bossfight = None
 
+start_in_bossfight = False 
+
 def start_game(user_id=None, player_data=None):
     splash_screen.disable()
     main_menu.disable()
@@ -37,9 +39,12 @@ def start_game(user_id=None, player_data=None):
         global game_started, player, shop, background, enemy_manager, ui, pause_menu, start_bossfight
 
         game_started = True
-        player = Player(user_id, player_data)  
-        
-        if player.gold == 0:
+        player = Player(user_id, player_data)
+
+        if start_in_bossfight:
+            setup_main_game()
+            start_bossfight.start_bossfight()  
+        elif player.gold == 0:
             first_time_scene = FirstTimeScene(on_complete=lambda: [
                 setup_main_game(),
                 first_time_scene.disable()
@@ -54,7 +59,7 @@ def start_game(user_id=None, player_data=None):
         enemy_manager = EnemyManager(player, background)
         ui = UI(player, enemy_manager)
         pause_menu = PauseMenu()
-        start_bossfight = Start_bossfight(player, enemy_manager)
+        start_bossfight = Start_bossfight(player, enemy_manager, ui)
 
     loading_screen = LoadingScreen(on_complete=load_game)
 
@@ -65,10 +70,8 @@ main_menu.disable()
 
 def show_main_menu():
     splash_screen.fade_out(on_complete=main_menu.enable)
-    
+
 invoke(show_main_menu, delay=3)
-
-
 
 def update():
     if not game_started:
