@@ -26,18 +26,20 @@ class BossFight(Entity):
         self.grounded = True
         
         self.active = True
-        self.timer = 60  
+        self.timer = 15 
         self.projectiles = []
         self.boss_health = 100
         self.attack_patterns = []
         self.current_pattern = 0
         self.pattern_timer = 0
-        self.pattern_duration = 5
+        self.pattern_duration = 7  
+        self.patterns_executed = 0  
+        self.max_patterns = 2  
+        self.attack_cooldown = 1.2  
+        self.attack_timer = 0  
 
         self.setup_arena()
-
         self.setup_animations()
-
         self.setup_attack_patterns()
 
     def setup_arena(self):
@@ -88,7 +90,6 @@ class BossFight(Entity):
     def setup_animations(self):
         self.walk_frames_right = [f'../assets/Player/PlayerMovement/Walk/Right/move_right_{i}' for i in range(8)]
         self.walk_frames_left = [f'../assets/Player/PlayerMovement/Walk/Left/move_left_{i}' for i in range(8)]
-        self.jump_frames = [f'../assets/Player/PlayerMovement/Jump/jump_{i}' for i in range(4)]
         self.current_frame = 0
         self.frame_timer = 0
         self.frame_speed = 0.1
@@ -97,35 +98,26 @@ class BossFight(Entity):
 
     def setup_attack_patterns(self):
         self.attack_patterns.append({
-            'name': 'rain',
-            'cooldown': 0.3,
-            'timer': 0,
-            'function': self.pattern_rain
-        })
-        
-        self.attack_patterns.append({
             'name': 'circle_wave',
-            'cooldown': 2.0,
+            'cooldown': 0.5,  
             'timer': 0,
-            'function': self.pattern_circle_wave
+            'function': self.pattern_circle_wave,
+            'executed': False
         })
         
         self.attack_patterns.append({
             'name': 'targeted',
-            'cooldown': 1.0,
+            'cooldown': 0.5,  
             'timer': 0,
-            'function': self.pattern_targeted
-        })
-        
-        self.attack_patterns.append({
-            'name': 'laser_walls',
-            'cooldown': 0,
-            'timer': 0,
-            'function': self.pattern_laser_walls
+            'function': self.pattern_targeted,
+            'executed': False
         })
 
     def update(self):
         if not self.active:
+            return
+        
+        if not hasattr(self, 'arena_fill') or not self.arena_fill:
             return
 
         self.timer -= time.dt
@@ -133,16 +125,15 @@ class BossFight(Entity):
             self.end_bossfight(success=True)
 
         self.handle_player_movement()
-        
         self.handle_jumping()
-        
         self.handle_attack_patterns()
-        
         self.update_projectiles()
-        
         self.update_animations()
 
     def handle_player_movement(self):
+        if not hasattr(self, 'arena_fill') or not self.arena_fill:
+            return
+            
         move = Vec2(
             held_keys['d'] - held_keys['a'],
             0  
@@ -192,9 +183,11 @@ class BossFight(Entity):
             self.is_jumping = True
             self.grounded = False
             self.jump_velocity = (2 * self.jump_height * self.jump_gravity) ** 0.5
-            self.player.sprite.texture = self.jump_frames[0]
 
     def handle_jumping(self):
+        if not hasattr(self, 'arena_fill') or not self.arena_fill:
+            return
+
         ground_level = self.arena_fill.y - (self.arena_fill.scale_y/2) + (self.player.sprite.scale_y/2)
         
         if self.is_jumping or not self.grounded:
@@ -208,10 +201,7 @@ class BossFight(Entity):
                 self.jump_velocity = 0
 
     def update_animations(self):
-        if self.is_jumping:
-            jump_frame = min(int((self.jump_velocity / ((2 * self.jump_height * self.jump_gravity) ** 0.5)) * len(self.jump_frames)), len(self.jump_frames)-1)
-            self.player.sprite.texture = self.jump_frames[jump_frame]
-        elif self.moving:
+        if self.moving:
             self.frame_timer += time.dt
             if self.frame_timer >= self.frame_speed:
                 self.current_frame = (self.current_frame + 1) % len(self.walk_frames_right)
@@ -229,25 +219,39 @@ class BossFight(Entity):
                 self.player.sprite.texture = self.walk_frames_left[0]
 
     def handle_attack_patterns(self):
+        if self.patterns_executed >= self.max_patterns:
+            return
+            
         self.pattern_timer += time.dt
         
         if self.pattern_timer >= self.pattern_duration:
             self.pattern_timer = 0
             self.current_pattern = (self.current_pattern + 1) % len(self.attack_patterns)
-            self.clear_projectiles()  
+            self.clear_projectiles()
+            self.patterns_executed += 1
+            self.attack_timer = 0  
+            
+            if self.patterns_executed >= self.max_patterns:
+                return
         
-        pattern = self.attack_patterns[self.current_pattern]
-        pattern['timer'] += time.dt
-        
-        if pattern['timer'] >= pattern['cooldown']:
-            pattern['timer'] = 0
-            pattern['function']()
+        self.attack_timer += time.dt
+        if self.attack_timer >= self.attack_cooldown:
+            self.attack_timer = 0
+            pattern = self.attack_patterns[self.current_pattern]
+            pattern['function']()  
 
     def update_projectiles(self):
         for proj in self.projectiles[:]:
             if hasattr(proj, 'velocity'):
                 proj.x += proj.velocity.x * time.dt
                 proj.y += proj.velocity.y * time.dt
+            
+            if hasattr(proj, 'lifetime'):
+                proj.lifetime -= time.dt
+                if proj.lifetime <= 0:
+                    destroy(proj)
+                    self.projectiles.remove(proj)
+                    continue
             
             if (proj.y < -5 or proj.y > 5 or 
                 proj.x < -5 or proj.x > 5):
@@ -260,22 +264,10 @@ class BossFight(Entity):
                     break
 
     def clear_projectiles(self):
-        for proj in self.projectiles:
-            destroy(proj)
-        self.projectiles = []
-
-    def pattern_rain(self):
-        for _ in range(3):  
-            x = random.uniform(-4.5, 4.5)
-            proj = Entity(
-                model='circle', 
-                color=color.red, 
-                scale=0.3, 
-                position=(x, 5), 
-                collider='box'
-            )
-            proj.z = self.player.sprite.z
-            self.projectiles.append(proj)
+        for proj in self.projectiles[:]:  
+            if proj: 
+                destroy(proj)
+        self.projectiles = []  
 
     def pattern_circle_wave(self):
         num_projectiles = 12
@@ -292,11 +284,11 @@ class BossFight(Entity):
             
             speed = 2
             proj.velocity = Vec3(cos(angle) * speed, sin(angle) * speed, 0)
+            proj.lifetime = 4.0
             
             self.projectiles.append(proj)
 
     def pattern_targeted(self):
-        predict_time = 0.5
         predicted_x = self.player.sprite.x
         predicted_y = self.player.sprite.y
         
@@ -316,43 +308,23 @@ class BossFight(Entity):
         )
         proj.z = self.player.sprite.z
         proj.velocity = direction * 6  
+        proj.lifetime = 2.5
         self.projectiles.append(proj)
 
-    def pattern_laser_walls(self):
-        left_laser = Entity(
-            model='quad', 
-            color=color.cyan, 
-            scale=(0.1, 5), 
-            position=(-5, 0), 
-            collider='box'
-        )
-        left_laser.z = self.player.sprite.z
-        left_laser.velocity = Vec3(1, 0, 0)  
-        
-        right_laser = Entity(
-            model='quad', 
-            color=color.cyan, 
-            scale=(0.1, 5), 
-            position=(5, 0), 
-            collider='box'
-        )
-        right_laser.z = self.player.sprite.z
-        right_laser.velocity = Vec3(-1, 0, 0)  
-        
-        self.projectiles.extend([left_laser, right_laser])
-
     def end_bossfight(self, success):
-        self.active = False
+        self.active = False  
         self.clear_projectiles()
         
-        destroy(self.arena_fill)
-        destroy(self.boss_entity)
-        destroy(self.border_top)
-        destroy(self.border_bottom)
-        destroy(self.border_left)
-        destroy(self.border_right)
-        destroy(self.background)
-
+        entities_to_destroy = [
+            'arena_fill', 'boss_entity', 'border_top',
+            'border_bottom', 'border_left', 'border_right', 'background'
+        ]
+        
+        for attr in entities_to_destroy:
+            if hasattr(self, attr) and getattr(self, attr):
+                destroy(getattr(self, attr))
+                setattr(self, attr, None)
+        
         if success:
             self.on_win()
         else:
