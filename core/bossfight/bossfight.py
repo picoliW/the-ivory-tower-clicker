@@ -25,7 +25,7 @@ class BossFight(Entity):
         self.projectiles = []
         self.player_projectiles = []
         
-        self.boss_max_health = 5  
+        self.boss_max_health = 15  # Changed to 15 HP
         self.boss_health = self.boss_max_health
         self.boss_speed = 1.5
         self.boss_direction = 1
@@ -54,27 +54,48 @@ class BossFight(Entity):
             size=Vec3(0.8, 0.8, 1)  
         )
 
-        self.hearts = []
-        self.setup_hearts()
+        self.health_bar = None
+        self.health_bar_bg = None
+        self.setup_health_bar()
 
-    def setup_hearts(self):
-        for heart in self.hearts:
-            destroy(heart)
-        self.hearts = []
+    def setup_health_bar(self):
+        # Destroy existing health bar if it exists
+        if self.health_bar:
+            destroy(self.health_bar)
+        if self.health_bar_bg:
+            destroy(self.health_bar_bg)
+            
+        # Health bar background (full size)
+        self.health_bar_bg = Entity(
+            parent=camera.ui,
+            model='quad',
+            color=color.dark_gray,
+            scale=(0.4, 0.03),
+            position=(0, 0.4),
+            z=-10
+        )
         
-        heart_spacing = 0.3
-        start_x = - (self.boss_max_health * heart_spacing) / 2
+        # Actual health bar (will shrink as health decreases)
+        self.health_bar = Entity(
+            parent=camera.ui,
+            model='quad',
+            color=color.red,
+            scale=(0.4, 0.03),
+            position=(0, 0.4),
+            z=-10
+        )
         
-        for i in range(self.boss_max_health):
-            heart = Entity(
-                parent=camera.ui,
-                model='quad',
-                texture='../assets/bosses/boss_hp', 
-                scale=(0.1, 0.1),
-                position=(start_x + i * heart_spacing, 0.4),
-                z=-10
-            )
-            self.hearts.append(heart)
+        self.update_health_bar()
+
+    def update_health_bar(self):
+        if not self.health_bar:
+            return
+            
+        health_percentage = self.boss_health / self.boss_max_health
+        self.health_bar.scale_x = 0.4 * health_percentage
+        
+        # Adjust position so it shrinks from the right
+        self.health_bar.x = -0.2 * (1 - health_percentage)
 
     def initialize_arena(self):
         self.background = Entity(
@@ -149,7 +170,6 @@ class BossFight(Entity):
         
         new_x = self.boss_entity.x + self.boss_speed * self.boss_direction * time.dt
         self.boss_entity.x = clamp(new_x, arena_x_min, arena_x_max)
-
 
     def update_attack_system(self):
         if self.is_attacking:
@@ -302,8 +322,7 @@ class BossFight(Entity):
                         self.player_projectiles.remove(proj)
                     
                     self.boss_health -= 1
-                    
-                    self.update_hearts()
+                    self.update_health_bar()
                     
                     self.boss_entity.color = color.red
                     invoke(setattr, self.boss_entity, 'color', color.white, delay=0.2)
@@ -316,13 +335,6 @@ class BossFight(Entity):
                 destroy(proj)
                 if proj in self.player_projectiles:
                     self.player_projectiles.remove(proj)
-
-    def update_hearts(self):
-        for i, heart in enumerate(self.hearts):
-            if i < self.boss_health:
-                heart.texture = '../assets/bosses/boss_hp' 
-            else:
-                heart.texture = '../assets/bosses/boss_hp_empty'  
 
     def create_player_projectile(self):
         if not hasattr(self, 'player') or not hasattr(self.player, 'sprite'):
@@ -426,7 +438,8 @@ class BossFight(Entity):
         
         entities_to_destroy = [
             'arena_fill', 'boss_entity', 'border_top', 
-            'border_bottom', 'border_left', 'border_right', 'background'
+            'border_bottom', 'border_left', 'border_right', 'background',
+            'health_bar', 'health_bar_bg'
         ]
         
         for attr in entities_to_destroy:
