@@ -5,6 +5,9 @@ import math
 class BossFight(Entity):
     def __init__(self, player, ui, on_win, on_fail): 
         super().__init__()
+
+
+        
         self.player = player
         self.ui = ui 
         self.on_win = on_win
@@ -22,10 +25,16 @@ class BossFight(Entity):
         self.timer = 999999
         self.speed = 5
         
+        self.player_max_health = 3
+        self.player_health = self.player_max_health
+        self.player_invincible = False
+        self.player_invincible_time = 1.0
+        self.player_invincible_timer = 0
+        
         self.projectiles = []
         self.player_projectiles = []
         
-        self.boss_max_health = 15  # Changed to 15 HP
+        self.boss_max_health = 15
         self.boss_health = self.boss_max_health
         self.boss_speed = 1.5
         self.boss_direction = 1
@@ -40,7 +49,11 @@ class BossFight(Entity):
         self.current_attack_time = 0
 
         self.initialize_arena()
+        self.setup_animations()
+        self.setup_colliders()
+        self.setup_health_bar()
 
+    def setup_animations(self):
         self.walk_frames_right = [f'../assets/Player/PlayerMovement/Walk/Right/move_right_{i}' for i in range(8)]
         self.walk_frames_left = [f'../assets/Player/PlayerMovement/Walk/Left/move_left_{i}' for i in range(8)]
         self.current_frame = 0
@@ -48,24 +61,19 @@ class BossFight(Entity):
         self.frame_speed = 0.1
         self.facing = 'right'
 
+    def setup_colliders(self):
         self.player.sprite.collider = BoxCollider(
             self.player.sprite,
             center=Vec3(0, -0.2, 0),  
             size=Vec3(0.8, 0.8, 1)  
         )
 
-        self.health_bar = None
-        self.health_bar_bg = None
-        self.setup_health_bar()
-
     def setup_health_bar(self):
-        # Destroy existing health bar if it exists
-        if self.health_bar:
+        if hasattr(self, 'health_bar') and self.health_bar:
             destroy(self.health_bar)
-        if self.health_bar_bg:
+        if hasattr(self, 'health_bar_bg') and self.health_bar_bg:
             destroy(self.health_bar_bg)
             
-        # Health bar background (full size)
         self.health_bar_bg = Entity(
             parent=camera.ui,
             model='quad',
@@ -75,7 +83,6 @@ class BossFight(Entity):
             z=-10
         )
         
-        # Actual health bar (will shrink as health decreases)
         self.health_bar = Entity(
             parent=camera.ui,
             model='quad',
@@ -88,14 +95,26 @@ class BossFight(Entity):
         self.update_health_bar()
 
     def update_health_bar(self):
-        if not self.health_bar:
+        if not hasattr(self, 'health_bar') or not self.health_bar:
             return
             
         health_percentage = self.boss_health / self.boss_max_health
         self.health_bar.scale_x = 0.4 * health_percentage
         
-        # Adjust position so it shrinks from the right
         self.health_bar.x = -0.2 * (1 - health_percentage)
+
+    def player_take_damage(self):
+        if self.player_invincible:
+            return
+            
+        self.player_health = 0
+        self.player_invincible = True
+        self.player_invincible_timer = self.player_invincible_time
+        
+        self.player.sprite.blink(color.red, duration=0.1)
+        self.player.sprite.shake(duration=0.5, magnitude=0.5)
+        
+        self.end_bossfight(success=False)
 
     def initialize_arena(self):
         self.background = Entity(
@@ -140,6 +159,11 @@ class BossFight(Entity):
 
         if not hasattr(self, 'arena_fill') or not self.arena_fill or not self.arena_fill.enabled:
             return
+
+        if self.player_invincible:
+            self.player_invincible_timer -= time.dt
+            if self.player_invincible_timer <= 0:
+                self.player_invincible = False
 
         self.timer -= time.dt
         if self.timer <= 0:
@@ -214,7 +238,8 @@ class BossFight(Entity):
             color=color.red, 
             scale=0.3, 
             position=self.boss_entity.position,
-            z=self.player.sprite.z
+            z=self.player.sprite.z,
+            collider='box'
         )
         
         direction = Vec2(math.cos(angle), math.sin(angle)).normalized()
@@ -240,7 +265,8 @@ class BossFight(Entity):
             color=color.yellow, 
             scale=0.4, 
             position=(x, self.boss_entity.y),
-            z=self.player.sprite.z
+            z=self.player.sprite.z,
+            collider='box'
         )
         proj.speed = 5
         self.projectiles.append(proj)
@@ -265,10 +291,12 @@ class BossFight(Entity):
                 color=color.blue, 
                 scale=0.3, 
                 position=(x, self.boss_entity.y),
-                z=self.player.sprite.z
+                z=self.player.sprite.z,
+                collider='box'
             )
             proj.speed = 4
             proj.wave_offset = wave_num * 0.8  
+        
             self.projectiles.append(proj)
 
     def update_boss_projectiles(self):
@@ -292,17 +320,17 @@ class BossFight(Entity):
                 continue
 
             if hasattr(self, 'player') and hasattr(self.player, 'sprite') and self.player.sprite:
-                result = proj.intersects(self.player.sprite)
-                if result.hit:
-                    destroy(proj)
-                    if proj in self.player_projectiles:
-                        self.player_projectiles.remove(proj)
-                    
-                    self.boss_entity.color = color.red
-                    invoke(setattr, self.boss_entity, 'color', color.white, delay=0.2)
-                    
-                    self.end_bossfight(success=True)
-                    return
+                if not hasattr(proj, 'collider'):
+                    proj.collider = 'box'  
+                
+                if hasattr(self.player.sprite, 'collider') and self.player.sprite.collider:
+                    if proj.intersects(self.player.sprite):
+                        destroy(proj)
+                        if proj in self.projectiles:
+                            self.projectiles.remove(proj)
+                        
+                        self.player_take_damage()
+                        return
 
     def update_player_projectiles(self):
         if mouse.left and len(self.player_projectiles) == 0: 
@@ -351,6 +379,7 @@ class BossFight(Entity):
             collider='box'
         )
         self.player_projectiles.append(proj)
+        proj.collider.visible = True
 
     def update_player_movement(self):
         if not hasattr(self, 'player') or not hasattr(self.player, 'sprite'):
@@ -425,6 +454,7 @@ class BossFight(Entity):
 
     def end_bossfight(self, success):
         self.active = False
+        self.player.sprite.position = Vec3(-5, -2.5, 0)
         
         for proj in self.projectiles[:]:
             if proj:
@@ -446,6 +476,8 @@ class BossFight(Entity):
             if hasattr(self, attr) and getattr(self, attr):
                 destroy(getattr(self, attr))
                 setattr(self, attr, None)
+
+
 
         if success:
             self.on_win()
