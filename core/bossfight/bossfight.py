@@ -6,8 +6,6 @@ class BossFight(Entity):
     def __init__(self, player, ui, on_win, on_fail): 
         super().__init__()
 
-
-        
         self.player = player
         self.ui = ui 
         self.on_win = on_win
@@ -110,9 +108,6 @@ class BossFight(Entity):
         self.player_health = 0
         self.player_invincible = True
         self.player_invincible_timer = self.player_invincible_time
-        
-        self.player.sprite.blink(color.red, duration=0.1)
-        self.player.sprite.shake(duration=0.5, magnitude=0.5)
         
         self.end_bossfight(success=False)
 
