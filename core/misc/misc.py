@@ -3,6 +3,7 @@ from core.api.api_requests import APIClient
 import os
 from core.misc.ranking_handler import RankingHandler
 from core.misc.achievements_handler import AchievementsHandler
+from core.misc.stats_handler import StatsHandler
 
 class MiscOptions(Entity):
     def __init__(self, player, shop_background):
@@ -16,6 +17,8 @@ class MiscOptions(Entity):
         
         self.ranking_handler = RankingHandler(self, player, shop_background, self.api_client)
         self.achievements_handler = AchievementsHandler(self, player, shop_background)
+        self.stats_handler = StatsHandler(self, player, shop_background, self.api_client) 
+
         
     def show_options(self):
         if self.option_buttons:
@@ -78,7 +81,8 @@ class MiscOptions(Entity):
         print("Mostrando configurações")
     
     def show_stats(self):
-        print("Mostrando estatísticas")
+        self.stats_handler.show_stats()
     
     def return_to_options(self):
         self.show_options()
+

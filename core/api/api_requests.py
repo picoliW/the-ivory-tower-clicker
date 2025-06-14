@@ -68,3 +68,34 @@ class APIClient:
             return self._handle_response(response)
         except requests.exceptions.RequestException as e:
             return False, f"Erro de conexão: {str(e)}"
+        
+    def get_player_stats(self, user_id):
+        try:
+            response = requests.get(
+                f"{self.base_url}/get-stats/{user_id}",
+                headers=self.headers
+            )
+            if response.status_code == 200:
+                data = response.json()
+                return data['success'], data
+            return False, f"Error: {response.status_code}"
+        except Exception as e:
+            return False, str(e)
+
+    def update_player_stat(self, user_id, stat_type, amount=1):
+        try:
+            response = requests.post(
+                f"{self.base_url}/update-stats",
+                json={
+                    "userId": user_id,
+                    "statType": stat_type,
+                    "amount": amount
+                },
+                headers=self.headers
+            )
+            if response.status_code == 200:
+                data = response.json()
+                return data['success'], data
+            return False, f"Error: {response.status_code}"
+        except Exception as e:
+            return False, str(e)

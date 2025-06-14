@@ -324,4 +324,101 @@ function evalAchievementCondition(condition, player, enemyManager) {
   }
 }
 
+router.post("/update-stats", async (req, res) => {
+  const { userId, statType, amount = 1 } = req.body;
+
+  try {
+    const [existingStats] = await pool.query(
+      "SELECT * FROM player_stats WHERE user_id = ?",
+      [userId]
+    );
+
+    if (existingStats.length === 0) {
+      await pool.query("INSERT INTO player_stats (user_id) VALUES (?)", [
+        userId,
+      ]);
+    }
+
+    let updateQuery;
+    switch (statType) {
+      case "enemies_defeated":
+        updateQuery =
+          "UPDATE player_stats SET enemies_defeated = enemies_defeated + ? WHERE user_id = ?";
+        break;
+      case "items_purchased":
+        updateQuery =
+          "UPDATE player_stats SET items_purchased = items_purchased + ? WHERE user_id = ?";
+        break;
+      case "armor_upgrades":
+        updateQuery =
+          "UPDATE player_stats SET armor_upgrades = armor_upgrades + ? WHERE user_id = ?";
+        break;
+      case "floors_reached":
+        updateQuery =
+          "UPDATE player_stats SET floors_reached = floors_reached + ? WHERE user_id = ?";
+        break;
+      case "gold_earned":
+        updateQuery =
+          "UPDATE player_stats SET gold_earned = gold_earned + ? WHERE user_id = ?";
+        break;
+      default:
+        return res.status(400).json({
+          success: false,
+          message: "Invalid stat type",
+        });
+    }
+
+    await pool.query(updateQuery, [amount, userId]);
+
+    res.status(200).json({
+      success: true,
+      message: "Stats updated successfully",
+    });
+  } catch (error) {
+    console.error("Error updating stats:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error updating stats",
+    });
+  }
+});
+
+router.get("/get-stats/:userId", async (req, res) => {
+  try {
+    const userId = req.params.userId;
+
+    const [stats] = await pool.query(
+      "SELECT * FROM player_stats WHERE user_id = ?",
+      [userId]
+    );
+
+    if (stats.length === 0) {
+      await pool.query("INSERT INTO player_stats (user_id) VALUES (?)", [
+        userId,
+      ]);
+      return res.status(200).json({
+        success: true,
+        stats: {
+          enemies_defeated: 0,
+          items_purchased: 0,
+          armor_upgrades: 0,
+          floors_reached: 0,
+          gold_earned: 0,
+        },
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      stats: stats[0],
+    });
+  } catch (error) {
+    console.error("Error fetching stats:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error fetching stats",
+    });
+  }
+});
+
 module.exports = router;

@@ -86,6 +86,7 @@ class EnemyManager:
         self.dps_timer = 0
         self.dps_interval = 1.0
         self.spawn_enemy()
+        self.total_enemies_defeated = 0
 
     def hide_enemies(self):
         for enemy in self.enemies:
@@ -123,7 +124,7 @@ class EnemyManager:
             self.dps_timer = 0
 
         if self.current_enemy.moving:
-            dash = DashAbility.instance
+            dash = DashAbility.instance if hasattr(DashAbility, 'instance') else None
             speed_multiplier = (2 if dash and dash.active else 1) * self.player.movespeed
             self.current_enemy.x -= self.current_enemy.speed * time.dt * speed_multiplier
             
@@ -139,14 +140,22 @@ class EnemyManager:
             else:
                 self.player.is_colliding_with_enemy = False
                 self.background.should_scroll = True
-                
+                    
         if self.current_enemy.health <= 0:
             self.current_enemy.die()  
             self.enemies_defeated += 1
-            self.player.gold += 5 + (self.player.floor * 2)
+            self.total_enemies_defeated += 1 
+            gold_earned = 5 + (self.player.floor * 2)
+            self.player.gold += gold_earned
+            
+            if hasattr(self.player, 'api') and hasattr(self.player, 'user_id'):
+                self.player.api.update_player_stat(self.player.user_id, "enemies_defeated")
+                self.player.api.update_player_stat(self.player.user_id, "gold_earned", gold_earned)
             
             if self.enemies_defeated >= 5:
                 self.player.floor += 1
+                if hasattr(self.player, 'api') and hasattr(self.player, 'user_id'):
+                    self.player.api.update_player_stat(self.player.user_id, "floors_reached")
                 self.enemies_defeated = 0
                 
             self.spawn_enemy()

@@ -279,12 +279,18 @@ class Shop(Entity):
                 self.player.gold_per_second += item.stat_value
             elif item.stat_type == 'dash':
                 self.player.dash_unlocked = True
+            
+            if hasattr(self.player, 'api') and hasattr(self.player, 'user_id'):
+                self.player.api.update_player_stat(self.player.user_id, "items_purchased")
+            
             self.available_items.pop(index)
             self.show_items()
 
     def upgrade_armor(self, index):
         armor = self.armor_list[index]
         if armor.upgrade(self.player):
+            if hasattr(self.player, 'api') and hasattr(self.player, 'user_id'):
+                self.player.api.update_player_stat(self.player.user_id, "armor_upgrades")
             self.show_armors()
 
     def clear_ranking(self):

@@ -8,6 +8,10 @@ class Player:
         self.save_interval = 30  
         self.save_timer = 0
         self.golden_touch = None
+        self.total_gold_earned = player_data.get('gold', 0) if player_data else 0
+        self.enemies_defeated = 0
+        self.items_purchased = 0
+        self.armor_upgrades = 0
 
         if player_data:
             self.damage = player_data.get('damage', 1)
@@ -138,6 +142,7 @@ class Player:
 
     def add_gold(self, amount):
         self.gold += amount
+        self.total_gold_earned += amount 
         if hasattr(self, 'achievement_manager'):
             self.achievement_manager.check_all_conditions(self, getattr(self, 'enemy_manager', None))
 
