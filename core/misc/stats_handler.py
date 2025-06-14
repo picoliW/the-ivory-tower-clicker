@@ -1,55 +1,40 @@
 from ursina import *
+from core.api.api_requests import APIClient
+import threading
 
 class StatsHandler:
-    def __init__(self, parent, player, background, api_client):
+    def __init__(self, parent, player, shop_background, api_client):
         self.parent = parent
         self.player = player
-        self.background = background
+        self.shop_background = shop_background
         self.api = api_client
         self.stats_entities = []
         self.stats_data = None
         
     def show_stats(self):
+        self.parent.hide_options()
         self.clear_stats()
         
-        self.stats_panel = Entity(
-            parent=self.background,
-            model='quad',
-            color=color.dark_gray,
-            scale=(0.7, 0.8),
+        loading_text = Text(
+            parent=self.shop_background,
+            text="Carregando estatísticas...",
             position=(0, 0),
-            z=-0.4
-        )
-        
-        self.stats_title = Text(
-            parent=self.stats_panel,
-            text='Estatísticas do Jogador',
-            y=0.4,
-            scale=1.5,
-            origin=(0, 0),
-            color=color.orange,
+            scale=1,
+            color=color.white,
             z=-0.5
         )
+        self.stats_entities.append(loading_text)
         
-        self.back_button = Button(
-            parent=self.stats_panel,
-            text='Voltar',
-            position=(0, -0.45),
-            scale=(0.2, 0.08),
-            color=color.gray,
-            z=-0.5,
-            on_click=self.clear_stats
-        )
-        
-        self.load_stats()
-        
-    def load_stats(self):
+        threading.Thread(target=self._fetch_and_display_stats, daemon=True).start()
+
+    def _fetch_and_display_stats(self):
         success, response = self.api.get_player_stats(self.player.user_id)
+        invoke(self._update_stats_display, success, response)
+    
+    def _update_stats_display(self, success, response):
+        self.clear_stats()
         
-        if success:
-            self.stats_data = response.get('stats', {})
-            self.display_stats()
-        else:
+        if not success:
             print(f"Erro ao carregar estatísticas: {response}")
             self.stats_data = {
                 'enemies_defeated': getattr(self.player, 'enemies_defeated', 0),
@@ -58,12 +43,20 @@ class StatsHandler:
                 'floors_reached': getattr(self.player, 'floor', 1),
                 'gold_earned': getattr(self.player, 'total_gold_earned', self.player.gold)
             }
-            self.display_stats()
-    
-    def display_stats(self):
-        if not self.stats_data:
-            return
-            
+        else:
+            self.stats_data = response.get('stats', {})
+        
+        title = Text(
+            parent=self.shop_background,
+            text='Estatísticas do Jogador',
+            y=0.3,
+            scale=1.5,
+            origin=(0, 0),
+            color=color.orange,
+            z=-0.5
+        )
+        self.stats_entities.append(title)
+        
         stats_list = [
             f"Inimigos derrotados: {self.stats_data.get('enemies_defeated', 0)}",
             f"Itens comprados: {self.stats_data.get('items_purchased', 0)}",
@@ -77,20 +70,51 @@ class StatsHandler:
         
         for i, stat_text in enumerate(stats_list):
             stat_entity = Text(
-                parent=self.stats_panel,
+                parent=self.shop_background,
                 text=stat_text,
-                y=0.3 - i * 0.1,
+                y=0.2 - i * 0.07,
                 scale=1,
-                origin=(-0.5, 0),
+                origin=(0, 0),
                 color=color.white,
                 z=-0.5
             )
             self.stats_entities.append(stat_entity)
+        
+        self._add_back_button()
+    
+    def _add_back_button(self):
+        back_button = Button(
+            parent=self.shop_background,
+            position=(0.39, -0.45),
+            scale=(0.15, 0.08),
+            color=color.clear,
+            on_click=self._return_to_options,
+            z=-0.5
+        )
+        
+        back_icon = Entity(
+            parent=back_button,
+            model='quad',
+            texture='../assets/misc_icons/back_icon.png',
+            scale=(0.9, 1.3),
+            z=-0.6
+        )
+        
+        back_label = Text(
+            parent=back_button,
+            text="Voltar",
+            y=-0.5,
+            scale=1,
+            color=color.white
+        )
+        
+        self.stats_entities.extend([back_button, back_icon, back_label])
+    
+    def _return_to_options(self):
+        self.clear_stats()
+        self.parent.return_to_options()
     
     def clear_stats(self):
-        if hasattr(self, 'stats_panel'):
-            destroy(self.stats_panel)
         for entity in self.stats_entities:
             destroy(entity)
-        self.stats_entities = []
-        self.parent.return_to_options()
+        self.stats_entities.clear()
