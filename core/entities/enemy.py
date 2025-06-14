@@ -147,15 +147,16 @@ class EnemyManager:
             self.total_enemies_defeated += 1 
             gold_earned = 5 + (self.player.floor * 2)
             self.player.gold += gold_earned
+            self.player.total_gold_earned += gold_earned
             
             if hasattr(self.player, 'api') and hasattr(self.player, 'user_id'):
-                self.player.api.update_player_stat(self.player.user_id, "enemies_defeated")
+                self.player.api.update_player_stat(self.player.user_id, "enemies_defeated", 1)
                 self.player.api.update_player_stat(self.player.user_id, "gold_earned", gold_earned)
             
             if self.enemies_defeated >= 5:
                 self.player.floor += 1
                 if hasattr(self.player, 'api') and hasattr(self.player, 'user_id'):
-                    self.player.api.update_player_stat(self.player.user_id, "floors_reached")
+                    self.player.api.update_player_stat(self.player.user_id, "floors_reached", 1)
                 self.enemies_defeated = 0
                 
             self.spawn_enemy()

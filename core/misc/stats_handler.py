@@ -1,6 +1,7 @@
 from ursina import *
 from core.api.api_requests import APIClient
 import threading
+from time import sleep
 
 class StatsHandler:
     def __init__(self, parent, player, shop_background, api_client):
@@ -29,6 +30,7 @@ class StatsHandler:
 
     def _fetch_and_display_stats(self):
         success, response = self.api.get_player_stats(self.player.user_id)
+        sleep(0.1)  
         invoke(self._update_stats_display, success, response)
     
     def _update_stats_display(self, success, response):
@@ -58,14 +60,13 @@ class StatsHandler:
         self.stats_entities.append(title)
         
         stats_list = [
-            f"Inimigos derrotados: {self.stats_data.get('enemies_defeated', 0)}",
-            f"Itens comprados: {self.stats_data.get('items_purchased', 0)}",
-            f"Melhorias de armadura: {self.stats_data.get('armor_upgrades', 0)}",
-            f"Andares alcançados: {self.stats_data.get('floors_reached', 1)}",
-            f"Ouro total ganho: {self.stats_data.get('gold_earned', 0)}",
-            f"Dano: {self.player.damage}",
-            f"Ouro por segundo: {self.player.gold_per_second}",
-            f"DPS: {self.player.dps}"
+            f"Purchased Items: {self.stats_data.get('items_purchased', 0)}",
+            f"Total Armor Levels: {self.stats_data.get('armor_upgrades', 0)}",
+            f"Total floors reached: {self.stats_data.get('floors_reached', 1)}",
+            f"Total Gold: {self.stats_data.get('gold_earned', 0)}",
+            f"Click Damage: {self.player.damage}",
+            f"Gold Per Second: {self.player.gold_per_second}",
+            f"Damage Per Second: {self.player.dps}"
         ]
         
         for i, stat_text in enumerate(stats_list):

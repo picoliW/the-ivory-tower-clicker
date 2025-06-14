@@ -334,9 +334,10 @@ router.post("/update-stats", async (req, res) => {
     );
 
     if (existingStats.length === 0) {
-      await pool.query("INSERT INTO player_stats (user_id) VALUES (?)", [
-        userId,
-      ]);
+      await pool.query(
+        "INSERT INTO player_stats (user_id, enemies_defeated, items_purchased, armor_upgrades, floors_reached, gold_earned) VALUES (?, 0, 0, 0, 0, 0)",
+        [userId]
+      );
     }
 
     let updateQuery;
@@ -368,7 +369,14 @@ router.post("/update-stats", async (req, res) => {
         });
     }
 
-    await pool.query(updateQuery, [amount, userId]);
+    const [result] = await pool.query(updateQuery, [amount, userId]);
+
+    if (result.affectedRows === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Failed to update stats",
+      });
+    }
 
     res.status(200).json({
       success: true,

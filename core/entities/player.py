@@ -8,7 +8,7 @@ class Player:
         self.save_interval = 30  
         self.save_timer = 0
         self.golden_touch = None
-        self.total_gold_earned = player_data.get('gold', 0) if player_data else 0
+        self.total_gold_earned = 0
         self.enemies_defeated = 0
         self.items_purchased = 0
         self.armor_upgrades = 0
@@ -21,6 +21,7 @@ class Player:
             self.dash_unlocked = player_data.get('dash_unlocked', False)
             self.movespeed = player_data.get('movespeed', 10.0)
             self.dps = player_data.get('dps', 0)
+            self.total_gold_earned = player_data.get('gold', 0)
         else:
             self.damage = 1000
             self.gold = 0

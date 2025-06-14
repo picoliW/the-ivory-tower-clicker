@@ -280,8 +280,9 @@ class Shop(Entity):
             elif item.stat_type == 'dash':
                 self.player.dash_unlocked = True
             
+            self.player.items_purchased += 1
             if hasattr(self.player, 'api') and hasattr(self.player, 'user_id'):
-                self.player.api.update_player_stat(self.player.user_id, "items_purchased")
+                self.player.api.update_player_stat(self.player.user_id, "items_purchased", 1)
             
             self.available_items.pop(index)
             self.show_items()
@@ -289,8 +290,9 @@ class Shop(Entity):
     def upgrade_armor(self, index):
         armor = self.armor_list[index]
         if armor.upgrade(self.player):
+            self.player.armor_upgrades += 1
             if hasattr(self.player, 'api') and hasattr(self.player, 'user_id'):
-                self.player.api.update_player_stat(self.player.user_id, "armor_upgrades")
+                self.player.api.update_player_stat(self.player.user_id, "armor_upgrades", 1)
             self.show_armors()
 
     def clear_ranking(self):

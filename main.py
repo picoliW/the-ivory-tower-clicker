@@ -11,6 +11,9 @@ from core.menus.main_menu import MainMenu
 from core.scenes.splash_screen import SplashScreen
 from core.scenes.loading_screen import LoadingScreen
 from core.scenes.first_time_scene import FirstTimeScene
+from ursina import Text
+Text.default_font = 'assets/fonts/Roboto-Regular.ttf'
+Text.default_resolution = 48
 
 app = Ursina()
 
