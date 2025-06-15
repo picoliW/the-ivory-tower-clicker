@@ -32,7 +32,7 @@ ui = None
 pause_menu = None
 start_bossfight = None
 
-start_in_bossfight = True 
+start_in_bossfight = False 
 
 def start_game(user_id=None, player_data=None):
     splash_screen.disable()
