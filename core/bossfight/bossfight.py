@@ -382,26 +382,21 @@ class BossFight(Entity):
 
         move = Vec2(
             held_keys['d'] - held_keys['a'],
-            held_keys['w'] - held_keys['s']
+            0 
         )
         new_x = self.player.sprite.x + move.x * time.dt * self.speed
-        new_y = self.player.sprite.y + move.y * time.dt * self.speed
+        new_y = self.player.sprite.y 
 
         if not hasattr(self, 'arena_fill') or not self.arena_fill:
             return
 
         half_width = self.arena_fill.scale_x / 2
-        half_height = self.arena_fill.scale_y / 2
         player_half_width = self.player.sprite.scale_x / 2
-        player_half_height = self.player.sprite.scale_y / 2
 
         min_x = self.arena_fill.x - half_width + player_half_width
         max_x = self.arena_fill.x + half_width - player_half_width
-        min_y = self.arena_fill.y - half_height + player_half_height
-        max_y = self.arena_fill.y + half_height - player_half_height
 
         self.player.sprite.x = clamp(new_x, min_x, max_x)
-        self.player.sprite.y = clamp(new_y, min_y, max_y)
 
         if self.player.dash_unlocked and not self.dashing and self.dash_cooldown_timer <= 0:
             if held_keys['e'] and move != Vec2(0, 0):
@@ -413,9 +408,7 @@ class BossFight(Entity):
         if self.dashing:
             dash_move = self.dash_direction * self.dash_speed * time.dt
             dash_x = self.player.sprite.x + dash_move.x
-            dash_y = self.player.sprite.y + dash_move.y
             self.player.sprite.x = clamp(dash_x, min_x, max_x)
-            self.player.sprite.y = clamp(dash_y, min_y, max_y)
 
             self.dash_timer -= time.dt
             if self.dash_timer <= 0:
