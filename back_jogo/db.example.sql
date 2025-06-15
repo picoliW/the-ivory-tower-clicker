@@ -47,3 +47,13 @@ INSERT INTO achievements (name, description, condition_text, icon_path, reward) 
 ('First Steps', 'Get to the third floor', 'player.floor >= 3', 'assets/achievements/first_steps.png', 100),
 ('Rich', 'Get 1000 gold', 'player.gold >= 1000', 'assets/achievements/rich.png', 500),
 ('Hunter', 'Defeat 50 enemies', 'enemy_manager.enemies_defeated >= 50', 'assets/achievements/hunter.png', 1000);
+
+CREATE TABLE player_stats (
+    user_id INT PRIMARY KEY,
+    enemies_defeated INT DEFAULT 0,
+    items_purchased INT DEFAULT 0,
+    armor_upgrades INT DEFAULT 0,
+    floors_reached INT DEFAULT 0,
+    gold_earned INT DEFAULT 0,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
