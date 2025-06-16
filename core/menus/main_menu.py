@@ -28,7 +28,7 @@ class MainMenu(Entity):
 
         self.menu_bg = Entity(
             model='quad',
-            scale=(base_width, base_height),
+            scale=(base_width, base_height + 0.8),
             texture=self.frames[0],
             z=-0.1,
             parent=self

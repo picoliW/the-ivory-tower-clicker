@@ -49,7 +49,8 @@ class Player:
             model='quad',
             texture=self.run_textures[0],  
             scale=(2, 1.6),
-            position=(-5, -2.5),
+            #position=(-5, -2.5), XERECA
+            position=(-5, -3.5),
             collider='box',
             z=0
         )

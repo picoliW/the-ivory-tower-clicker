@@ -37,7 +37,8 @@ class UI:
     def create_main_ui(self):
         self.floor_text = Text(
             text=f'Floor: {self.player.floor}', 
-            position=(-0.8, 0.45), 
+            #position=(-0.6, 0.45), XERECA
+            position=(-0.6, 0.45), 
             scale=1.5,
             z=-0.1
         )
@@ -49,7 +50,8 @@ class UI:
         )
         self.enemy_count_text = Text(
             text=f'Enemies: {self.enemy_manager.enemies_defeated}/5', 
-            position=(-0.8, 0.35), 
+            #position=(-0.6, 0.35),  XERECA
+            position=(-0.6, 0.35), 
             scale=1.5,
             z=-0.1
         )
@@ -99,7 +101,8 @@ class UI:
     def create_golden_touch_button(self):
         self.golden_touch_button = Button(
             text='Golden Touch!',
-            position=(-.8, -0.3),  
+            # position=(-.8, -0.3),  XERECA
+            position=(-.6, -0.3),  
             scale=(0.1, 0.1)
         )
         self.golden_touch = GoldenTouch(self.golden_touch_button, self.player)
@@ -109,7 +112,8 @@ class UI:
     def create_run_button(self):
         self.run_button = Button(
             text='Run!',
-            position=(-.8, -0.42),
+            # position=(-.8, -0.42),  XERECA
+            position=(-.6, -0.42),
             scale=(0.1, 0.1)
         )
         self.dash_ability = DashAbility(self.run_button)

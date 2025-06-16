@@ -4,7 +4,9 @@ from core.abilities.dashability import DashAbility
 class Background(Entity):
     def __init__(self, texture='../assets/bg.png'):
         window_ratio = window.aspect_ratio  
-        base_height = 14
+        
+        base_height = 20
+        #base_height = 14 XERECA
         base_width = base_height * window_ratio
 
         super().__init__(

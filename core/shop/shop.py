@@ -31,7 +31,8 @@ class Shop(Entity):
             parent=camera.ui, 
             model='quad', 
             color=color.black66, 
-            position=(.5, 0),
+            #position=(.5, 0), XERECA
+            position=(.23, 0),
             scale=(0.8, 1), 
             enabled=False,
             z=-0.3

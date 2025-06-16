@@ -32,7 +32,8 @@ class Start_bossfight:
         def fail():
             self.ui.enable_ui() 
             self.player.floor -= 1
-            self.player.sprite.position = (-5, -2.5)
+            #self.player.sprite.position = (-5, -2.5) XERECA
+            self.player.sprite.position = (-5, -3.5)
             self.enemy_manager.show_enemies()
             self.boss_fight = None
             self.choice_made = False  
@@ -99,7 +100,8 @@ class Start_bossfight:
 
     def finish_win_sequence(self):
         self.player.floor += 1
-        self.player.sprite.position = (-5, -2.5)
+        #self.player.sprite.position = (-5, -2.5) XERECA
+        self.player.sprite.position = (-5, -3.5)
         self.bossfight_win_sound.play()
         self.enemy_manager.show_enemies()
         self.boss_fight = None

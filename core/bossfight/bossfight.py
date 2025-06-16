@@ -145,7 +145,8 @@ class BossFight(Entity):
         self.border_left = Entity(model='quad', color=color.white, scale=(thickness, h), x=-w/2, y=offset_y, z=0.5)
         self.border_right = Entity(model='quad', color=color.white, scale=(thickness, h), x=w/2, y=offset_y, z=0.5)
 
-        self.player.sprite.position = (0, offset_y - h/2 + 1.5)
+        #self.player.sprite.position = (0, offset_y - h/2 + 1.5)
+        self.player.sprite.position = (0, offset_y - h/2 + 0.45)
         self.player.sprite.z = 0.6
 
     def update(self):
